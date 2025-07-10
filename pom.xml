@@ -34,6 +34,7 @@
 		<module>user-service</module>
 		<module>transaction-server</module>
         <module>notification-server</module>
+        <module>loan-server</module>
     </modules>
 
 	<properties>
