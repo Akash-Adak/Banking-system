@@ -17,9 +17,9 @@ public class TransactionController {
     public ResponseEntity<TransactionResponse> createTransaction(@RequestBody TransactionRequest request) {
         return ResponseEntity.ok(transactionService.processTransaction(request));
     }
-
-    @GetMapping("/history/{account}")
-    public ResponseEntity<List<Transaction>> getHistory(@PathVariable String account) {
-        return ResponseEntity.ok(transactionService.getTransactionHistory(account));
-    }
+//
+//    @GetMapping("/history/{account}")
+//    public ResponseEntity<List<Transaction>> getHistory(@PathVariable String account) {
+//        return ResponseEntity.ok(transactionService.getTransactionHistory(account));
+//    }
 }

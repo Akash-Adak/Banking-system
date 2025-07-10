@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class TransactionService {
@@ -77,5 +78,9 @@ public class TransactionService {
         }
     }
 
+//    public List<Transaction> getTransactionHistory(String account) {
+//return transactionRepository.fin(account);
+//
+//    }
 }
 
