@@ -1,4 +1,5 @@
-package com.banking.banking_system;
+package com.banking.main;
+
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -6,9 +7,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class BankingSystemApplication {
 
-	public static void main(String[] args) {
+    public static void main(String[] args) {
 
-		SpringApplication.run(BankingSystemApplication.class, args);
-	}
+        SpringApplication.run(BankingSystemApplication.class, args);
+    }
 
 }
