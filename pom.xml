@@ -21,20 +21,14 @@
 	</parent>
 
 	<modules>
-<!--		<module>auth-service</module>-->
-<!--		<module>account-service</module>-->
-<!--		<module>user-service</module>-->
-<!--		<module>transaction-service</module>-->
 <!--		<module>fraud-service</module>-->
-<!--		<module>notification-service</module>-->
-<!--		<module>admin-service</module>-->
-<!--		<module>common-library</module>-->
 		<module>auth-service</module>
 		<module>account-service</module>
 		<module>user-service</module>
 		<module>transaction-server</module>
         <module>notification-server</module>
         <module>loan-server</module>
+        <module>eureka-server</module>
     </modules>
 
 	<properties>
@@ -47,9 +41,39 @@
 			 <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
 			 <version>2.1.0</version>
 		 </dependency>
+		 <dependency>
+			 <groupId>org.springframework.boot</groupId>
+			 <artifactId>spring-boot-dependencies</artifactId>
+			 <version>3.5.3</version>
+			 <type>pom</type>
+			 <scope>import</scope>
+		 </dependency>
+		 <dependency>
+			 <groupId>org.springframework.cloud</groupId>
+			 <artifactId>spring-cloud-dependencies</artifactId>
+			 <version>2025.0.0</version>
+			 <type>pom</type>
+			 <scope>import</scope>
+		 </dependency>
 
 	 </dependencies>
  </dependencyManagement>
+
+
+
+	<dependencies>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
 	<build>
 		<plugins>
 			<plugin>
