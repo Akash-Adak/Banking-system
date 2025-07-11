@@ -34,6 +34,8 @@ public class UserController {
         return new ResponseEntity<>(saved,HttpStatus.CREATED);
     }
 
+
+
     @GetMapping("/{username}")
     public ResponseEntity<?> getUser(@PathVariable String username) {
         String jwtUsername = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -46,6 +48,21 @@ public class UserController {
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
+
+//    @GetMapping("/{username}")
+//    public ResponseEntity<?> getUsername(@PathVariable String username) {
+//        String jwtUsername = SecurityContextHolder.getContext().getAuthentication().getName();
+//
+//        if (!jwtUsername.equals(username)) {
+//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+//                    .body("You cannot create a user for someone else.");
+//        }
+//
+//        return userService.getUserByUsername(username)
+//                .map(ResponseEntity::ok)
+//                .orElse(ResponseEntity.notFound().build());
+//    }
+
 
 
 }
