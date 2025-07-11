@@ -11,6 +11,10 @@
 
     <artifactId>user-service</artifactId>
     <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
 
 
         <!-- Spring Data JPA -->
