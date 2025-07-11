@@ -2,6 +2,8 @@ server:
   port: 8082
 
 spring:
+  application:
+    name: user
   datasource:
     url: jdbc:mysql://localhost:3306/userdb
     username: root
@@ -17,6 +19,7 @@ spring:
 jwt:
   secret: <your-base64-secret>
   expiration: 3600000
+
 eureka :
   client :
     service-url :

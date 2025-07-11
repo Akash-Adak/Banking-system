@@ -2,6 +2,8 @@ server:
   port: 8081
 
 spring:
+  application:
+    name: auth
   datasource:
     url: jdbc:mysql://localhost:3306/authdb
     username: root
@@ -19,10 +21,10 @@ spring:
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
-  redis:
-    host: localhost
-    port: 6379
-    password: ""
+#  redis:
+#    host: localhost
+#    port: 6379
+#    password: ""
 jwt:
   secret: U2VjdXJlS2V5Rm9yQmFua2luZ0FwcFNob3VsZEJlQmFzZTY0
   expiration: 3600000
