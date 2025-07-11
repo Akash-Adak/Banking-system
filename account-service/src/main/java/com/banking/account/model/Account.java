@@ -14,10 +14,7 @@ public class Account {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String Name;
-    private String dob;
-    private String adhar;
-    private String mobile;
+    private String name;
     private String userId;
     private String accountNumber;
     private Double balance;
