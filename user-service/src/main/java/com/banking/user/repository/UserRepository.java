@@ -1,5 +1,6 @@
-package com.banking.user;
+package com.banking.user.repository;
 
+import com.banking.user.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

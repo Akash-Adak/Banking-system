@@ -26,15 +26,15 @@ public class AuthService {
         return jwtUtil.generateToken(user.getUsername(), user.getRoles());
     }
 
-    public Boolean login(LoginRequest request) {
+    public String login(LoginRequest request) {
         var user = repo.findByUsername(request.getUsername())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         if (!encoder.matches(request.getPassword(), user.getPassword()))
             throw new RuntimeException("Invalid credentials");
 
-//        return jwtUtil.generateToken(user.getUsername(), user.getRoles());
-        return true;
+        return jwtUtil.generateToken(user.getUsername(), user.getRoles());
+
     }
 
     public List<User> getUserDetails() {

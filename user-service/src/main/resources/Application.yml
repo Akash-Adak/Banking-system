@@ -16,8 +16,11 @@ spring:
       hibernate:
         format_sql: true
 
+
+  kafka:
+    bootstrap-servers: localhost:9092
 jwt:
-  secret: <your-base64-secret>
+  secret: U2VjdXJlS2V5Rm9yQmFua2luZ0FwcFNob3VsZEJlQmFzZTY0
   expiration: 3600000
 
 eureka :

@@ -1,0 +1,71 @@
+version: '3.8'
+services:
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+
+  kafka:
+    image: confluentinc/cp-kafka:latest
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+
+  auth-service:
+    build: ./auth-service
+    ports:
+      - "8081:8081"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+
+  user-service:
+    build: ./user-service
+    ports:
+      - "8083:8083"
+    depends_on:
+      - auth-service
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+
+  account-service:
+    build: ./account-service
+    ports:
+      - "8082:8082"
+    depends_on:
+      - auth-service
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+
+  transaction-server:
+    build: ./transaction-service
+    ports:
+      - "8084:8084"
+    depends_on:
+      - account-service
+      - kafka
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+
+  notification-server:
+    build: ./notification-service
+    ports:
+      - "8085:8085"
+    depends_on:
+      - kafka
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+
+  loan-server:
+    build: ./loan-service
+    ports:
+      - "8086:8086"
+    depends_on:
+      - auth-service
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
