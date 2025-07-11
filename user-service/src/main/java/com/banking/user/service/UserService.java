@@ -1,4 +1,6 @@
-package com.banking.user;
+package com.banking.user.service;
+
+import com.banking.user.model.User;
 
 import java.util.Optional;
 

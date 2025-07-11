@@ -1,7 +1,7 @@
-package com.banking.account;
+package com.banking.account.controller;
 
-import com.banking.account.Account;
-import com.banking.account.AccountService;
+import com.banking.account.service.AccountService;
+import com.banking.account.model.Account;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

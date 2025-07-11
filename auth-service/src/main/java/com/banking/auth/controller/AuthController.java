@@ -26,9 +26,10 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest request) {
-       if(!authService.login(request))
+        String s=authService.login(request);
+       if(s==null)
            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-       return new ResponseEntity<>(HttpStatus.OK);
+       return new ResponseEntity<>(s,HttpStatus.OK);
     }
 
     @GetMapping("/user-details")

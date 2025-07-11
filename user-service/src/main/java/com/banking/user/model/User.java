@@ -1,4 +1,4 @@
-package com.banking.user;
+package com.banking.user.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

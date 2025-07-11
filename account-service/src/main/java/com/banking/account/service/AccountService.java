@@ -1,7 +1,7 @@
-package com.banking.account;
+package com.banking.account.service;
 
-import com.banking.account.Account;
-import com.banking.account.AccountRepository;
+import com.banking.account.model.Account;
+import com.banking.account.repository.AccountRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

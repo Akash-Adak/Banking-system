@@ -1,5 +1,7 @@
-package com.banking.user;
+package com.banking.user.service;
 
+import com.banking.user.model.User;
+import com.banking.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +15,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User createUser(User user) {
+
         return userRepository.save(user);
     }
 
@@ -20,4 +23,6 @@ public class UserServiceImpl implements UserService {
     public Optional<User> getUserByUsername(String username) {
         return userRepository.findByUsername(username);
     }
+
+
 }
