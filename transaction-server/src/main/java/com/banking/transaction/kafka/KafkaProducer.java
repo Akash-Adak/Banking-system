@@ -1,5 +1,6 @@
-package com.banking.transaction;
+package com.banking.transaction.kafka;
 
+import com.banking.transaction.model.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;

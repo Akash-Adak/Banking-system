@@ -1,4 +1,4 @@
-package com.banking.transaction;
+package com.banking.account.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,4 +11,3 @@ public class BalanceUpdateRequest {
     private String accountNumber;
     private Double amount;
 }
-

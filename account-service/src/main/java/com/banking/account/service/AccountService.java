@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestOperations;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
 @Slf4j
 @Service
@@ -43,7 +44,7 @@ public class AccountService {
         Account account = new Account();
         account.setUserId("BANK" + ThreadLocalRandom.current().nextInt(100000, 999999));
         account.setAccountNumber(generateBankAccountNumber());
-        account.setBalance(0.0);
+        account.setBalance(5000.0);
         account.setName(userResponse.getFullname()); // if Account has name field
 
         return repository.save(account);
@@ -66,5 +67,30 @@ public class AccountService {
         long randomNumber = ThreadLocalRandom.current().nextLong(1000000000L, 9999999999L);
         return bankCode + randomNumber;
     }
+
+    public boolean debit(String accountNumber, Double amount) {
+        Optional<Account> optional = Optional.ofNullable(repository.findByAccountNumber(accountNumber));
+        if (optional.isPresent()) {
+            Account account = optional.get();
+            if (account.getBalance() >= amount) {
+                account.setBalance(account.getBalance() - amount);
+                repository.save(account);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean credit(String accountNumber, Double amount) {
+        Optional<Account> optional = Optional.ofNullable(repository.findByAccountNumber(accountNumber));
+        if (optional.isPresent()) {
+            Account account = optional.get();
+            account.setBalance(account.getBalance() + amount);
+            repository.save(account);
+            return true;
+        }
+        return false;
+    }
+
 
 }
