@@ -5,6 +5,7 @@ import com.banking.account.model.Account;
 import com.banking.account.repository.AccountRepository;
 import com.banking.account.response.UserResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -14,7 +15,7 @@ import org.springframework.web.client.RestOperations;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.concurrent.ThreadLocalRandom;
-
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AccountService {
@@ -23,14 +24,13 @@ public class AccountService {
 
    private final RestTemplate restTemplate;
     public Account createAccount(String username,String token) {
-        // 1. Get user details from user-service
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", token);
 
         HttpEntity<Void> entity = new HttpEntity<>(headers);
 
         ResponseEntity<UserResponse> response = restTemplate.exchange(
-                "http://localhost:8082/api/users/{username}", // Or use service name if with @LoadBalanced
+                "http://USER/api/users/{username}",
                 HttpMethod.GET,
                 entity,
                 UserResponse.class,
@@ -38,13 +38,13 @@ public class AccountService {
         );
 
         UserResponse userResponse = response.getBody();
-
+            log.info("name :",userResponse.getFullname());
         // 2. Create and save account
         Account account = new Account();
         account.setUserId("BANK" + ThreadLocalRandom.current().nextInt(100000, 999999));
         account.setAccountNumber(generateBankAccountNumber());
         account.setBalance(0.0);
-        account.setName(userResponse.getFullName()); // if Account has name field
+        account.setName(userResponse.getFullname()); // if Account has name field
 
         return repository.save(account);
     }
@@ -57,8 +57,9 @@ public class AccountService {
 
 
 
-    public Account getAccountByUserId(String userId) {
-        return repository.findByUserId(userId);
+    public Account getAccountByUserId(String accountNumber) {
+
+        return repository.findByAccountNumber(accountNumber);
     }
     public String generateBankAccountNumbe() {
         String bankCode = "8940"; // can be static per your bank

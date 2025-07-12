@@ -9,5 +9,7 @@ public interface UserService {
     User createUser(User user);
     Optional<User> getUserByUsername(String username);
 
+    User UpdateUser(User user);
+
 //    void accountCreation(String Username);
 }
