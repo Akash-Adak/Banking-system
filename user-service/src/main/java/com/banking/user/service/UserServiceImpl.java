@@ -25,6 +25,20 @@ public class UserServiceImpl implements UserService {
         return userRepository.findByUsername(username);
     }
 
+    @Override
+    public User UpdateUser(User user) {
+//        user.setUsername(user.getUsername());
+
+            User old=userRepository.findByUsername(user.getUsername()).orElseThrow();
+            old.setEmail(user.getEmail());
+            old.setAddress(user.getAddress());
+            old.setPhone(user.getPhone());
+            old.setKycStatus(user.getKycStatus());
+            old.setFullname(user.getFullname());
+            return userRepository.save(old);
+
+    }
+
 //    @Override
 //    public void accountCreation(String username) {
 //

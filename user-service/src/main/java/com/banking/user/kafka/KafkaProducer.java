@@ -17,4 +17,9 @@ public class KafkaProducer {
         kafkaTemplate.send("user-events", message);
         System.out.println("✅ Sent Kafka event: " + message);
     }
+    public void sendUserUpdateEvent(String username) {
+        String message = username + " Updated";
+        kafkaTemplate.send("user-events", message);
+        System.out.println("✅ Sent Kafka event: " + message);
+    }
 }

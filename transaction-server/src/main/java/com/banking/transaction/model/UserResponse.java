@@ -1,4 +1,4 @@
-package com.banking.account.response;
+package com.banking.transaction.model;
 
 import lombok.Data;
 

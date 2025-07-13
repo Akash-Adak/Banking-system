@@ -1,4 +1,4 @@
-package com.banking.transaction;
+package com.banking.transaction.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

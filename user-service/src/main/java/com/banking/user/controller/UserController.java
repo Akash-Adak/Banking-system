@@ -49,19 +49,20 @@ public class UserController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-//    @GetMapping("/{username}")
-//    public ResponseEntity<?> getUsername(@PathVariable String username) {
-//        String jwtUsername = SecurityContextHolder.getContext().getAuthentication().getName();
-//
-//        if (!jwtUsername.equals(username)) {
-//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-//                    .body("You cannot create a user for someone else.");
-//        }
-//
-//        return userService.getUserByUsername(username)
-//                .map(ResponseEntity::ok)
-//                .orElse(ResponseEntity.notFound().build());
-//    }
+    @PutMapping
+    public ResponseEntity<?> UpdateUser(@RequestBody User user) {
+        String jwtUsername = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        if (!jwtUsername.equals(user.getUsername())) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body("You cannot create a user for someone else.");
+        }
+
+        User saved= userService.UpdateUser(user);
+
+        kafkaProducer.sendUserUpdateEvent(saved.getUsername());
+        return new ResponseEntity<>(saved,HttpStatus.OK);
+    }
 
 
 
