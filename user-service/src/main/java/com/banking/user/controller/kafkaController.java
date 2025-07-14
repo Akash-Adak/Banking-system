@@ -17,6 +17,7 @@ public class kafkaController {
 
     @PostMapping
     public void publish(@RequestBody MessageRequest request){
+
         kafkaTemplate.send("user",request.message());
     }
 }
