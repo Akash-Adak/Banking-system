@@ -28,3 +28,7 @@ jobs:
 
       - name: Submit dependency snapshot
         uses: advanced-security/maven-dependency-submission-action@v3
+        with:
+          directory: .
+          ignore-maven-wrapper: true          # ✅ Use system Maven instead of ./mvnw
+          snapshot-include-file-name: true
