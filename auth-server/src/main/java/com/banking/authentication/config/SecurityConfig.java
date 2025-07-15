@@ -1,7 +1,8 @@
-package com.banking.auth.security;
+package com.banking.authentication.config;
 
-import com.banking.auth.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.*;
@@ -10,11 +11,14 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.*;
 
+import com.banking.authentication.repository.UserRepository;
+
 @Configuration
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final UserRepository repo;
+        @Autowired
+    private  UserRepository userRepository;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -31,7 +35,7 @@ public class SecurityConfig {
 
     @Bean
     public UserDetailsService userDetailsService() {
-        return username -> repo.findByUsername(username)
+        return username -> userRepository.findByUsername(username)
                 .map(user -> User.builder()
                         .username(user.getUsername())
                         .password(user.getPassword())

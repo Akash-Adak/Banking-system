@@ -22,15 +22,16 @@
 
 	<modules>
 <!--		<module>fraud-service</module>-->
-		<module>auth-service</module>
+<!--		<module>auth-service</module>-->
 		<module>account-service</module>
 		<module>user-service</module>
 		<module>transaction-server</module>
         <module>notification-server</module>
 
 		<module>cloud</module>
+        <module>auth-server</module>
 
-	</modules>
+    </modules>
 
 	<properties>
 		<java.version>21</java.version>
