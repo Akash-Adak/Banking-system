@@ -1,4 +1,4 @@
-package com.banking.auth.model;
+package com.banking.authentication.model;
 
 import lombok.Data;
 

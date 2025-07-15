@@ -1,4 +1,4 @@
-package com.banking.auth.model;
+package com.banking.authentication.model;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -22,4 +22,6 @@ public class User {
     private String password;
 
     private String roles; // USER or ADMIN
+
+
 }

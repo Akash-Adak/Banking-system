@@ -1,8 +1,10 @@
-package com.banking.auth.service;
+package com.banking.authentication.service;
 
-import com.banking.auth.model.*;
-import com.banking.auth.repository.UserRepository;
-import com.banking.auth.security.JwtUtil;
+import com.banking.authentication.config.JwtUtil;
+import com.banking.authentication.model.LoginRequest;
+import com.banking.authentication.model.RegisterRequest;
+import com.banking.authentication.model.User;
+import com.banking.authentication.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;

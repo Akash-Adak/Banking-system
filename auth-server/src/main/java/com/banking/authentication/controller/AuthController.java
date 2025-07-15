@@ -1,8 +1,10 @@
-package com.banking.auth.controller;
+package com.banking.authentication.controller;
 
-import com.banking.auth.model.*;
-import com.banking.auth.service.AuthService;
-import lombok.RequiredArgsConstructor;
+
+import com.banking.authentication.model.LoginRequest;
+import com.banking.authentication.model.RegisterRequest;
+import com.banking.authentication.model.User;
+import com.banking.authentication.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,11 +14,12 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/auth")
-@RequiredArgsConstructor
 public class AuthController {
 
 
-    private final AuthService authService;
+
+    @Autowired
+    private AuthService authService;
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody RegisterRequest request) {

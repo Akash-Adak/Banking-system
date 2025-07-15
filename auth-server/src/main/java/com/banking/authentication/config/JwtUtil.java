@@ -1,4 +1,4 @@
-package com.banking.auth.security;
+package com.banking.authentication.config;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
