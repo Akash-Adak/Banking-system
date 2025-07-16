@@ -16,19 +16,17 @@ import java.util.List;
 @RequestMapping("/api/auth")
 public class AuthController {
 
-
-
     @Autowired
     private AuthService authService;
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
+    public ResponseEntity<?> register(@RequestBody RegisterRequest request) throws Exception{
           String  res=  authService.register(request);
           return new ResponseEntity<>(res, HttpStatus.CREATED);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequest request) {
+    public ResponseEntity<?> login(@RequestBody LoginRequest request) throws Exception{
         String s=authService.login(request);
        if(s==null)
            return new ResponseEntity<>(HttpStatus.NOT_FOUND);

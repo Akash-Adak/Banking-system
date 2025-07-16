@@ -7,6 +7,8 @@ import com.banking.user.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,7 +21,8 @@ public class UserController {
 
     @Autowired
     private KafkaProducer kafkaProducer;
-    @PostMapping
+
+    @PostMapping("/create-user")
     public ResponseEntity<?> createUser(@RequestBody User user) {
         String jwtUsername = SecurityContextHolder.getContext().getAuthentication().getName();
 
@@ -64,6 +67,18 @@ public class UserController {
         return new ResponseEntity<>(saved,HttpStatus.OK);
     }
 
+    @GetMapping("/getAll")
+    public ResponseEntity<?> getAllUsers() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String roles = String.valueOf(auth.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .toList());
 
+        if (!roles.equals("ADMIN")) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body("You cannot access user details");
+        }
+       return new ResponseEntity<>(userService.getAll(),HttpStatus.FOUND);
+    }
 
 }

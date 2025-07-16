@@ -5,10 +5,13 @@ import lombok.RequiredArgsConstructor;
 
 @Data
 @RequiredArgsConstructor
-public class RegisterRequest {
+public class Userdto {
     private String username;
-    private String password;
-    private String role; // Optional: USER / ADMIN
+  // USER or ADMIN
     private String phone;
-}
 
+    public Userdto(String username, String phone) {
+        this.username=username;
+        this.phone=phone;
+    }
+}

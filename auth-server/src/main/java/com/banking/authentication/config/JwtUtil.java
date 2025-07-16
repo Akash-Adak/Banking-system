@@ -1,73 +1,71 @@
 package com.banking.authentication.config;
 
-import io.jsonwebtoken.*;
-import io.jsonwebtoken.security.Keys;
-import jakarta.annotation.PostConstruct;
-import lombok.extern.slf4j.Slf4j;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import java.security.Key;
-import java.util.Date;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.security.KeyFactory;
+import java.security.PrivateKey;
+import java.security.PublicKey;
+import java.security.spec.PKCS8EncodedKeySpec;
+import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
+import java.util.Date;
+import java.util.Map;
 
 @Component
-@Slf4j
 public class JwtUtil {
 
-    @Value("${jwt.secret}")
-    private String secretKeyBase64;
-
     @Value("${jwt.expiration}")
-    private long expirationMillis;
+    private long expirationTime;
 
-    private Key key;
+    private PrivateKey getPrivateKey() throws Exception {
+        InputStream inputStream = getClass().getClassLoader().getResourceAsStream("private.key");
+        if (inputStream == null) throw new FileNotFoundException("private.key not found in resources");
 
-    @PostConstruct
-    public void init() {
-        byte[] decodedKey = Base64.getDecoder().decode(secretKeyBase64);
-        this.key = Keys.hmacShaKeyFor(decodedKey);
+        String key = new String(inputStream.readAllBytes())
+                .replaceAll("-----\\w+ PRIVATE KEY-----", "")
+                .replaceAll("\\s", "");
+
+        byte[] decoded = Base64.getDecoder().decode(key);
+        PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(decoded);
+        return KeyFactory.getInstance("RSA").generatePrivate(keySpec);
     }
 
-    public String generateToken(String username, String role) {
+
+    private PublicKey getPublicKey() throws Exception {
+        InputStream inputStream = getClass().getClassLoader().getResourceAsStream("public.key");
+        if (inputStream == null) throw new FileNotFoundException("public.key not found in resources");
+
+        String key = new String(inputStream.readAllBytes())
+                .replaceAll("-----\\w+ PUBLIC KEY-----", "")
+                .replaceAll("\\s", "");
+
+        byte[] decoded = Base64.getDecoder().decode(key);
+        X509EncodedKeySpec keySpec = new X509EncodedKeySpec(decoded);
+        return KeyFactory.getInstance("RSA").generatePublic(keySpec);
+    }
+
+
+    public String generateToken(Map<String, Object> claims, String subject) throws Exception {
         return Jwts.builder()
-                .setSubject(username)
-                .claim("role", role)
+                .setClaims(claims)
+                .setSubject(subject)
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + expirationMillis))
-                .signWith(key, SignatureAlgorithm.HS256)
+                .setExpiration(new Date(System.currentTimeMillis() + expirationTime))
+                .signWith(getPrivateKey(), SignatureAlgorithm.RS256)
                 .compact();
     }
 
-    public String extractUsername(String token) {
-        return extractAllClaims(token).getSubject();
-    }
-
-    public String extractUserRole(String token) {
-        return extractAllClaims(token).get("role", String.class);
-    }
-
-    public boolean validateToken(String token) {
-        try {
-            extractAllClaims(token);
-            return true;
-        } catch (ExpiredJwtException e) {
-            log.warn("JWT expired: {}", e.getMessage());
-        } catch (UnsupportedJwtException e) {
-            log.warn("Unsupported JWT: {}", e.getMessage());
-        } catch (MalformedJwtException e) {
-            log.warn("Malformed JWT: {}", e.getMessage());
-        } catch (SignatureException e) {
-            log.warn("Invalid signature: {}", e.getMessage());
-        } catch (IllegalArgumentException e) {
-            log.warn("Illegal argument token: {}", e.getMessage());
-        }
-        return false;
-    }
-
-    private Claims extractAllClaims(String token) {
+    public Claims validateToken(String token) throws Exception {
         return Jwts.parserBuilder()
-                .setSigningKey(key)
+                .setSigningKey(getPublicKey())
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
