@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestOperations;
 import org.springframework.web.client.RestTemplate;
 
+
 import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
 @Slf4j
@@ -24,6 +25,7 @@ public class AccountService {
     private final AccountRepository repository;
 
    private final RestTemplate restTemplate;
+
     public Account createAccount(String username,String token) {
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", token);

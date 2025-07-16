@@ -17,14 +17,15 @@ public class SecurityConfig {
     private  JwtAuthenticationFilter jwtFilter;
 
 
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/users/**").authenticated()
-                        .anyRequest().permitAll()
+                        .requestMatchers("/api/users/**").hasAnyRole("USER" , "ADMIN")
+
+                        .requestMatchers("/actuator/**").permitAll()
+                        .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 

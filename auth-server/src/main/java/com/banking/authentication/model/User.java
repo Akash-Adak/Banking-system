@@ -17,11 +17,14 @@ public class User {
     private UUID id;
 
     @Column(unique = true)
+    @NonNull
     private String username;
 
+    @NonNull
     private String password;
-
-    private String roles; // USER or ADMIN
-
+    @NonNull
+    private String roles;
+    @NonNull
+     private String phone;
 
 }

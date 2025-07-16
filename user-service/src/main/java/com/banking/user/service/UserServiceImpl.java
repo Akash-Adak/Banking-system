@@ -4,8 +4,10 @@ import com.banking.user.model.User;
 import com.banking.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -22,6 +24,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Optional<User> getUserByUsername(String username) {
+
         return userRepository.findByUsername(username);
     }
 
@@ -37,6 +40,13 @@ public class UserServiceImpl implements UserService {
             old.setFullname(user.getFullname());
             return userRepository.save(old);
 
+    }
+
+    @Override
+    public List<User> getAll() {
+
+      List<User> list=userRepository.findAll();
+      return list;
     }
 
 //    @Override
