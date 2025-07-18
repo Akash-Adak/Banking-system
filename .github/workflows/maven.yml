@@ -1,0 +1,38 @@
+name: Maven Build
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+permissions:
+  contents: read
+  actions: read
+  security-events: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
+      - name: Build with Maven
+        run: mvn clean install
+
+      # Optional Dependency Submission — safe for GHAS only
+      - name: Submit dependency snapshot (optional)
+        if: github.repository_owner == 'Akash-Adak' && github.event_name == 'push'
+        uses: advanced-security/maven-dependency-submission-action@v3
+        with:
+          directory: .
+          ignore-maven-wrapper: true
+          snapshot-include-file-name: true

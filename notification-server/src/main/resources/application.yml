@@ -16,7 +16,7 @@ spring:
     host: smtp.gmail.com
     port: 587
     username: akashadak0029@gmail.com
-    password: drlm zilr eavj frgf
+    password: xxxxxx
     properties:
       mail:
         smtp:
@@ -39,11 +39,7 @@ eureka :
       defaultZone: http://localhost:8761/eureka
       fetch-registry: true
       register-with-eureka: true
-fast2sms:
-  api:
-    key: RL36xS1EN9ZGCqd7XHWb45orPDhKcm8uekOaBg2nAYjFzJUV0vP7EB38A5CrsOnyghx2TXGkJwF6Mfea
-  sender-id: FSTSMS
-  route: q
+
 twilio:
   accountSid: YOUR_TWILIO_ACCOUNT_SID
   authToken: YOUR_TWILIO_AUTH_TOKEN
