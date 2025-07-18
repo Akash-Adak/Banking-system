@@ -1,6 +1,6 @@
-package com.banking.user.controller;
+package com.banking.notification.kafka;
 
-import com.banking.user.model.MessageRequest;
+//import com.banking.user.model.MessageRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.web.bind.annotation.PostMapping;

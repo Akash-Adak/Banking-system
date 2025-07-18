@@ -1,4 +1,4 @@
-package com.banking.user.kafka;
+package com.banking.notification.kafka;
 
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;

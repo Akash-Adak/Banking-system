@@ -4,13 +4,13 @@ server:
 spring:
   application:
     name: notification
-#  kafka:
-#    bootstrap-servers: localhost:29092
-#    consumer:
-#      group-id: notification-group
-#      auto-offset-reset: earliest
-#      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-#      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: notification-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
 
   mail:
     host: smtp.gmail.com
@@ -40,6 +40,11 @@ eureka :
       fetch-registry: true
       register-with-eureka: true
 fast2sms:
-  api-key: RL36xS1EN9ZGCqd7XHWb45orPDhKcm8uekOaBg2nAYjFzJUV0vP7EB38A5CrsOnyghx2TXGkJwF6Mfea
+  api:
+    key: RL36xS1EN9ZGCqd7XHWb45orPDhKcm8uekOaBg2nAYjFzJUV0vP7EB38A5CrsOnyghx2TXGkJwF6Mfea
   sender-id: FSTSMS
   route: q
+twilio:
+  accountSid: YOUR_TWILIO_ACCOUNT_SID
+  authToken: YOUR_TWILIO_AUTH_TOKEN
+  fromNumber: YOUR_TWILIO_PHONE_NUMBER

@@ -19,6 +19,13 @@ spring:
 
   kafka:
     bootstrap-servers: localhost:9092
+    consumer:
+      group-id: notification-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+
+
 jwt:
   secret: U2VjdXJlS2V5Rm9yQmFua2luZ0FwcFNob3VsZEJlQmFzZTY0
   expiration: 3600000
