@@ -7,6 +7,7 @@ import com.banking.authentication.model.User;
 import com.banking.authentication.model.Userdto;
 import com.banking.authentication.repository.UserRepository;
 import com.banking.authentication.response.UserResponse;
+import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -27,6 +28,7 @@ public class AuthService {
     private final PasswordEncoder encoder;
     private final JwtUtil jwtUtil;
     private final RestTemplate restTemplate;
+    private final KafkaProducerService kafkaProducerService;
     public String register(RegisterRequest request) throws Exception{
         var user = User.builder()
                 .username(request.getUsername())
@@ -56,6 +58,16 @@ public class AuthService {
         }
 
         repo.save(user);
+
+        RegisterRequest event = new RegisterRequest();
+        event.setUsername(user.getUsername());
+//        event.setEmail("akash@example.com");
+        event.setPhone(user.getPhone());
+
+        String json = new Gson().toJson(event);
+        kafkaProducerService.sendMessage("user-registered", json);
+
+
         return token;
     }
 

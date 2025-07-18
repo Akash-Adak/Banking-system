@@ -1,7 +1,6 @@
 package com.banking.user.controller;
 
-import com.banking.user.config.KafkaProducerConfig;
-import com.banking.user.kafka.KafkaProducer;
+//import com.banking.user.kafka.KafkaProducer;
 import com.banking.user.service.UserService;
 import com.banking.user.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,9 +18,6 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @Autowired
-    private KafkaProducer kafkaProducer;
-
     @PostMapping("/create-user")
     public ResponseEntity<?> createUser(@RequestBody User user) {
         String jwtUsername = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -33,7 +29,6 @@ public class UserController {
 
        User saved= userService.createUser(user);
 
-        kafkaProducer.sendUserCreatedEvent(saved.getUsername());
         return new ResponseEntity<>(saved,HttpStatus.CREATED);
     }
 
@@ -63,7 +58,6 @@ public class UserController {
 
         User saved= userService.UpdateUser(user);
 
-        kafkaProducer.sendUserUpdateEvent(saved.getUsername());
         return new ResponseEntity<>(saved,HttpStatus.OK);
     }
 

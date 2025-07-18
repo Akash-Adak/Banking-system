@@ -1,4 +1,4 @@
-package com.banking.user.config;
+package com.banking.notification.kafka;
 
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
