@@ -6,6 +6,7 @@ import com.banking.authentication.model.RegisterRequest;
 import com.banking.authentication.model.User;
 import com.banking.authentication.model.Userdto;
 import com.banking.authentication.repository.UserRepository;
+import com.banking.authentication.response.RegisterRequestResponse;
 import com.banking.authentication.response.UserResponse;
 import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,7 @@ import org.springframework.web.client.RestTemplate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -30,9 +32,11 @@ public class AuthService {
     private final RestTemplate restTemplate;
     private final KafkaProducerService kafkaProducerService;
     public String register(RegisterRequest request) throws Exception{
+
         var user = User.builder()
                 .username(request.getUsername())
                 .password(encoder.encode(request.getPassword()))
+                .email(request.getEmail())
                 .roles(request.getRole() != null ? request.getRole() : "USER")
                 .phone(request.getPhone())
                 .build();
@@ -41,9 +45,10 @@ public class AuthService {
         claims.put("role", user.getRoles());
 
         String token= jwtUtil.generateToken(claims, user.getUsername());
+
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + token);
-        Userdto dto=new Userdto(user.getUsername(),user.getPhone());
+        Userdto dto=new Userdto(user.getUsername(),user.getPhone(),user.getEmail());
         HttpEntity<Userdto> entity = new HttpEntity<>(dto, headers);
 
         ResponseEntity<UserResponse> response = restTemplate.exchange(
@@ -59,13 +64,13 @@ public class AuthService {
 
         repo.save(user);
 
-        RegisterRequest event = new RegisterRequest();
-        event.setUsername(user.getUsername());
-//        event.setEmail("akash@example.com");
-        event.setPhone(user.getPhone());
+        RegisterRequestResponse event = new RegisterRequestResponse();
+        event.setUsername(request.getUsername());
+        event.setEmail(request.getEmail());
+        event.setBody("User Register Successfully 🎉🎉");
 
         String json = new Gson().toJson(event);
-        kafkaProducerService.sendMessage("user-registered", json);
+        kafkaProducerService.sendUserRegistered("user-registered", json);
 
 
         return token;
@@ -80,12 +85,16 @@ public class AuthService {
         Map<String, Object> claims = new HashMap<>();
         claims.put("username", user.getUsername());
         claims.put("role", user.getRoles());
+
+        RegisterRequestResponse event = new RegisterRequestResponse();
+        event.setUsername(user.getUsername());
+        event.setEmail(user.getEmail());
+        event.setBody("Login Successfully");
+        String json = new Gson().toJson(event);
+        kafkaProducerService.sendLoginSuccess("user-registered", json);
+
         return jwtUtil.generateToken(claims, user.getUsername());
 
     }
 
-    public List<User> getUserDetails() {
-       List<User> list=repo.findAll();
-       return list;
-    }
 }

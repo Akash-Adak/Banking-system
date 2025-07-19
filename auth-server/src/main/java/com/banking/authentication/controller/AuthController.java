@@ -4,6 +4,7 @@ package com.banking.authentication.controller;
 import com.banking.authentication.model.LoginRequest;
 import com.banking.authentication.model.RegisterRequest;
 import com.banking.authentication.model.User;
+import com.banking.authentication.repository.UserRepository;
 import com.banking.authentication.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,9 +19,16 @@ public class AuthController {
 
     @Autowired
     private AuthService authService;
-
+    @Autowired
+    private UserRepository userRepository;
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody RegisterRequest request) throws Exception{
+
+        if(userRepository.findByUsername(request.getUsername()).isPresent() ||
+                userRepository.findByEmail(request.getEmail()).isPresent()||
+         userRepository.findByPhone(request.getPhone()).isPresent()){
+            throw new Exception("user already present");
+        }
           String  res=  authService.register(request);
           return new ResponseEntity<>(res, HttpStatus.CREATED);
     }
@@ -33,15 +41,4 @@ public class AuthController {
        return new ResponseEntity<>(s,HttpStatus.OK);
     }
 
-    @GetMapping("/user-details")
-    public ResponseEntity<List<User>> getDetails(){
-        List<User> user=authService.getUserDetails();
-       return new ResponseEntity<>(user,HttpStatus.FOUND);
-
-    }
-
-//    @DeleteMapping
-//    public ResponseEntity<?> logout(){
-//
-//    }
 }

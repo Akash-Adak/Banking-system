@@ -9,4 +9,5 @@ public class TransactionCompletedEvent {
     private String phone;
     private String transactionId;
     private double amount;
+    private String body;
 }

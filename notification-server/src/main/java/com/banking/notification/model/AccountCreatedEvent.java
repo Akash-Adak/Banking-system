@@ -8,4 +8,5 @@ public class AccountCreatedEvent {
     private String email;
     private String phone;
     private String accountNumber;
+    private String body;
 }
