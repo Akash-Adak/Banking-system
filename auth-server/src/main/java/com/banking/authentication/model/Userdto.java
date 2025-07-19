@@ -9,9 +9,11 @@ public class Userdto {
     private String username;
   // USER or ADMIN
     private String phone;
+    private String email;
 
-    public Userdto(String username, String phone) {
-        this.username=username;
-        this.phone=phone;
+    public Userdto(String username, String phone, String email) {
+        this.username = username;
+        this.phone = phone;
+        this.email = email;
     }
 }

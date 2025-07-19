@@ -27,4 +27,6 @@ public class User {
     @NonNull
      private String phone;
 
+    private String email;
+
 }

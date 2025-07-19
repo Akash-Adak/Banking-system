@@ -8,4 +8,5 @@ public class UserRegisteredEvent {
     private String email;
     private String phone;
     private String username;
+    private String body;
 }
