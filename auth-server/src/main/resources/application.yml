@@ -5,7 +5,7 @@ spring:
   application:
     name: auth
   datasource:
-    url: jdbc:mysql://localhost:3306/authdb
+    url: jdbc:mysql://localhost:3306/banking_system
     username: root
     password: Akash@2003
     driver-class-name: com.mysql.cj.jdbc.Driver

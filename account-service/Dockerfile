@@ -1,0 +1,9 @@
+FROM openjdk:17-jdk-alpine
+
+WORKDIR /app
+
+COPY target/account-service-0.0.1-SNAPSHOT.jar account-service.jar
+
+EXPOSE 8083
+
+ENTRYPOINT ["java", "-jar", "account-service.jar"]
