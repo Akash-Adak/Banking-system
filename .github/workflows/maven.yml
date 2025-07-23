@@ -27,12 +27,3 @@ jobs:
 
       - name: Build with Maven
         run: mvn clean install
-
-      # Optional Dependency Submission — safe for GHAS only
-      - name: Submit dependency snapshot (optional)
-        if: github.repository_owner == 'Akash-Adak' && github.event_name == 'push'
-        uses: advanced-security/maven-dependency-submission-action@v3
-        with:
-          directory: .
-          ignore-maven-wrapper: true
-          snapshot-include-file-name: true
