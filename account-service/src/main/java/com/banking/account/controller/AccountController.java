@@ -5,6 +5,7 @@ import com.banking.account.service.AccountService;
 import com.banking.account.model.Account;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -12,10 +13,9 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/accounts")
-@RequiredArgsConstructor
 public class AccountController {
-
-    private final AccountService accountService;
+    @Autowired
+    private  AccountService accountService;
 
     @PostMapping
     public ResponseEntity<Account> createAccount(HttpServletRequest request) {

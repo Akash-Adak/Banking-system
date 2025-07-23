@@ -6,6 +6,7 @@ import com.banking.account.repository.AccountRepository;
 import com.banking.account.response.UserResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -17,14 +18,15 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
-@Slf4j
 @Service
-@RequiredArgsConstructor
+
 public class AccountService {
+    @Autowired
+    private  AccountRepository repository;
 
-    private final AccountRepository repository;
 
-   private final RestTemplate restTemplate;
+    @Autowired
+   private  RestTemplate restTemplate;
 
     public Account createAccount(String username,String token) {
         HttpHeaders headers = new HttpHeaders();
@@ -41,7 +43,6 @@ public class AccountService {
         );
 
         UserResponse userResponse = response.getBody();
-            log.info("name :",userResponse.getFullname());
         // 2. Create and save account
         Account account = new Account();
         account.setUserId("BANK" + ThreadLocalRandom.current().nextInt(100000, 999999));

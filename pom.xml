@@ -30,6 +30,7 @@
 
 		<module>cloud</module>
         <module>auth-server</module>
+        <module>admin</module>
 
     </modules>
 
