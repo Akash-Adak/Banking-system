@@ -5,7 +5,7 @@ spring:
   application:
     name: user
   datasource:
-    url: jdbc:mysql://localhost:3306/userdb
+    url: jdbc:mysql://localhost:3306/banking_system
     username: root
     password: Akash@2003
   jpa:
