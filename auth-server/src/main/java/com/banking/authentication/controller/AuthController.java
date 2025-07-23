@@ -3,15 +3,13 @@ package com.banking.authentication.controller;
 
 import com.banking.authentication.model.LoginRequest;
 import com.banking.authentication.model.RegisterRequest;
-import com.banking.authentication.model.User;
 import com.banking.authentication.repository.UserRepository;
+
 import com.banking.authentication.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/auth")

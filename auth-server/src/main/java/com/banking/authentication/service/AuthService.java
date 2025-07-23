@@ -10,6 +10,7 @@ import com.banking.authentication.response.RegisterRequestResponse;
 import com.banking.authentication.response.UserResponse;
 import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -24,22 +25,25 @@ import java.util.Map;
 import java.util.Optional;
 
 @Service
-@RequiredArgsConstructor
-public class AuthService {
-    private final UserRepository repo;
-    private final PasswordEncoder encoder;
-    private final JwtUtil jwtUtil;
-    private final RestTemplate restTemplate;
-    private final KafkaProducerService kafkaProducerService;
-    public String register(RegisterRequest request) throws Exception{
 
-        var user = User.builder()
-                .username(request.getUsername())
-                .password(encoder.encode(request.getPassword()))
-                .email(request.getEmail())
-                .roles(request.getRole() != null ? request.getRole() : "USER")
-                .phone(request.getPhone())
-                .build();
+public class AuthService {
+    @Autowired
+    private  UserRepository repo;
+    @Autowired
+    private  PasswordEncoder encoder;
+    @Autowired
+    private  JwtUtil jwtUtil;
+    @Autowired
+    private  RestTemplate restTemplate;
+    @Autowired
+    private  KafkaProducerService kafkaProducerService;
+    public String register(RegisterRequest request) throws Exception{
+        User user=new User();
+        user.setUsername(request.getUsername());
+        user.setPhone(request.getPhone());
+        user.setPassword(encoder.encode(request.getPassword()));
+        user.setEmail(request.getEmail());
+        user.setRoles(request.getRole()!=null ? request.getRole():"USER");
         Map<String, Object> claims = new HashMap<>();
         claims.put("username", user.getUsername());
         claims.put("role", user.getRoles());
@@ -98,3 +102,4 @@ public class AuthService {
     }
 
 }
+

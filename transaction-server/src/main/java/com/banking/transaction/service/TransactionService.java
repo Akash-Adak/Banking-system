@@ -40,14 +40,14 @@ public class TransactionService {
         String to = request.getToAccount();
         Double amount = request.getAmount();
 
-        Transaction transaction = Transaction.builder()
-                .fromAccount(from)
-                .toAccount(to)
-                .amount(amount)
-                .type(type)
-                .timestamp(LocalDateTime.now())
-                .status("FAILED")
-                .build();
+        Transaction transaction = new Transaction();
+           transaction.setFromAccount(request.getFromAccount());
+           transaction.setToAccount(request.getToAccount());
+           transaction.setAmount(request.getAmount());
+           transaction.setStatus("FAILED");
+           transaction.setType(request.getType());
+           transaction.setTimestamp(LocalDateTime.now());
+
 
         try {
             switch (type) {
