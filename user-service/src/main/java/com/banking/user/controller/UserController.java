@@ -1,13 +1,11 @@
 package com.banking.user.controller;
 
 //import com.banking.user.kafka.KafkaProducer;
-import com.banking.user.service.UserService;
 import com.banking.user.model.User;
+import com.banking.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
@@ -61,18 +59,9 @@ public class UserController {
         return new ResponseEntity<>(saved,HttpStatus.OK);
     }
 
-    @GetMapping("/getAll")
-    public ResponseEntity<?> getAllUsers() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        String roles = String.valueOf(auth.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
-                .toList());
+    @PutMapping("/{accountNumber}")
+    public void addAccount(@PathVariable String accountNumber){
 
-        if (!roles.equals("ADMIN")) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body("You cannot access user details");
-        }
-       return new ResponseEntity<>(userService.getAll(),HttpStatus.FOUND);
-    }
-
+        userService.addAccountNumber(accountNumber);
+ }
 }

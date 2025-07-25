@@ -13,5 +13,5 @@ public class Apponfig {
         public RestTemplate restTemplate(){
             return new RestTemplate();
         }
-    }
+}
 

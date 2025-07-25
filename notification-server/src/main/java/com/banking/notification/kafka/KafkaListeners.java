@@ -11,18 +11,17 @@ public class KafkaListeners {
     @Autowired
     private NotificationService handler;
 
-    @KafkaListener(topics = "user-registered", groupId = "notification-group")
+    @KafkaListener(topics = "banking-users", groupId = "notification-group")
     public void userRegistered(String message) {
-        System.out.println("message received:"+ message);
         handler.processUserRegistered(message);
     }
 
-    @KafkaListener(topics = "account-created", groupId = "notification-group")
+    @KafkaListener(topics = "banking-account", groupId = "notification-group")
     public void accountCreated(String message) {
         handler.processAccountCreated(message);
     }
 
-    @KafkaListener(topics = "transaction-completed", groupId = "notification-group")
+    @KafkaListener(topics = "banking-transaction", groupId = "notification-group")
     public void transactionCompleted(String message) {
         handler.processTransaction(message);
     }

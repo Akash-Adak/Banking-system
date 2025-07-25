@@ -19,6 +19,7 @@ public class AuthController {
     private AuthService authService;
     @Autowired
     private UserRepository userRepository;
+
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody RegisterRequest request) throws Exception{
 
@@ -35,7 +36,7 @@ public class AuthController {
     public ResponseEntity<?> login(@RequestBody LoginRequest request) throws Exception{
         String s=authService.login(request);
        if(s==null)
-           return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+           return new ResponseEntity<>("User not found! register first",HttpStatus.NOT_FOUND);
        return new ResponseEntity<>(s,HttpStatus.OK);
     }
 

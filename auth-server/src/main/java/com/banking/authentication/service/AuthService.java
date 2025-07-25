@@ -74,7 +74,7 @@ public class AuthService {
         event.setBody("User Register Successfully 🎉🎉");
 
         String json = new Gson().toJson(event);
-        kafkaProducerService.sendUserRegistered("user-registered", json);
+        kafkaProducerService.sendUserRegistered("banking-users", json);
 
 
         return token;
@@ -95,7 +95,7 @@ public class AuthService {
         event.setEmail(user.getEmail());
         event.setBody("Login Successfully");
         String json = new Gson().toJson(event);
-        kafkaProducerService.sendLoginSuccess("user-registered", json);
+        kafkaProducerService.sendLoginSuccess("banking-users", json);
 
         return jwtUtil.generateToken(claims, user.getUsername());
 
