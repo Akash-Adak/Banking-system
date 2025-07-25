@@ -29,32 +29,31 @@ public class AccountService {
    private  RestTemplate restTemplate;
 
     public Account createAccount(String username,String token) {
+
+        Account account = new Account();
+
+        account.setAccountNumber(generateBankAccountNumber());
+        account.setBalance(1000.0);
+
+
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", token);
 
         HttpEntity<Void> entity = new HttpEntity<>(headers);
 
         ResponseEntity<UserResponse> response = restTemplate.exchange(
-                "http://USER/api/users/{username}",
-                HttpMethod.GET,
+                "http://USER/api/users/{accountNumber}",
+                HttpMethod.PUT,
                 entity,
                 UserResponse.class,
-                username
+                account.getAccountNumber()
         );
-
-        UserResponse userResponse = response.getBody();
-        // 2. Create and save account
-        Account account = new Account();
-        account.setUserId("BANK" + ThreadLocalRandom.current().nextInt(100000, 999999));
-        account.setAccountNumber(generateBankAccountNumber());
-        account.setBalance(5000.0);
-        account.setName(userResponse.getFullname()); // if Account has name field
 
         return repository.save(account);
     }
 
     private String generateBankAccountNumber() {
-        String bankCode = "8940"; // fixed code for your bank/system
+        String bankCode = "8940";
         long randomPart = ThreadLocalRandom.current().nextLong(1000000000L, 9999999999L); // 10-digit number
         return bankCode + randomPart;
     }
@@ -65,11 +64,7 @@ public class AccountService {
 
         return repository.findByAccountNumber(accountNumber);
     }
-    public String generateBankAccountNumbe() {
-        String bankCode = "8940"; // can be static per your bank
-        long randomNumber = ThreadLocalRandom.current().nextLong(1000000000L, 9999999999L);
-        return bankCode + randomNumber;
-    }
+
 
     public boolean debit(String accountNumber, Double amount) {
         Optional<Account> optional = Optional.ofNullable(repository.findByAccountNumber(accountNumber));

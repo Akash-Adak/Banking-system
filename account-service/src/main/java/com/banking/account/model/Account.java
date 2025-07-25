@@ -14,10 +14,9 @@ public class Account {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;
-    private String userId;
     private String accountNumber;
     private Double balance;
+
 
     public Long getId() {
         return id;
@@ -27,21 +26,6 @@ public class Account {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
 
     public String getAccountNumber() {
         return accountNumber;

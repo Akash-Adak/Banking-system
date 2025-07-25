@@ -25,12 +25,14 @@ public class User {
     private String address;
     private String kycStatus; // PENDING, VERIFIED, REJECTED
 
-    public Long getId() {
-        return id;
+    private String accountNumber;
+
+    public String getAccountNumber() {
+        return accountNumber;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setAccountNumber(String accountNumber) {
+        this.accountNumber = accountNumber;
     }
 
     public String getUsername() {
