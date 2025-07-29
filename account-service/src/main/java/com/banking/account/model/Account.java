@@ -15,7 +15,17 @@ public class Account {
     private Long id;
 
     private String accountNumber;
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
     private Double balance;
+    private String username;
 
 
     public Long getId() {

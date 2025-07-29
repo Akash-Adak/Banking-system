@@ -12,8 +12,6 @@ spring:
     show-sql: true
 
 
-  kafka:
-    bootstrap-servers: localhost:9092
 
 jwt:
   secret: U2VjdXJlS2V5Rm9yQmFua2luZ0FwcFNob3VsZEJlQmFzZTY0
@@ -25,6 +23,7 @@ eureka :
       defaultZone: http://localhost:8761/eureka
       fetch-registry: true
       register-with-eureka: true
+
 
 
 management:

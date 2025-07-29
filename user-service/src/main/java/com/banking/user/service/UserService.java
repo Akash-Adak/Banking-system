@@ -5,6 +5,8 @@ import com.banking.user.repository.UserRepository;
 import com.banking.user.response.RegisterRequestResponse;
 import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -13,6 +15,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -23,15 +26,18 @@ public class UserService {
     @Autowired
     private  KafkaProducerService kafkaProducerService;
 
+
     public User createUser(User user) {
+
+
         return userRepository.save(user);
     }
 
 
     public Optional<User> getUserByUsername(String username) {
+
         return userRepository.findByUsername(username);
     }
-
 
     public User UpdateUser(User user) {
             User old=userRepository.findByUsername(user.getUsername()).orElseThrow();
@@ -71,5 +77,10 @@ public class UserService {
               old.setFullname(old.getFullname());
               old.setAccountNumber(accountNumber);
               userRepository.save(old);
+    }
+
+    public Optional<User> getuserbyaccountnumber(String accountNumber) {
+
+        return userRepository.findByAccountNumber(accountNumber);
     }
 }

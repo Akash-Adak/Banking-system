@@ -1,11 +1,11 @@
 package com.banking.transaction.service;
 
 import com.banking.transaction.model.BalanceUpdateRequest;
-import com.banking.transaction.kafka.KafkaProducer;
 import com.banking.transaction.model.TransactionRequest;
 import com.banking.transaction.model.TransactionResponse;
 import com.banking.transaction.model.Transaction;
 import com.banking.transaction.repository.TransactionRepository;
+//import org.apache.kafka.clients.producer.KafkaProducer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -24,8 +24,8 @@ public class TransactionService {
     @Autowired
     private RestTemplate restTemplate;
 
-    @Autowired
-    private KafkaProducer kafkaProducer;
+//    @Autowired
+//    private KafkaProducer kafkaProducer;
 
     public TransactionResponse processTransaction(TransactionRequest request, String token) {
 
@@ -72,7 +72,7 @@ public class TransactionService {
             }
 
             Transaction saved = transactionRepository.save(transaction);
-            kafkaProducer.publishTransactionEvent(saved);
+//            kafkaProducer.publishTransactionEvent(saved);
 
             return new TransactionResponse("SUCCESS", "Transaction completed", saved.getId());
 
@@ -85,6 +85,7 @@ public class TransactionService {
 
 
     public List<Transaction> getTransactionHistory(String account) {
+
         return transactionRepository.findByFromAccount(account);
     }
 }

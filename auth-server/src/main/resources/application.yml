@@ -21,9 +21,19 @@ spring:
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
+  cache:
+    type: redis
+
+  data:
+    redis:
+      host: redis-16748.c301.ap-south-1-1.ec2.redns.redis-cloud.com
+      port: 16748
+      password: LKIudJQ9HnyyOzJQZdBVf3BjDWQSHyac
+      timeout: 3000
+
 jwt:
-  secret: U2VjdXJlS2V5Rm9yQmFua2luZ0FwcFNob3VsZEJlQmFzZTY0
   expiration: 3600000
+
 eureka :
   client :
     service-url :
@@ -40,5 +50,7 @@ management:
     export:
       prometheus:
         enabled: true
+
+
 
 
