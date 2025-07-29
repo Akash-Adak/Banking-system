@@ -2,12 +2,18 @@ package com.banking.user.controller;
 
 //import com.banking.user.kafka.KafkaProducer;
 import com.banking.user.model.User;
+import com.banking.user.service.RedisService;
 import com.banking.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/users")
@@ -16,34 +22,48 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private RedisService redisService;
+
     @PostMapping("/create-user")
     public ResponseEntity<?> createUser(@RequestBody User user) {
+
         String jwtUsername = SecurityContextHolder.getContext().getAuthentication().getName();
 
         if (!jwtUsername.equals(user.getUsername())) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body("You cannot create a user for someone else.");
         }
-
        User saved= userService.createUser(user);
-
         return new ResponseEntity<>(saved,HttpStatus.CREATED);
     }
 
-
-
     @GetMapping("/{username}")
     public ResponseEntity<?> getUser(@PathVariable String username) {
+
         String jwtUsername = SecurityContextHolder.getContext().getAuthentication().getName();
 
         if (!jwtUsername.equals(username)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body("You cannot create a user for someone else.");
+                    .body("You cannot access another user's data.");
         }
-        return userService.getUserByUsername(username)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+
+        User cachedUser = redisService.get(username, User.class);
+        if (cachedUser != null) {
+            System.out.println("✅ Retrieved from Redis");
+            return new ResponseEntity<>(cachedUser, HttpStatus.FOUND);
+        }
+
+        Optional<User> users = userService.getUserByUsername(username);
+        if (users.isPresent()) {
+            User userObj = users.get();
+            redisService.set(username, userObj, 3600L);
+            return new ResponseEntity<>(userObj, HttpStatus.FOUND);
+        }
+
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
+
 
     @PutMapping
     public ResponseEntity<?> UpdateUser(@RequestBody User user) {
@@ -55,7 +75,6 @@ public class UserController {
         }
 
         User saved= userService.UpdateUser(user);
-
         return new ResponseEntity<>(saved,HttpStatus.OK);
     }
 
@@ -63,5 +82,21 @@ public class UserController {
     public void addAccount(@PathVariable String accountNumber){
 
         userService.addAccountNumber(accountNumber);
- }
+    }
+
+    @GetMapping("/get-by-account/{accountNumber}")
+    public ResponseEntity<?> getByAccountnimber(@PathVariable String accountNumber){
+//        String jwtUsername = SecurityContextHolder.getContext().getAuthentication().getName();
+//
+//        if (!jwtUsername.equals(user.getUsername())) {
+//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+//                    .body("You cannot create a user for someone else.");
+//        }
+       Optional<User> user= userService.getuserbyaccountnumber(accountNumber);
+       if(user.isPresent()) return new ResponseEntity<>(user,HttpStatus.FOUND);
+
+       return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
+
 }
