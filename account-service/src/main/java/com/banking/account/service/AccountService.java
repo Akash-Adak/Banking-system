@@ -24,7 +24,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
 @Service
-@Slf4j
+//@Slf4j
 public class AccountService {
     @Autowired
     private  AccountRepository repository;
@@ -137,7 +137,7 @@ public class AccountService {
         return Optional.ofNullable(repository.findByAccountNumber(accountNumber)).map(account -> {
             account.setBalance(account.getBalance() + amount);
             repository.save(account);
-            log.info("Credited ₹{} to account {}", amount, accountNumber);
+//            log.info("Credited ₹{} to account {}", amount, accountNumber);
 
             HttpHeaders headers = new HttpHeaders();
             headers.set("Authorization", token);
@@ -154,7 +154,7 @@ public class AccountService {
 
                 UserResponse userResponse = response.getBody();
                 if (userResponse == null) {
-                    log.error("User info missing in response for account {}", accountNumber);
+//                    log.error("User info missing in response for account {}", accountNumber);
                     return false;
                 }
 
@@ -175,7 +175,7 @@ public class AccountService {
                 return true;
 
             } catch (HttpClientErrorException | HttpServerErrorException ex) {
-                log.error("Failed to fetch user info for account {}: {}", accountNumber, ex.getMessage());
+//                log.error("Failed to fetch user info for account {}: {}", accountNumber, ex.getMessage());
                 return false;
             }
 

@@ -1,18 +1,13 @@
-server :
-  port : 8761
-spring :
-  application :
-    name : eureka-server
-eureka :
+server:
+  port: 8762
+  address: 0.0.0.0
+
+
+spring:
+  application:
+    name: eureka-server
+
+eureka:
   client:
-    fetch-registry : false
-    register-with-eureka : false
-management:
-  endpoints:
-    web:
-      exposure:
-        include: "*"
-  metrics:
-    export:
-      prometheus:
-        enabled: true
+    register-with-eureka: false
+    fetch-registry: false

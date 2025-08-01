@@ -6,14 +6,22 @@ services:
     container_name: mysql
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: root
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
     ports:
-      - "3306:3306"
+      - "3307:3306"
     volumes:
       - mysql_data:/var/lib/mysql
     networks:
       - bank-net
 
+  redis:
+    image: redis:7.0
+    container_name: redis
+    restart: always
+    ports:
+      - "${REDIS_PORT}:${REDIS_PORT}"
+    networks:
+      - bank-net
 
   kafka:
     image: bitnami/kafka:latest
@@ -30,34 +38,34 @@ services:
       KAFKA_CFG_CONTROLLER_LISTENER_NAMES: CONTROLLER
       ALLOW_PLAINTEXT_LISTENER: "yes"
     ports:
-      - "9092:9092"
+      - "${KAFKA_PORT}:9092"
     volumes:
       - kafka_data:/bitnami/kafka
     networks:
       - bank-net
 
   eureka-server:
-    build: ./eureka-server
+    build: ./cloud
     container_name: eureka-server
     ports:
       - "8761:8761"
     networks:
       - bank-net
 
-  auth-service:
-    build: ./auth-service
-    container_name: auth-service
+  auth-server:
+    build: ./auth-server
+    container_name: auth-server
     depends_on:
       - mysql
       - redis
       - eureka-server
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/authdb
+      SPRING_DATASOURCE_URL: ${AUTH_DB_URL}
       SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: root
+      SPRING_DATASOURCE_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       SPRING_REDIS_HOST: redis
-      SPRING_REDIS_PORT: 6379
-      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
+      SPRING_REDIS_PORT: ${REDIS_PORT}
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: ${EUREKA_URL}
     ports:
       - "8081:8081"
     networks:
@@ -71,11 +79,11 @@ services:
       - kafka
       - eureka-server
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/accountdb
+      SPRING_DATASOURCE_URL: ${ACCOUNT_DB_URL}
       SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: root
-      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
-      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
+      SPRING_DATASOURCE_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:${KAFKA_PORT}
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: ${EUREKA_URL}
     ports:
       - "8082:8082"
     networks:
@@ -88,48 +96,46 @@ services:
       - mysql
       - eureka-server
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/userdb
+      SPRING_DATASOURCE_URL: ${USER_DB_URL}
       SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: root
-      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
+      SPRING_DATASOURCE_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: ${EUREKA_URL}
     ports:
       - "8083:8083"
     networks:
       - bank-net
 
-  transaction-service:
-    build: ./transaction-service
-    container_name: transaction-service
+  transaction-server:
+    build: ./transaction-server
+    container_name: transaction-server
     depends_on:
       - mysql
       - kafka
       - eureka-server
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/transactiondb
+      SPRING_DATASOURCE_URL: ${TRANSACTION_DB_URL}
       SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: root
-      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
-      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
+      SPRING_DATASOURCE_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:${KAFKA_PORT}
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: ${EUREKA_URL}
     ports:
       - "8084:8084"
     networks:
       - bank-net
 
-  notification-service:
-    build: ./notification-service
-    container_name: notification-service
+  notification-server:
+    build: ./notification-server
+    container_name: notification-server
     depends_on:
       - kafka
       - eureka-server
     environment:
-      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
-      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:${KAFKA_PORT}
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: ${EUREKA_URL}
     ports:
       - "8085:8085"
     networks:
       - bank-net
-
-
 
 volumes:
   mysql_data:

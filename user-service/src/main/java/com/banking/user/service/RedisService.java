@@ -23,7 +23,7 @@ public class RedisService {
             if (json == null) return null;
             return objectMapper.readValue(json, clazz);
         } catch (Exception e) {
-            log.error("❌ Error reading from Redis: {}", e.getMessage());
+//            log.error("❌ Error reading from Redis: {}", e.getMessage());
             return null;
         }
     }
@@ -33,7 +33,7 @@ public class RedisService {
             String json = objectMapper.writeValueAsString(value);
             redisTemplate.opsForValue().set(key, json, ttlMinutes, TimeUnit.SECONDS);
         } catch (Exception e) {
-            log.error("❌ Error writing to Redis: {}", e.getMessage());
+//            log.error("❌ Error writing to Redis: {}", e.getMessage());
         }
     }
 }
