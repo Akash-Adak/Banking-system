@@ -12,7 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-@Slf4j
+//@Slf4j
 @RestController
 @RequestMapping("/api/accounts")
 public class AccountController {
@@ -45,7 +45,7 @@ public class AccountController {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         String token1 = (String) redisTemplate.opsForValue().get(username);
         String token = request1.getHeader("Authorization");
-        log.info(token,token1);
+//        log.info(token,token1);
         boolean success = accountService.debit(request.getAccountNumber(), request.getAmount(),token);
         if (success) {
             return ResponseEntity.ok("Debited successfully");
