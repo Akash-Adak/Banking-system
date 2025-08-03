@@ -75,9 +75,10 @@ scrape_configs:
 ```
 
 > 📈 Grafana dashboards provided for Kafka, JVM, API, Redis, MySQL.
-https://github.com/Akash-Adak/Banking-system/blob/6796c77272457ef05d6a9f94badb88068b4b7709/docs/first.png
-(docs/se.png)
-(docs/th.png)
+> ![grafana](https://github.com/Akash-Adak/Banking-system/blob/6796c77272457ef05d6a9f94badb88068b4b7709/docs/first.png)
+> ![grafana](https://github.com/Akash-Adak/Banking-system/blob/9bbbaa504603b0c53201a47baee934f5301d3a3a/docs/se.png)
+> ![grafana](https://github.com/Akash-Adak/Banking-system/blob/9bbbaa504603b0c53201a47baee934f5301d3a3a/docs/th.png)
+
 ---
 
 ## 🔐 Authentication — JWT (RS256)
