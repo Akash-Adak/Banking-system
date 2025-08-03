@@ -75,7 +75,9 @@ scrape_configs:
 ```
 
 > 📈 Grafana dashboards provided for Kafka, JVM, API, Redis, MySQL.
-
+(docs/first.png)
+(docs/se.png)
+(docs/th.png)
 ---
 
 ## 🔐 Authentication — JWT (RS256)
@@ -93,7 +95,7 @@ scrape_configs:
 | ----------------------- | --------------------- | ---------------------- | ------------------------------- |
 | `user.registered`       | `user-service`        | `notification-service` | Notify on user registration     |
 | `transaction.completed` | `transaction-service` | `notification-service` | Notify on completed transaction |
-| `loan.approved`         | `loan-service`        | `notification-service` | Notify on loan approval         |
+| `credit/debit`          | `account-service`     | `notification-service` | Notify on credit or debit       |
 
 > Kafka makes the system **asynchronous, scalable, and decoupled**.
 
