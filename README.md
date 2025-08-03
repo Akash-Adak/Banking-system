@@ -75,7 +75,7 @@ scrape_configs:
 ```
 
 > 📈 Grafana dashboards provided for Kafka, JVM, API, Redis, MySQL.
-(docs/first.png)
+docs/first.png
 (docs/se.png)
 (docs/th.png)
 ---
