@@ -31,3 +31,6 @@ build/
 /jwt-secrets
 ### VS Code ###
 .vscode/
+
+**/src/main/resources/private.key
+**/src/main/resources/public.key
