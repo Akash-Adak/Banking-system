@@ -13,7 +13,7 @@
     </parent>
 
     <groupId>com.banking</groupId>
-    <artifactId>cloud</artifactId>
+    <artifactId>eureka-server</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>eureka-server</name>
     <description>Banking System Eureka Discovery Server</description>

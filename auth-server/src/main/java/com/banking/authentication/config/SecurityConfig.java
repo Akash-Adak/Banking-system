@@ -17,7 +17,7 @@ import com.banking.authentication.repository.UserRepository;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-        @Autowired
+    @Autowired
     private  UserRepository userRepository;
 
     @Bean
@@ -25,11 +25,11 @@ public class SecurityConfig {
         return http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/**").permitAll()
+                                .requestMatchers("/api/auth/**").permitAll()
 //                        .requestMatchers("/api/admin/**").authenticated()
 
                                 .requestMatchers("/actuator/**").permitAll()
-                        .anyRequest().authenticated()
+                                .anyRequest().authenticated()
                 )
                 .build();
     }

@@ -38,7 +38,7 @@ spring:
 #      ssl: true
 
 jwt:
-  secret: U2VjdXJlS2V5Rm9yQmFua2luZ0FwcFNob3VsZEJlQmFzZTY0
+  public-key-location: jwt-secrets/public-key.pem
   expiration: 3600000
 
 eureka:
