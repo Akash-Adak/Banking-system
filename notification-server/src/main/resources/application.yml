@@ -16,7 +16,7 @@ spring:
     host: smtp.gmail.com
     port: 587
     username: akashadak0029@gmail.com
-    password: xxxxxx
+    password:
     properties:
       mail:
         smtp:
@@ -39,8 +39,3 @@ eureka :
       defaultZone: http://localhost:8761/eureka
       fetch-registry: true
       register-with-eureka: true
-
-twilio:
-  accountSid: YOUR_TWILIO_ACCOUNT_SID
-  authToken: YOUR_TWILIO_AUTH_TOKEN
-  fromNumber: YOUR_TWILIO_PHONE_NUMBER

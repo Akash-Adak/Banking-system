@@ -16,10 +16,12 @@
     <description>Handles all transaction-related operations</description>
 
     <properties>
-        <maven.compiler.source>21</maven.compiler.source>
-        <maven.compiler.target>21</maven.compiler.target>
+        <java.version>17</java.version>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <spring.boot.version>3.2.4</spring.boot.version>
+        <jjwt.version>0.11.5</jjwt.version>
+        <spring-boot.version>3.2.5</spring-boot.version> <!-- ✅ ADDED -->
     </properties>
 
     <dependencies>
@@ -41,11 +43,7 @@
         </dependency>
 
 
-        <!-- Kafka -->
-<!--        <dependency>-->
-<!--            <groupId>org.springframework.kafka</groupId>-->
-<!--            <artifactId>spring-kafka</artifactId>-->
-<!--        </dependency>-->
+
 
         <dependency>
             <groupId>org.springdoc</groupId>
@@ -137,23 +135,33 @@
 
 
     </dependencies>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring-boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <build>
         <plugins>
-            <!-- Spring Boot Maven Plugin -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>${spring.boot.version}</version>
-            </plugin>
-
-            <!-- Compiler Plugin -->
-            <plugin>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <release>21</release>
-                </configuration>
+                <version>${spring-boot.version}</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
+
 </project>

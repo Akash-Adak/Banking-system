@@ -1,0 +1,15 @@
+services:
+  eureka-server:
+    container_name: eureka-server
+    image: eureka-server:01
+    build:
+      context: .
+    hostname: eureka-server
+    ports:
+      - "8761:8761"
+    networks:
+      - banking-network
+
+networks:
+  banking-network:
+    driver: bridge

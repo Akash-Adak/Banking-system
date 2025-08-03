@@ -27,12 +27,12 @@
 		<module>transaction-server</module>
         <module>notification-server</module>
 
-		<module>cloud</module>
+<!--		<module>cloud</module>-->
         <module>auth-server</module>
+        <module>eureka-server</module>
 
 
-
-	</modules>
+    </modules>
 
 	<properties>
 		<java.version>21</java.version>
