@@ -1,76 +1,167 @@
+# 💳 Banking Management System — Scalable Microservices Architecture
 
-# 💳 Banking Management System — Microservices Project
-
-A production-grade **Banking Management System** using **Spring Boot Microservices**, **Kafka**, **Docker**, **JWT**, **Monitoring with Prometheus + Grafana**, and **CI/CD via GitHub Actions**.
-
----
-
-## 🚀 Features
-
-| Module             | Description                                                              |
-|--------------------|--------------------------------------------------------------------------|
-| 🔐 `auth-service`     | JWT RS256 authentication + Redis cache                                |
-| 👤 `user-service`     | Manage users and their profiles                                        |
-| 💼 `account-service`  | Create & manage accounts with balances                                 |
-| 💰 `transaction-service` | Transfer, deposit, withdraw with Kafka events                     |
-| 📢 `notification-service` | Sends SMS (Fast2SMS/Twilio) and email notifications asynchronously |
-
+A production-ready **Banking Management System** built using **Spring Boot Microservices**, **Kafka**, **Docker**, **JWT (RS256)**, with robust **Monitoring via Prometheus & Grafana**, **Service Discovery**, and **CI/CD via GitHub Actions**.
 
 ---
 
-## ⚙️ Tech Stack
+## 🚀 Core Features
 
-- **Java 21 + Spring Boot 3.2.x**
-- **Spring Cloud (Eureka)**
-- **Spring Security + RS256 JWT**
-- **Apache Kafka** (async messaging)
-- **MySQL + Redis**
-- **Docker + Docker Compose**
-- **Prometheus + Grafana** (Monitoring)
-- **GitHub Actions** (CI/CD Pipelines)
-- **Swagger (SpringDoc OpenAPI)**
+| Microservice              | Role                                                            |
+| ------------------------- | --------------------------------------------------------------- |
+| 🔐 `auth-service`         | Handles RS256 JWT Authentication, Redis-backed token revocation |
+| 👤 `user-service`         | Manages users, profiles, and role-based permissions             |
+| 💼 `account-service`      | Creates/manages accounts with balance tracking                  |
+| 💰 `transaction-service`  | Handles transfers, deposits, withdrawals (via Kafka events)     |
+| 📢 `notification-service` | Sends SMS/email alerts on events (via Kafka listeners)          |
+
 
 ---
 
-## 🧭 Architecture
+## ⚙️ Technology Stack
+
+* Java 21 + Spring Boot 3.2.x
+* Spring Cloud (Eureka, OpenFeign, Config)
+* Kafka + Spring Kafka
+* Spring Security + RS256 JWT
+* Redis (for caching and token blacklist)
+* MySQL (primary DB)
+* Docker & Docker Compose
+* Prometheus + Grafana for observability
+* GitHub Actions for CI/CD pipelines
+
+---
+
+## 🧭 Microservices Architecture
+
+![Banking System Architecture](docs/architecture-diagram.png)
+*Illustrates API Gateway, service communication, Kafka event flow, and notification pipeline.*
 
 ```
-
-\[User] → \[API Gateway] → \[Auth/User/Account/Transaction/... Services]
-↓
-\[Kafka Broker]
-↓
-\[Notification Service]
-
-````
+[Client] → [API Gateway] → [Auth/User/Account/Transaction/... Services]
+                          ↘
+                         [Kafka Broker] → [Notification Service]
+                                         ↘
+                                       [Email/SMS Providers]
+```
 
 ---
 
-## 📦 DevOps & Observability
+## 🔍 Monitoring (Prometheus + Grafana)
 
-### 🔍 Prometheus + Grafana
-All services expose `/actuator/prometheus` metrics for Prometheus to scrape.
+Each service exposes metrics via `/actuator/prometheus`.
 
-#### Grafana Dashboards:
-- JVM memory, CPU, GC stats
-- Kafka consumer lag
-- API performance
-- Uptime per microservice
+### ✅ Metrics Tracked:
 
-#### Prometheus Config (sample):
+* JVM memory, GC, threads
+* API response time, throughput
+* Eureka instance health
+* Kafka consumer lag
+* DB & cache health
+
+### 🔧 Prometheus `prometheus.yml` Sample:
+
 ```yaml
 scrape_configs:
-  - job_name: 'spring-apps'
+  - job_name: 'microservices'
     metrics_path: '/actuator/prometheus'
     static_configs:
-      - targets: ['auth-service:8081', 'user-service:8082']
-````
+      - targets:
+          - 'auth-service:8081'
+          - 'user-service:8082'
+          - 'account-service:8083'
+          - 'transaction-service:8084'
+          - 'notification-service:8085'
+          - 'loan-service:8086'
+```
+
+> 📈 Grafana dashboards provided for Kafka, JVM, API, Redis, MySQL.
 
 ---
 
-### ✅ GitHub Actions CI/CD
+## 🔐 Authentication — JWT (RS256)
 
-Your `.github/workflows/ci.yml` might look like:
+* Public/Private Key Pair for signing/validation
+* Token includes roles, expiration, and issuer
+* Redis stores blacklisted tokens for logout/invalidation
+* Role-based access at API Gateway & service level
+
+---
+
+## 📬 Kafka Messaging
+
+| Topic Name              | Producer Service      | Consumer Service       | Description                     |
+| ----------------------- | --------------------- | ---------------------- | ------------------------------- |
+| `user.registered`       | `user-service`        | `notification-service` | Notify on user registration     |
+| `transaction.completed` | `transaction-service` | `notification-service` | Notify on completed transaction |
+| `loan.approved`         | `loan-service`        | `notification-service` | Notify on loan approval         |
+
+> Kafka makes the system **asynchronous, scalable, and decoupled**.
+
+---
+
+## 🔁 Eureka Discovery (Port `8761`)
+
+All microservices register with Eureka at:
+
+```
+http://localhost:8761
+```
+
+> Load-balanced client-side discovery enabled via Spring Cloud LoadBalancer.
+
+---
+
+## 🐳 Dockerized Setup
+
+```bash
+docker-compose up --build
+```
+
+This spins up:
+
+* ✔️ All 6 microservices
+* ✔️ MySQL, Redis, Kafka + Zookeeper
+* ✔️ Eureka Server (port 8761)
+* ✔️ Prometheus (port 9090)
+* ✔️ Grafana (port 3000)
+* ✔️ API Gateway (optional addition)
+
+---
+
+## 🔐 Security Features
+
+* RS256-signed JWT Auth
+* Redis-backed token invalidation
+* Role-based access control
+* Centralized CORS & rate-limiting
+* Secured internal endpoints with service tokens
+
+---
+
+## 📊 API Docs (Swagger)
+
+Each service auto-generates OpenAPI docs:
+
+```
+http://localhost:<PORT>/swagger-ui.html
+```
+
+---
+
+## ✉️ Notification Support
+
+| Channel | Provider Options      |
+| ------- | --------------------- |
+| SMS     | Fast2SMS / Twilio     |
+| Email   | SendGrid / Gmail SMTP |
+
+> Services consume Kafka topics for notifications.
+
+---
+
+## 📦 CI/CD — GitHub Actions
+
+`.github/workflows/ci.yml`:
 
 ```yaml
 name: Build & Test Microservices
@@ -90,46 +181,21 @@ jobs:
         run: mvn clean install
 ```
 
-✅ Automatically builds and tests on every PR or push.
+✅ Auto testing for every PR or push.
 
 ---
 
-## 🐳 Dockerized Setup
+## ⚖️ Scalability & Resilience
 
-```bash
-docker-compose up --build
-```
-
-Spin up:
-
-* 5+ Microservices
-* Kafka + Zookeeper
-* Redis
-* MySQL
-* Eureka
-* Prometheus + Grafana
+* Kafka decouples producers/consumers
+* Eureka + Spring Cloud LoadBalancer = failover ready
+* Redis for fast token operations
+* Docker Compose for local orchestration
+* Can be extended with Kubernetes for autoscaling
 
 ---
 
-## 🔐 Authentication (JWT RS256)
-
-* Secure with asymmetric keys (public/private)
-* JWT token includes roles, expires in X mins
-* Redis used for storing blacklisted/revoked tokens
-
----
-
-## 📬 Kafka Notification Topics
-
-| Topic                   | Produced By           | Consumed By            |
-| ----------------------- | --------------------- | ---------------------- |
-| `user.registered`       | `user-service`        | `notification-service` |
-| `transaction.completed` | `transaction-service` | `notification-service` |
-| `loan.approved`         | `loan-service`        | `notification-service` |
-
----
-
-## 📁 Project Structure
+## 📁 Project Layout
 
 ```
 banking-system/
@@ -139,54 +205,28 @@ banking-system/
 ├── transaction-service/
 ├── loan-service/
 ├── notification-service/
-├── .github/workflows/    # GitHub Actions
 ├── docker-compose.yml
-└── README.md
+├── prometheus.yml
+├── docs/
+│   └── architecture-diagram.png
+└── .github/
+    └── workflows/
+        └── ci.yml
 ```
-
----
-
-## 🛡️ Security Features
-
-* ✅ RS256 signed JWT tokens
-* ✅ Redis-based token invalidation
-* ✅ API Gateway route protection
-* ✅ Role-based endpoint authorization
-* ✅ CORS and rate-limiting support
-
----
-
-## 📊 Swagger Docs
-
-Each service provides Swagger UI at:
-
-```
-http://localhost:<PORT>/swagger-ui.html
-```
-
----
-
-## ✉️ Notifications (SMS + Email)
-
-| Type  | Providers Used            |
-| ----- | ------------------------- |
-| SMS   | Fast2SMS / Twilio (trial) |
-| Email | Gmail SMTP / SendGrid     |
 
 ---
 
 ## 🧑‍💻 Author
 
 **Akash Adak**
-`Backend Architect | Microservices Specialist`
+*Backend Architect | Microservices Specialist*
 GitHub: [@Akash-Adak](https://github.com/Akash-Adak)
 
 ---
 
 ## 📜 License
 
-MIT License — Free to use and modify.
+MIT — Open to use, improve, and extend freely.
 
 ---
-
 
