@@ -75,7 +75,7 @@ scrape_configs:
 ```
 
 > 📈 Grafana dashboards provided for Kafka, JVM, API, Redis, MySQL.
-docs/first.png
+https://github.com/Akash-Adak/Banking-system/blob/6796c77272457ef05d6a9f94badb88068b4b7709/docs/first.png
 (docs/se.png)
 (docs/th.png)
 ---
