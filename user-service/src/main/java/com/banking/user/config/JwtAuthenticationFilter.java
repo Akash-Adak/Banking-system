@@ -10,15 +10,18 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.io.ClassPathResource;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.security.KeyFactory;
 import java.security.PublicKey;
 import java.security.spec.X509EncodedKeySpec;
@@ -30,66 +33,55 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private static final Logger log = LoggerFactory.getLogger(JwtAuthenticationFilter.class);
 
-    private PublicKey publicKey;
 
-    @PostConstruct
-    public void loadPublicKey() {
-        try {
-            var resource = new ClassPathResource("public.key");
-            String keyString = new String(resource.getInputStream().readAllBytes(), StandardCharsets.UTF_8);
 
-            keyString = keyString
-                    .replace("-----BEGIN PUBLIC KEY-----", "")
-                    .replace("-----END PUBLIC KEY-----", "")
-                    .replaceAll("\\s", "");
+    private PublicKey getPublicKey() throws Exception {
+        InputStream inputStream = getClass().getClassLoader().getResourceAsStream("public.key");
+        if (inputStream == null) throw new FileNotFoundException("public.key not found in resources");
 
-            byte[] decodedKey = Base64.getDecoder().decode(keyString);
-            X509EncodedKeySpec keySpec = new X509EncodedKeySpec(decodedKey);
-            KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-            this.publicKey = keyFactory.generatePublic(keySpec);
-            log.info("Public key loaded successfully for JWT verification.");
-        } catch (Exception e) {
-            log.error("Failed to load public key: {}", e.getMessage(), e);
-            throw new IllegalStateException("Failed to initialize JWT public key.", e);
-        }
+        String key = new String(inputStream.readAllBytes())
+                .replaceAll("-----\\w+ PUBLIC KEY-----", "")
+                .replaceAll("\\s", "");
+
+        byte[] decoded = Base64.getDecoder().decode(key);
+        X509EncodedKeySpec keySpec = new X509EncodedKeySpec(decoded);
+        return KeyFactory.getInstance("RSA").generatePublic(keySpec);
     }
-
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
 
-        String authorizationHeader = request.getHeader("Authorization");
+        String header = request.getHeader("Authorization");
 
-        if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
+        if (header == null || !header.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
             return;
         }
 
-        String token = authorizationHeader.substring(7);
+        String token = header.substring(7);
 
         try {
             Claims claims = Jwts.parserBuilder()
-                    .setSigningKey(publicKey)
+                    .setSigningKey(getPublicKey())
                     .build()
                     .parseClaimsJws(token)
                     .getBody();
 
-            String username = claims.getSubject(); // sub claim
-            String role = claims.get("role", String.class); // custom claim
+            String username = claims.getSubject();
+            String role = claims.get("role", String.class);
 
             if (username != null && role != null) {
-                SimpleGrantedAuthority authority = new SimpleGrantedAuthority("ROLE_" + role.toUpperCase());
-
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                         username,
                         null,
-                        Collections.singletonList(authority));
+                        Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + role.toUpperCase()))
+                );
 
                 SecurityContextHolder.getContext().setAuthentication(authentication);
                 log.debug("User '{}' authenticated with role '{}'", username, role);
             } else {
-                log.warn("JWT token valid but missing username or role claims. Token: {}", token);
+                log.warn("JWT token valid but missing username or role. Token: {}", token);
             }
 
         } catch (JwtException e) {
@@ -98,7 +90,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             response.getWriter().write("Unauthorized: Invalid or expired token.");
             return;
         } catch (Exception e) {
-            log.error("An unexpected error occurred during JWT processing: {}", e.getMessage(), e);
+            log.error("Unexpected error during JWT processing: {}", e.getMessage(), e);
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             response.getWriter().write("Internal Server Error: Could not process token.");
             return;

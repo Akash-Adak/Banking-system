@@ -13,6 +13,15 @@ public class RegisterRequestResponse {
    private String phone;
    private String body;
 
+    public String getContentType() {
+        return contentType;
+    }
+
+    public void setContentType(String contentType) {
+        this.contentType = contentType;
+    }
+
+    private String contentType;
     public String getBody() {
         return body;
     }

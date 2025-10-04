@@ -78,11 +78,18 @@ public class UserController {
         return new ResponseEntity<>(saved,HttpStatus.OK);
     }
 
-    @PutMapping("/{accountNumber}")
-    public void addAccount(@PathVariable String accountNumber){
+//    @PutMapping("/{accountNumber}")
+//    public ResponseEntity<?> addAccount(@PathVariable String accountNumber){
+//
+//        return  ResponseEntity.ok(userService.addAccountNumber(accountNumber));
+//    }
 
-        userService.addAccountNumber(accountNumber);
+    @PatchMapping("/{username}/addAccountNumber/{accountNumber}")
+    public ResponseEntity<?> addAccountNumber( @PathVariable String username,@PathVariable String accountNumber){
+
+        return  ResponseEntity.ok(userService.addAccountNumber(username,accountNumber));
     }
+
 
     @GetMapping("/get-by-account/{accountNumber}")
     public ResponseEntity<?> getByAccountnimber(@PathVariable String accountNumber){
