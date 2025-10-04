@@ -1,3 +1,4 @@
+
 server:
   port: 8085
 
@@ -15,8 +16,8 @@ spring:
   mail:
     host: smtp.gmail.com
     port: 587
-    username: akashadak0029@gmail.com
-    password:
+    username: equinoxfinancebank@gmail.com
+    password: gplfihhlusxhscpp
     properties:
       mail:
         smtp:

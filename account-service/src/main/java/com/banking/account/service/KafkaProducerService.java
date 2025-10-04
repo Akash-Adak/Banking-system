@@ -18,5 +18,6 @@ public class KafkaProducerService {
 
     public void sendLoginSuccess(String topic, String json) {
         kafkaTemplate.send(topic,json);
+        System.out.println("📩message sent: " + json);
     }
 }

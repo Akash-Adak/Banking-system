@@ -51,4 +51,3 @@ management:
       prometheus:
         enabled: true
 
-

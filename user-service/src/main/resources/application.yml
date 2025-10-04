@@ -1,3 +1,4 @@
+
 server:
   port: 8082
 
@@ -57,3 +58,4 @@ management:
     export:
       prometheus:
         enabled: true
+

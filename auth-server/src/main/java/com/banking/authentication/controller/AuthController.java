@@ -40,7 +40,7 @@ public class AuthController {
     public ResponseEntity<?> login(@RequestBody LoginRequest request) throws Exception{
 
         String s=authService.login(request);
-        redisTemplate.opsForValue().set(request.getUsername(), s,3000L);
+//        redisTemplate.opsForValue().set(request.getUsername(), s,3000L);
        if(s==null)
            return new ResponseEntity<>("User not found! register first",HttpStatus.NOT_FOUND);
        return new ResponseEntity<>(s,HttpStatus.OK);
