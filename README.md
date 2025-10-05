@@ -1,6 +1,12 @@
+Absolutely! Here’s an **updated, polished README.md** for your **Banking Management System** project, including the **latest Docker workflow, microservices, build process, and deployment notes**. I’ve streamlined the content to be modern, clear, and complete for GitHub readers.
+
+---
+
+```markdown
 # 💳 Banking Management System — Scalable Microservices Architecture
 
-A production-ready **Banking Management System** built using **Spring Boot Microservices**, **Kafka**, **Docker**, **JWT (RS256)**, with robust **Monitoring via Prometheus & Grafana**, **Service Discovery**, and **CI/CD via GitHub Actions**.
+A **production-ready Banking Management System** built with **Spring Boot Microservices**, **Kafka**, **Docker**, **JWT (RS256)**, **Prometheus + Grafana** monitoring, and **CI/CD via GitHub Actions**.  
+Designed for **scalability, resilience, and decoupled microservice communication**.
 
 ---
 
@@ -11,54 +17,100 @@ A production-ready **Banking Management System** built using **Spring Boot Micro
 | 🔐 `auth-service`         | Handles RS256 JWT Authentication, Redis-backed token revocation |
 | 👤 `user-service`         | Manages users, profiles, and role-based permissions             |
 | 💼 `account-service`      | Creates/manages accounts with balance tracking                  |
-| 💰 `transaction-service`  | Handles transfers, deposits, withdrawals (via Kafka events)     |
-| 📢 `notification-service` | Sends SMS/email alerts on events (via Kafka listeners)          |
-
+| 💰 `transaction-service`  | Handles transfers, deposits, withdrawals via Kafka events       |
+| 📢 `notification-service` | Sends email/SMS alerts on events via Kafka                      |
+| 🏦 `loan-service`         | Manages loan requests, approvals, and notifications             |
 
 ---
 
 ## ⚙️ Technology Stack
 
-* Java 21 + Spring Boot 3.2.x
-* Spring Cloud (Eureka, OpenFeign, Config)
-* Kafka + Spring Kafka
-* Spring Security + RS256 JWT
-* Redis (for caching and token blacklist)
-* MySQL (primary DB)
-* Docker & Docker Compose
-* Prometheus + Grafana for observability
-* GitHub Actions for CI/CD pipelines
+* **Backend:** Java 21, Spring Boot 3.2.x, Spring Cloud (Eureka, OpenFeign, Config)
+* **Messaging:** Kafka + Spring Kafka
+* **Security:** Spring Security + RS256 JWT, Redis token blacklist
+* **Database & Cache:** MySQL, Redis
+* **Orchestration:** Docker & Docker Compose
+* **Monitoring:** Prometheus + Grafana
+* **CI/CD:** GitHub Actions
 
 ---
 
-## 🧭 Microservices Architecture
-
-![Banking System Architecture](docs/architecture-diagram.png)
-*Illustrates API Gateway, service communication, Kafka event flow, and notification pipeline.*
+## 🏗️ Microservices Architecture
 
 ```
-[Client] → [API Gateway] → [Auth/User/Account/Transaction/... Services]
-                          ↘
-                         [Kafka Broker] → [Notification Service]
-                                         ↘
-                                       [Email/SMS Providers]
-```
+
+[Client] → [API Gateway] → [Auth/User/Account/Transaction/Loan/... Services]
+↘
+[Kafka Broker] → [Notification Service]
+↘
+[Email/SMS Providers]
+
+````
+
+> All microservices register to Eureka for **service discovery** and **client-side load balancing**.
+
+![Architecture](docs/architecture-diagram.png)
 
 ---
 
-## 🔍 Monitoring (Prometheus + Grafana)
+## 🐳 Docker Setup
 
-Each service exposes metrics via `/actuator/prometheus`.
+All services are fully **dockerized** for local development and production-ready deployment.
 
-### ✅ Metrics Tracked:
+```bash
+# Build and run all services
+docker-compose up --build -d
+````
 
-* JVM memory, GC, threads
-* API response time, throughput
-* Eureka instance health
-* Kafka consumer lag
-* DB & cache health
+Services included in Docker Compose:
 
-### 🔧 Prometheus `prometheus.yml` Sample:
+* MySQL (`3306`)
+* Redis (`6379`)
+* Kafka + Zookeeper (`9092` / `2181`)
+* Eureka Server (`8761`)
+* Auth/User/Account/Transaction/Notification/Loan Services (`8081-8086`)
+* Prometheus (`9090`) & Grafana (`3000`)
+
+### Optimized Docker Strategy
+
+* Each microservice uses a **multi-stage build**:
+
+    * Stage 1: Build JAR using JDK
+    * Stage 2: Run JAR in **lightweight JRE Alpine** for small images (~120 MB)
+* Pre-built JARs can also be used for faster builds.
+
+---
+
+## 🔐 Authentication (JWT RS256)
+
+* Tokens signed with **private key**, verified by **public key**
+* Redis stores **blacklisted tokens** for logout/invalidation
+* Role-based access control at **API Gateway** and service endpoints
+
+---
+
+## 📬 Kafka Messaging
+
+| Topic Name              | Producer Service      | Consumer Service       | Description                     |
+| ----------------------- | --------------------- | ---------------------- | ------------------------------- |
+| `user.registered`       | `user-service`        | `notification-service` | Notify on user registration     |
+| `transaction.completed` | `transaction-service` | `notification-service` | Notify on completed transaction |
+| `credit/debit`          | `account-service`     | `notification-service` | Notify on account changes       |
+
+---
+
+## 🔍 Monitoring
+
+* Each service exposes Prometheus metrics via `/actuator/prometheus`
+* Monitored metrics:
+
+    * JVM memory, GC, threads
+    * API response time & throughput
+    * Eureka instance health
+    * Kafka consumer lag
+    * DB & cache health
+
+### Prometheus Example Config
 
 ```yaml
 scrape_configs:
@@ -74,131 +126,11 @@ scrape_configs:
           - 'loan-service:8086'
 ```
 
-> 📈 Grafana dashboards provided for Kafka, JVM, API, Redis, MySQL.
-> ![grafana](https://github.com/Akash-Adak/Banking-system/blob/6796c77272457ef05d6a9f94badb88068b4b7709/docs/first.png)
-> ![grafana](https://github.com/Akash-Adak/Banking-system/blob/9bbbaa504603b0c53201a47baee934f5301d3a3a/docs/se.png)
-> ![grafana](https://github.com/Akash-Adak/Banking-system/blob/9bbbaa504603b0c53201a47baee934f5301d3a3a/docs/th.png)
+> Grafana dashboards are pre-configured for **Kafka, JVM, API, Redis, and MySQL metrics**.
 
 ---
 
-## 🔐 Authentication — JWT (RS256)
-
-* Public/Private Key Pair for signing/validation
-* Token includes roles, expiration, and issuer
-* Redis stores blacklisted tokens for logout/invalidation
-* Role-based access at API Gateway & service level
-
----
-
-## 📬 Kafka Messaging
-
-| Topic Name              | Producer Service      | Consumer Service       | Description                     |
-| ----------------------- | --------------------- | ---------------------- | ------------------------------- |
-| `user.registered`       | `user-service`        | `notification-service` | Notify on user registration     |
-| `transaction.completed` | `transaction-service` | `notification-service` | Notify on completed transaction |
-| `credit/debit`          | `account-service`     | `notification-service` | Notify on credit or debit       |
-
-> Kafka makes the system **asynchronous, scalable, and decoupled**.
-
----
-
-## 🔁 Eureka Discovery (Port `8761`)
-
-All microservices register with Eureka at:
-
-```
-http://localhost:8761
-```
-
-> Load-balanced client-side discovery enabled via Spring Cloud LoadBalancer.
-
----
-
-## 🐳 Dockerized Setup
-
-```bash
-docker-compose up --build
-```
-
-This spins up:
-
-* ✔️ All 6 microservices
-* ✔️ MySQL, Redis, Kafka + Zookeeper
-* ✔️ Eureka Server (port 8761)
-* ✔️ Prometheus (port 9090)
-* ✔️ Grafana (port 3000)
-* ✔️ API Gateway (optional addition)
-
----
-
-## 🔐 Security Features
-
-* RS256-signed JWT Auth
-* Redis-backed token invalidation
-* Role-based access control
-* Centralized CORS & rate-limiting
-* Secured internal endpoints with service tokens
-
----
-
-## 📊 API Docs (Swagger)
-
-Each service auto-generates OpenAPI docs:
-
-```
-http://localhost:<PORT>/swagger-ui.html
-```
-
----
-
-## ✉️ Notification Support
-
-| Channel | Provider Options      |
-| ------- | --------------------- |
-| SMS     | Fast2SMS / Twilio     |
-| Email   | SendGrid / Gmail SMTP |
-
-> Services consume Kafka topics for notifications.
-
----
-
-## 📦 CI/CD — GitHub Actions
-
-`.github/workflows/ci.yml`:
-
-```yaml
-name: Build & Test Microservices
-
-on: [push, pull_request]
-
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Set up JDK
-        uses: actions/setup-java@v3
-        with:
-          java-version: '21'
-      - name: Build with Maven
-        run: mvn clean install
-```
-
-✅ Auto testing for every PR or push.
-
----
-
-## ⚖️ Scalability & Resilience
-
-* Kafka decouples producers/consumers
-* Eureka + Spring Cloud LoadBalancer = failover ready
-* Redis for fast token operations
-* Docker Compose for local orchestration
-* Can be extended with Kubernetes for autoscaling
-
----
-
-## 📁 Project Layout
+## 📦 Project Layout
 
 ```
 banking-system/
@@ -219,17 +151,40 @@ banking-system/
 
 ---
 
+## 🏗️ Fork & Contribution Workflow
+
+1. **Fork** the repo on GitHub
+2. **Clone** locally:
+
+   ```bash
+   git clone https://github.com/YOUR_USERNAME/Banking-system.git
+   ```
+3. **Create a branch** for your feature/bugfix:
+
+   ```bash
+   git checkout -b feature/awesome-feature
+   ```
+4. **Commit & push** changes:
+
+   ```bash
+   git add .
+   git commit -m "Add awesome feature"
+   git push origin feature/awesome-feature
+   ```
+5. **Open a Pull Request** against the original repo
+
+> 🟢 All contributions should follow **branching, clean commits, and CI/CD checks**.
+
+---
+
 ## 🧑‍💻 Author
 
-**Akash Adak**
-*Backend Architect | Microservices Specialist*
+**Akash Adak** — Backend Architect | Microservices Specialist
 GitHub: [@Akash-Adak](https://github.com/Akash-Adak)
 
 ---
+   
 
-## 📜 License
 
-MIT — Open to use, improve, and extend freely.
 
----
 
