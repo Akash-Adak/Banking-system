@@ -1,8 +1,4 @@
-Absolutely! Here’s an **updated, polished README.md** for your **Banking Management System** project, including the **latest Docker workflow, microservices, build process, and deployment notes**. I’ve streamlined the content to be modern, clear, and complete for GitHub readers.
 
----
-
-```markdown
 # 💳 Banking Management System — Scalable Microservices Architecture
 
 A **production-ready Banking Management System** built with **Spring Boot Microservices**, **Kafka**, **Docker**, **JWT (RS256)**, **Prometheus + Grafana** monitoring, and **CI/CD via GitHub Actions**.  
