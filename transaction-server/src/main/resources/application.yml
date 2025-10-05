@@ -3,29 +3,27 @@ server:
   port: 8084
 
 spring:
+  application:
+    name: transaction
   datasource:
-    url: jdbc:mysql://localhost:3306/banking_system
+    url: jdbc:mysql://mysql-db:3306/banking_system   # MySQL container name
     username: root
-    password: Akash@2003
+    password: root
+
   jpa:
     hibernate:
       ddl-auto: update
     show-sql: true
 
-
-
 jwt:
-
   expiration: 3600000
 
-eureka :
-  client :
-    service-url :
-      defaultZone: http://localhost:8761/eureka
-      fetch-registry: true
-      register-with-eureka: true
-
-
+eureka:
+  client:
+    service-url:
+      defaultZone: http://eureka-server:8761/eureka   # Eureka container name
+    fetch-registry: true
+    register-with-eureka: true
 
 management:
   endpoints:
@@ -36,4 +34,3 @@ management:
     export:
       prometheus:
         enabled: true
-
