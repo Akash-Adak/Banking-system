@@ -51,11 +51,10 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-
     networks:
       - banking-network
 
-
+  # Kafka
   kafka:
     image: confluentinc/cp-kafka:7.5.0
     container_name: kafka
@@ -73,11 +72,10 @@ services:
       zookeeper:
         condition: service_healthy
     healthcheck:
-      test: [ "CMD-SHELL", "kafka-broker-api-versions --bootstrap-server localhost:9092 || exit 1" ]
+      test: ["CMD-SHELL", "kafka-broker-api-versions --bootstrap-server localhost:9092 || exit 1"]
       interval: 10s
       timeout: 10s
       retries: 5
-
     volumes:
       - kafka_data:/var/lib/kafka/data
     networks:
@@ -87,16 +85,16 @@ services:
   eureka-server:
     build:
       context: ./eureka-server
+    image: akta2910/eureka-server:v1.00.02
     container_name: eureka-server
     ports:
       - "8761:8761"
     restart: always
     healthcheck:
-      test: [ "CMD-SHELL", "curl -f http://localhost:8761/actuator/health || exit 1" ]
+      test: ["CMD-SHELL", "curl -f http://localhost:8761/actuator/health || exit 1"]
       interval: 10s
       timeout: 5s
       retries: 10
-
     networks:
       - banking-network
 
@@ -104,17 +102,12 @@ services:
   auth-service:
     build:
       context: ./auth-server
+    image: akta2910/auth-service:v1.00.02
     container_name: auth-service
     ports:
       - "8081:8081"
     environment:
       SPRING_PROFILES_ACTIVE: docker
-      JWT_PRIVATE_KEY_FILE: /run/secrets/jwt_private_key
-      JWT_PUBLIC_KEY_FILE: /run/secrets/jwt_public_key
-      JWT_EXPIRATION: 3600000
-    volumes:
-      - ./jwt-secrets/jwt_private.pem:/run/secrets/jwt_private_key:ro
-      - ./jwt-secrets/jwt_public.pem:/run/secrets/jwt_public_key:ro
     depends_on:
       mysql:
         condition: service_healthy
@@ -131,15 +124,12 @@ services:
   user-service:
     build:
       context: ./user-service
+    image: akta2910/user-service:v1.00.02
     container_name: user-service
     ports:
       - "8082:8082"
     environment:
       SPRING_PROFILES_ACTIVE: docker
-      JWT_PUBLIC_KEY_FILE: /run/secrets/jwt_public_key
-    volumes:
-      - ./jwt-secrets/jwt_public.pem:/run/secrets/jwt_public_key:ro
-
     depends_on:
       auth-service:
         condition: service_started
@@ -152,14 +142,12 @@ services:
   account-service:
     build:
       context: ./account-service
+    image: akta2910/account-service:v1.00.02
     container_name: account-service
     ports:
       - "8083:8083"
     environment:
       SPRING_PROFILES_ACTIVE: docker
-      JWT_PUBLIC_KEY_FILE: /run/secrets/jwt_public_key
-    volumes:
-      - ./jwt-secrets/jwt_public.pem:/run/secrets/jwt_public_key:ro
     depends_on:
       auth-service:
         condition: service_started
@@ -172,14 +160,12 @@ services:
   transaction-service:
     build:
       context: ./transaction-server
+    image: akta2910/transaction-service:v1.00.02
     container_name: transaction-service
     ports:
       - "8084:8084"
     environment:
       SPRING_PROFILES_ACTIVE: docker
-      JWT_PUBLIC_KEY_FILE: /run/secrets/jwt_public_key
-    volumes:
-      - ./jwt-secrets/jwt_public.pem:/run/secrets/jwt_public_key:ro
     depends_on:
       auth-service:
         condition: service_started
@@ -194,14 +180,12 @@ services:
   notification-service:
     build:
       context: ./notification-server
+    image: akta2910/notification-service:v1.00.02
     container_name: notification-service
     ports:
       - "8085:8085"
     environment:
       SPRING_PROFILES_ACTIVE: docker
-      JWT_PUBLIC_KEY_FILE: /run/secrets/jwt_public_key
-    volumes:
-      - ./jwt-secrets/jwt_public.pem:/run/secrets/jwt_public_key:ro
     depends_on:
       auth-service:
         condition: service_started
