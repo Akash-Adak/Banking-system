@@ -1,8 +1,4 @@
-Absolutely! Here’s an **updated, polished README.md** for your **Banking Management System** project, including the **latest Docker workflow, microservices, build process, and deployment notes**. I’ve streamlined the content to be modern, clear, and complete for GitHub readers.
 
----
-
-```markdown
 # 💳 Banking Management System — Scalable Microservices Architecture
 
 A **production-ready Banking Management System** built with **Spring Boot Microservices**, **Kafka**, **Docker**, **JWT (RS256)**, **Prometheus + Grafana** monitoring, and **CI/CD via GitHub Actions**.  
@@ -49,8 +45,7 @@ Designed for **scalability, resilience, and decoupled microservice communication
 
 > All microservices register to Eureka for **service discovery** and **client-side load balancing**.
 
-![Architecture](docs/architecture-diagram.png)
-
+![architecture-diagram.png](docs/architecture-diagram.png)
 ---
 
 ## 🐳 Docker Setup
@@ -127,7 +122,10 @@ scrape_configs:
 ```
 
 > Grafana dashboards are pre-configured for **Kafka, JVM, API, Redis, and MySQL metrics**.
-
+> 
+![Grafana Dashboard](docs/first.png)
+![Grafana Dashboard](docs/se.png)
+![Grafana Dashboard](docs/th.png)
 ---
 
 ## 📦 Project Layout
