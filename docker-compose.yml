@@ -83,7 +83,7 @@ services:
 
   # Eureka Server
   eureka-server:
-    image: akta2910/eureka-server:latest
+    image: akta2910/banking-eureka:latest
     container_name: eureka-server
     ports:
       - "8761:8761"
@@ -98,7 +98,7 @@ services:
 
   # Auth Service
   auth-service:
-    image: akta2910/auth-service:latest
+    image: akta2910/banking-auth:latest
     container_name: auth-service
     ports:
       - "8081:8081"
@@ -118,7 +118,7 @@ services:
 
   # User Service
   user-service:
-    image: akta2910/user-service:latest
+    image: akta2910/banking-user:latest
     container_name: user-service
     ports:
       - "8082:8082"
@@ -134,7 +134,7 @@ services:
 
   # Account Service
   account-service:
-    image: akta2910/account-service:latest
+    image: akta2910/banking-account:latest
     container_name: account-service
     ports:
       - "8083:8083"
@@ -150,7 +150,7 @@ services:
 
   # Transaction Service
   transaction-service:
-    image: akta2910/transaction-service:latest
+    image: akta2910/banking-transaction:latest
     container_name: transaction-service
     ports:
       - "8084:8084"
@@ -168,7 +168,7 @@ services:
 
   # Notification Service
   notification-service:
-    image: akta2910/notification-service:latest
+    image: akta2910/banking-notify:latest
     container_name: notification-service
     ports:
       - "8085:8085"
