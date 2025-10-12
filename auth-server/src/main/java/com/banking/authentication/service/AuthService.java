@@ -1,5 +1,6 @@
 package com.banking.authentication.service;
 
+import com.banking.authentication.Exception.RunTimeException;
 import com.banking.authentication.config.JwtUtil;
 import com.banking.authentication.model.LoginRequest;
 import com.banking.authentication.model.RegisterRequest;
@@ -9,31 +10,37 @@ import com.banking.authentication.repository.UserRepository;
 import com.banking.authentication.response.RegisterRequestResponse;
 import com.banking.authentication.response.UserResponse;
 import com.google.gson.Gson;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.http.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import com.google.gson.Gson;
+
 import java.util.HashMap;
-import java.util.List;
+
 import java.util.Map;
-import java.util.Optional;
 
 @Service
 
 public class AuthService {
-    @Autowired
-    private  UserRepository repo;
-    @Autowired
-    private  PasswordEncoder encoder;
-    @Autowired
-    private  JwtUtil jwtUtil;
-    @Autowired
-    private  RestTemplate restTemplate;
-    @Autowired
-    private  KafkaProducerService kafkaProducerService;
+
+    private final  UserRepository repo;
+
+    private final PasswordEncoder encoder;
+
+    private final JwtUtil jwtUtil;
+
+    private final RestTemplate restTemplate;
+
+    private final KafkaProducerService kafkaProducerService;
+
+    public AuthService(UserRepository repo, PasswordEncoder encoder, JwtUtil jwtUtil, RestTemplate restTemplate, KafkaProducerService kafkaProducerService) {
+        this.repo = repo;
+        this.encoder = encoder;
+        this.jwtUtil = jwtUtil;
+        this.restTemplate = restTemplate;
+        this.kafkaProducerService = kafkaProducerService;
+    }
 
     public String register(RegisterRequest request) throws Exception {
         User user = new User();
@@ -66,7 +73,7 @@ public class AuthService {
         );
 
         if (!response.getStatusCode().is2xxSuccessful() || response.getBody() == null) {
-            throw new RuntimeException("Failed to create user in user-service");
+            throw new RunTimeException("Failed to create user in user-service");
         }
 
         repo.save(user);
@@ -130,7 +137,7 @@ public class AuthService {
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         if (!encoder.matches(request.getPassword(), user.getPassword()))
-            throw new RuntimeException("Invalid credentials");
+            throw new RunTimeException("Invalid credentials");
         Map<String, Object> claims = new HashMap<>();
         claims.put("username", user.getUsername());
         claims.put("role", user.getRoles());
