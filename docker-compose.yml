@@ -83,9 +83,7 @@ services:
 
   # Eureka Server
   eureka-server:
-    build:
-      context: ./eureka-server
-    image: akta2910/eureka-server:v1.00.02
+    image: akta2910/eureka-server:latest
     container_name: eureka-server
     ports:
       - "8761:8761"
@@ -100,9 +98,7 @@ services:
 
   # Auth Service
   auth-service:
-    build:
-      context: ./auth-server
-    image: akta2910/auth-service:v1.00.02
+    image: akta2910/auth-service:latest
     container_name: auth-service
     ports:
       - "8081:8081"
@@ -122,9 +118,7 @@ services:
 
   # User Service
   user-service:
-    build:
-      context: ./user-service
-    image: akta2910/user-service:v1.00.02
+    image: akta2910/user-service:latest
     container_name: user-service
     ports:
       - "8082:8082"
@@ -140,9 +134,7 @@ services:
 
   # Account Service
   account-service:
-    build:
-      context: ./account-service
-    image: akta2910/account-service:v1.00.02
+    image: akta2910/account-service:latest
     container_name: account-service
     ports:
       - "8083:8083"
@@ -158,9 +150,7 @@ services:
 
   # Transaction Service
   transaction-service:
-    build:
-      context: ./transaction-server
-    image: akta2910/transaction-service:v1.00.02
+    image: akta2910/transaction-service:latest
     container_name: transaction-service
     ports:
       - "8084:8084"
@@ -178,9 +168,7 @@ services:
 
   # Notification Service
   notification-service:
-    build:
-      context: ./notification-server
-    image: akta2910/notification-service:v1.00.02
+    image: akta2910/notification-service:latest
     container_name: notification-service
     ports:
       - "8085:8085"

@@ -12,7 +12,19 @@ jobs:
 
     strategy:
       matrix:
-        service: [eureka-service,auth-service, account-service, user-service, transaction-service, notification-service]
+        include:
+          - service: eureka-server
+            image: banking-eureka
+          - service: auth-server
+            image: banking-auth
+          - service: account-service
+            image: banking-account
+          - service: user-service
+            image: banking-user
+          - service: transaction-server
+            image: banking-transaction
+          - service: notification-server
+            image: banking-notify
 
     steps:
       - name: Checkout repository
@@ -38,5 +50,5 @@ jobs:
           file: ./${{ matrix.service }}/Dockerfile
           push: true
           tags: |
-            ${{ secrets.DOCKER_USERNAME }}/${{ matrix.service }}:latest
-            ${{ secrets.DOCKER_USERNAME }}/${{ matrix.service }}:${{ env.sha_short }}
+            ${{ secrets.DOCKER_USERNAME }}/${{ matrix.image }}:latest
+            ${{ secrets.DOCKER_USERNAME }}/${{ matrix.image }}:${{ env.sha_short }}
