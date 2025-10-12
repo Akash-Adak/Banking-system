@@ -12,7 +12,7 @@ jobs:
 
     strategy:
       matrix:
-        service: [auth-service, account-service, user-service, transaction-service, notification-service, loan-service]
+        service: [eureka-service,auth-service, account-service, user-service, transaction-service, notification-service]
 
     steps:
       - name: Checkout repository
