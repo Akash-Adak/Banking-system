@@ -1,22 +1,19 @@
-name: Maven Build
+name: Maven Build & Test
 
 on:
   push:
-    branches: [ master ]
+    branches-ignore:
+      - master
   pull_request:
-    branches: [ master ]
-
-permissions:
-  contents: read
-  actions: read
-  security-events: write
+    branches:
+      - master
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Set up JDK 21
@@ -25,5 +22,5 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
 
-      - name: Build with Maven
+      - name: Build & Test with Maven
         run: mvn clean install
