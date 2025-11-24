@@ -75,6 +75,17 @@ public class UserController {
         }
 
         User saved= userService.UpdateUser(user);
+
+
+        User cachedUser = redisService.get(saved.getUsername(), User.class);
+        if (cachedUser != null) {
+            Optional<User> users = userService.getUserByUsername(saved.getUsername());
+            if (users.isPresent()) {
+                User userObj = users.get();
+                redisService.set(saved.getUsername(), userObj, 3600L);
+                return new ResponseEntity<>(userObj, HttpStatus.OK);
+            }
+        }
         return new ResponseEntity<>(saved,HttpStatus.OK);
     }
 

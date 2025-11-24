@@ -32,7 +32,7 @@ export default function ProfilePage() {
     try {
       const username = localStorage.getItem("username");
       const res = await api.get(`/api/users/${username}`);
-
+            console.log(res);
       setProfile({
         username: res.data.username || "",
         fullname: res.data.fullname || "",
