@@ -12,7 +12,7 @@ target/
 .settings
 .springBeans
 .sts4-cache
-*.env
+.env
 ### IntelliJ IDEA ###
 .idea
 *.iws
@@ -28,9 +28,10 @@ target/
 build/
 !**/src/main/**/build/
 !**/src/test/**/build/
-/jwt-secrets
+jwt-secrets/
 ### VS Code ###
 .vscode/
 
 **/src/main/resources/private.key
 **/src/main/resources/public.key
+**/src/main/resources/application.yml

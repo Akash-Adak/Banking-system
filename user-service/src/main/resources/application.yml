@@ -31,14 +31,14 @@ spring:
 
   data:
     redis:
-      host: redis-16748.c301.ap-south-1-1.ec2.redns.redis-cloud.com
-      port: 16748
-      password: LKIudJQ9HnyyOzJQZdBVf3BjDWQSHyac
+      host: redis-13252.c305.ap-south-1-1.ec2.redns.redis-cloud.com
+      port: 13252
+      password: KiIpJJ24Oh46m4SfPWcDh3JuVcPWjPWQ
       timeout: 3000
 #      ssl: true
 
 jwt:
-  public-key-location: jwt-secrets/public-key.pem
+  secret: U2VjdXJlS2V5Rm9yQmFua2luZ0FwcFNob3VsZEJlQmFzZTY0
   expiration: 3600000
 
 eureka:

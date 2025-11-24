@@ -1,17 +1,18 @@
 version: '3.8'
 
 services:
+  # MySQL Database
   mysql:
     image: mysql:8.0
-    container_name: mysql
-    ports:
-      - "3306:3306"
+    container_name: mysql-db
     environment:
-      MYSQL_ROOT_PASSWORD: Akash@2003
+      MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: banking_system
-      MYSQL_TCP_PORT: 3306
+    ports:
+      - "3308:3306"
     volumes:
       - mysql_data:/var/lib/mysql
+    restart: always
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       interval: 5s
@@ -20,19 +21,22 @@ services:
     networks:
       - banking-network
 
+  # Redis
   redis:
     image: redis:7.2-alpine
     container_name: redis
     ports:
       - "6379:6379"
+    restart: always
     healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
+      test: ["CMD", "redis-cli", "--raw", "ping"]
       interval: 5s
       timeout: 5s
       retries: 5
     networks:
       - banking-network
 
+  # Zookeeper
   zookeeper:
     image: confluentinc/cp-zookeeper:7.5.0
     container_name: zookeeper
@@ -41,14 +45,16 @@ services:
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
+      ZOOKEEPER_4LW_COMMANDS_WHITELIST: "ruok,stat"
     healthcheck:
-      test: ["CMD-SHELL", "echo stat | nc localhost 2181 | grep Mode"]
+      test: ["CMD-SHELL", "echo > /dev/tcp/127.0.0.1/2181"]
       interval: 10s
       timeout: 5s
       retries: 5
     networks:
       - banking-network
 
+  # Kafka
   kafka:
     image: confluentinc/cp-kafka:7.5.0
     container_name: kafka
@@ -66,7 +72,7 @@ services:
       zookeeper:
         condition: service_healthy
     healthcheck:
-      test: ["CMD-SHELL", "kafka-topics --bootstrap-server localhost:9092 --list"]
+      test: ["CMD-SHELL", "kafka-broker-api-versions --bootstrap-server localhost:9092 || exit 1"]
       interval: 10s
       timeout: 10s
       retries: 5
@@ -75,35 +81,29 @@ services:
     networks:
       - banking-network
 
+  # Eureka Server
   eureka-server:
+    image: akta2910/banking-eureka:latest
     container_name: eureka-server
-    build:
-      context: ./eureka-server
     ports:
       - "8761:8761"
-    environment:
-      SPRING_PROFILES_ACTIVE: docker
+    restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8761/actuator/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
     networks:
       - banking-network
 
-  auth-server:
-    container_name: auth-server
-    build:
-      context: ./auth-server
+  # Auth Service
+  auth-service:
+    image: akta2910/banking-auth:latest
+    container_name: auth-service
     ports:
       - "8081:8081"
     environment:
       SPRING_PROFILES_ACTIVE: docker
-      JWT_PRIVATE_KEY_FILE: /run/secrets/jwt_private_key
-      JWT_PUBLIC_KEY_FILE: /run/secrets/jwt_public_key
-      JWT_EXPIRATION: 3600000
-    secrets:
-      - source: jwt_private_key
-        target: jwt_private_key
-        mode: 0440
-      - source: jwt_public_key
-        target: jwt_public_key
-        mode: 0444
     depends_on:
       mysql:
         condition: service_healthy
@@ -112,100 +112,84 @@ services:
       redis:
         condition: service_healthy
       eureka-server:
-        condition: service_started
+        condition: service_healthy
     networks:
       - banking-network
 
+  # User Service
   user-service:
+    image: akta2910/banking-user:latest
     container_name: user-service
-    build:
-      context: ./user-service
-    ports:
-      - "8083:8083"
-    environment:
-      SPRING_PROFILES_ACTIVE: docker
-      JWT_PUBLIC_KEY_FILE: /run/secrets/jwt_public_key
-    secrets:
-      - source: jwt_public_key
-        target: jwt_public_key
-        mode: 0444
-    depends_on:
-      auth-server:
-        condition: service_started
-    networks:
-      - banking-network
-
-  account-service:
-    container_name: account-service
-    build:
-      context: ./account-service
     ports:
       - "8082:8082"
     environment:
       SPRING_PROFILES_ACTIVE: docker
-      JWT_PUBLIC_KEY_FILE: /run/secrets/jwt_public_key
-    secrets:
-      - source: jwt_public_key
-        target: jwt_public_key
-        mode: 0444
     depends_on:
-      auth-server:
+      auth-service:
         condition: service_started
+      eureka-server:
+        condition: service_healthy
     networks:
       - banking-network
 
-  transaction-server:
-    container_name: transaction-server
-    build:
-      context: ./transaction-server
+  # Account Service
+  account-service:
+    image: akta2910/banking-account:latest
+    container_name: account-service
+    ports:
+      - "8083:8083"
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+    depends_on:
+      auth-service:
+        condition: service_started
+      eureka-server:
+        condition: service_healthy
+    networks:
+      - banking-network
+
+  # Transaction Service
+  transaction-service:
+    image: akta2910/banking-transaction:latest
+    container_name: transaction-service
     ports:
       - "8084:8084"
     environment:
       SPRING_PROFILES_ACTIVE: docker
-      JWT_PUBLIC_KEY_FILE: /run/secrets/jwt_public_key
-    secrets:
-      - source: jwt_public_key
-        target: jwt_public_key
-        mode: 0444
     depends_on:
-      auth-server:
+      auth-service:
         condition: service_started
       kafka:
+        condition: service_healthy
+      eureka-server:
         condition: service_healthy
     networks:
       - banking-network
 
-  notification-server:
-    container_name: notification-server
-    build:
-      context: ./notification-server
+  # Notification Service
+  notification-service:
+    image: akta2910/banking-notify:latest
+    container_name: notification-service
     ports:
       - "8085:8085"
     environment:
       SPRING_PROFILES_ACTIVE: docker
-      JWT_PUBLIC_KEY_FILE: /run/secrets/jwt_public_key
-    secrets:
-      - source: jwt_public_key
-        target: jwt_public_key
-        mode: 0444
     depends_on:
-      auth-server:
+      auth-service:
         condition: service_started
       kafka:
+        condition: service_healthy
+      eureka-server:
         condition: service_healthy
     networks:
       - banking-network
 
+# Volumes
 volumes:
   mysql_data:
   kafka_data:
 
-secrets:
-  jwt_private_key:
-    file: ./jwt-secrets/private-key.pem
-  jwt_public_key:
-    file: ./jwt-secrets/public-key.pem
-
+# Network
 networks:
   banking-network:
     driver: bridge

@@ -25,10 +25,10 @@ public class AccountController {
     public ResponseEntity<Account> createAccount(HttpServletRequest request) {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         String token = request.getHeader("Authorization"); // Get the token from incoming request
-        String token1= (String) redisTemplate.opsForValue().get(username);
+//        String token1= (String) redisTemplate.opsForValue().get(username);
 
-        if(token.equals(token1)) System.out.println("smae...............................................");
-        else System.out.println("not same.................................");
+//        if(token.equals(token1)) System.out.println("smae...............................................");
+//        else System.out.println("not same.................................");
         return ResponseEntity.ok(accountService.createAccount(username, token));
     }
 
@@ -43,7 +43,7 @@ public class AccountController {
     @PostMapping("/debit")
     public ResponseEntity<String> debit(@RequestBody BalanceUpdateRequest request,HttpServletRequest request1) {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        String token1 = (String) redisTemplate.opsForValue().get(username);
+//        String token1 = (String) redisTemplate.opsForValue().get(username);
         String token = request1.getHeader("Authorization");
 //        log.info(token,token1);
         boolean success = accountService.debit(request.getAccountNumber(), request.getAmount(),token);
@@ -57,7 +57,7 @@ public class AccountController {
     @PostMapping("/credit")
     public ResponseEntity<String> credit(@RequestBody BalanceUpdateRequest request,HttpServletRequest request1) {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        String token1 = (String) redisTemplate.opsForValue().get(username);
+//        String token1 = (String) redisTemplate.opsForValue().get(username);
         String token = request1.getHeader("Authorization");
         boolean success = accountService.credit(request.getAccountNumber(), request.getAmount(),token);
         if (success) {
@@ -66,6 +66,14 @@ public class AccountController {
             return ResponseEntity.badRequest().body("Account not found");
         }
     }
+
+    @GetMapping("checkbalance/{accountNumber}")
+    public double checkBalance(@PathVariable String accountNumber){
+        double balance=accountService.getBalanceByAccountNumber(accountNumber);
+        return balance;
+    }
+
+
 
 }
 
