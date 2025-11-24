@@ -1,6 +1,7 @@
 package com.banking.account.service;
 
 import com.banking.account.model.Account;
+import com.banking.account.model.AccountType;
 import com.banking.account.repository.AccountRepository;
 import com.banking.account.response.RegisterRequestResponse;
 import com.banking.account.response.UserResponse;
@@ -34,7 +35,7 @@ public class AccountService {
 
     @Autowired
     private RedisTemplate redisTemplate;
-    public Account createAccount(String username, String token) {
+    public Account createAccount(String username, String token, AccountType type) {
 
         // Check if user already has an account
         if (repository.findByUsername(username).isPresent()) return null;
@@ -44,7 +45,7 @@ public class AccountService {
         account.setAccountNumber(generateBankAccountNumber());
         account.setBalance(1000.0);
         account.setUsername(username);
-
+        account.setAccountType(String.valueOf(type));
         // ✅ Add proper headers
         HttpHeaders headers = new HttpHeaders();
 //        headers.setContentType(MediaType.APPLICATION_JSON);

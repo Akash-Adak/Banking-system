@@ -1,5 +1,6 @@
 package com.banking.account.controller;
 
+import com.banking.account.model.AccountRequest;
 import com.banking.account.model.BalanceUpdateRequest;
 import com.banking.account.response.Token;
 import com.banking.account.service.AccountService;
@@ -21,15 +22,13 @@ public class AccountController {
 
     @Autowired
     private RedisTemplate redisTemplate;
+
     @PostMapping
-    public ResponseEntity<Account> createAccount(HttpServletRequest request) {
+    public ResponseEntity<Account> createAccount(@RequestBody AccountRequest accountRequest, HttpServletRequest request) {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         String token = request.getHeader("Authorization"); // Get the token from incoming request
-//        String token1= (String) redisTemplate.opsForValue().get(username);
 
-//        if(token.equals(token1)) System.out.println("smae...............................................");
-//        else System.out.println("not same.................................");
-        return ResponseEntity.ok(accountService.createAccount(username, token));
+        return ResponseEntity.ok(accountService.createAccount(username, token,accountRequest.getType()));
     }
 
 

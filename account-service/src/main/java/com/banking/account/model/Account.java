@@ -16,6 +16,7 @@ public class Account {
 
     private String accountNumber;
 
+    private String accountType;
     public String getUsername() {
         return username;
     }
