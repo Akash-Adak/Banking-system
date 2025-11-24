@@ -5,9 +5,9 @@ spring:
   application:
     name: auth
   datasource:
-    url: jdbc:mysql://mysql-db:3306/banking_system   # Use service name from Docker Compose
+    url: jdbc:mysql://localhost:3306/banking_system
     username: root
-    password: root
+    password: Akash@2003
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
@@ -17,28 +17,29 @@ spring:
     database-platform: org.hibernate.dialect.MySQLDialect
 
   kafka:
-    bootstrap-servers: kafka:9092               # Kafka container name
+    bootstrap-servers: localhost:9092
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
-
   cache:
     type: redis
+
   data:
     redis:
-      host: redis                                # Redis container name
-      port: 6379                                 # default Redis port inside container
+      host: redis-13252.c305.ap-south-1-1.ec2.redns.redis-cloud.com
+      port: 13252
+      password: KiIpJJ24Oh46m4SfPWcDh3JuVcPWjPWQ
       timeout: 3000
 
 jwt:
   expiration: 3600000
 
-eureka:
-  client:
-    service-url:
-      defaultZone: http://eureka-server:8761/eureka   # Eureka container name
-    fetch-registry: true
-    register-with-eureka: true
+eureka :
+  client :
+    service-url :
+      defaultZone: http://localhost:8761/eureka
+      fetch-registry: true
+      register-with-eureka: true
 
 management:
   endpoints:

@@ -1,13 +1,11 @@
-
 server:
   port: 8085
 
 spring:
   application:
     name: notification
-
   kafka:
-    bootstrap-servers: kafka:9092              # Kafka container name
+    bootstrap-servers: localhost:9092
     consumer:
       group-id: notification-group
       auto-offset-reset: earliest
@@ -17,15 +15,14 @@ spring:
   mail:
     host: smtp.gmail.com
     port: 587
-    username: equinoxfinancebank@gmail.com
-    password: gplfihhlusxhscpp               # Use env variable in Docker for security
+    username: akashadak0029@gmail.com
+    password: xxxxxx
     properties:
       mail:
         smtp:
           auth: true
           starttls:
             enable: true
-
 management:
   endpoints:
     web:
@@ -36,9 +33,14 @@ management:
       prometheus:
         enabled: true
 
-eureka:
-  client:
-    service-url:
-      defaultZone: http://eureka-server:8761/eureka   # Eureka container name
-    fetch-registry: true
-    register-with-eureka: true
+eureka :
+  client :
+    service-url :
+      defaultZone: http://localhost:8761/eureka
+      fetch-registry: true
+      register-with-eureka: true
+
+twilio:
+  accountSid: YOUR_TWILIO_ACCOUNT_SID
+  authToken: YOUR_TWILIO_AUTH_TOKEN
+  fromNumber: YOUR_TWILIO_PHONE_NUMBER

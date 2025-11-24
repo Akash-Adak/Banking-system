@@ -34,3 +34,4 @@ jwt-secrets/
 
 **/src/main/resources/private.key
 **/src/main/resources/public.key
+**/src/main/resources/application.yml

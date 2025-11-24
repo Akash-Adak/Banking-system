@@ -51,14 +51,14 @@ public class UserController {
         User cachedUser = redisService.get(username, User.class);
         if (cachedUser != null) {
             System.out.println("✅ Retrieved from Redis");
-            return new ResponseEntity<>(cachedUser, HttpStatus.FOUND);
+            return new ResponseEntity<>(cachedUser, HttpStatus.OK);
         }
 
         Optional<User> users = userService.getUserByUsername(username);
         if (users.isPresent()) {
             User userObj = users.get();
             redisService.set(username, userObj, 3600L);
-            return new ResponseEntity<>(userObj, HttpStatus.FOUND);
+            return new ResponseEntity<>(userObj, HttpStatus.OK);
         }
 
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);

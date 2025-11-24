@@ -1,4 +1,3 @@
-
 server:
   port: 8082
 
@@ -7,9 +6,9 @@ spring:
     name: user
 
   datasource:
-    url: jdbc:mysql://mysql-db:3306/banking_system   # MySQL service name in Docker
+    url: jdbc:mysql://localhost:3306/banking_system
     username: root
-    password: root
+    password: Akash@2003
 
   jpa:
     hibernate:
@@ -20,7 +19,7 @@ spring:
         format_sql: true
 
   kafka:
-    bootstrap-servers: kafka:9092               # Kafka container name
+    bootstrap-servers: localhost:9092
     consumer:
       group-id: notification-group
       auto-offset-reset: earliest
@@ -29,21 +28,23 @@ spring:
 
   cache:
     type: redis
+
   data:
     redis:
-      host: redis                                # Redis container name
-      port: 6379
-      password: LKIudJQ9HnyyOzJQZdBVf3BjDWQSHyac
+      host: redis-13252.c305.ap-south-1-1.ec2.redns.redis-cloud.com
+      port: 13252
+      password: KiIpJJ24Oh46m4SfPWcDh3JuVcPWjPWQ
       timeout: 3000
+#      ssl: true
 
 jwt:
-  public-key-location: jwt-secrets/public-key.pem
+  secret: U2VjdXJlS2V5Rm9yQmFua2luZ0FwcFNob3VsZEJlQmFzZTY0
   expiration: 3600000
 
 eureka:
   client:
     service-url:
-      defaultZone: http://eureka-server:8761/eureka   # Eureka container name
+      defaultZone: http://localhost:8761/eureka
     fetch-registry: true
     register-with-eureka: true
 
