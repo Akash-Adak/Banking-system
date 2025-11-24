@@ -23,7 +23,7 @@ export default function Login() {
       console.log(res);
       localStorage.setItem("username",form.username);
       login(res.data); // store in context
-      navigate("/dashboard"); // redirect
+      navigate("/"); // redirect
     } catch (e) {
       setError(e.response?.data?.message || "Login failed");
     }

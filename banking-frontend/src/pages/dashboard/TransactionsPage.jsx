@@ -4,58 +4,53 @@ import Table from "../../components/Table";
 import StatusBadge from "../../components/StatusBadge";
 import FilterBar from "../../components/FilterBar";
 import { format } from "date-fns";
+import api_transaction from "../../api/axiosTransaction"; // 🔥 your axios instance
 
 export default function TransactionsPage() {
   const [transactions, setTransactions] = useState([]);
   const [typeFilter, setTypeFilter] = useState("ALL");
   const [statusFilter, setStatusFilter] = useState("ALL");
   const [search, setSearch] = useState("");
+  const [loading, setLoading] = useState(true);
+
+  const accountNumber = localStorage.getItem("accountNumber");
+
+  // 🔥 LOAD TRANSACTIONS FROM BACKEND
+  const loadTransactions = async () => {
+    try {
+      const res = await api_transaction.get(`/api/transactions/history/${accountNumber}`);
+
+      const safeData = Array.isArray(res.data) ? res.data : [];
+      setTransactions(safeData);
+      setLoading(false);
+    } catch (err) {
+      console.error("Error loading transactions:", err);
+      setTransactions([]);
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    setTransactions([
-      {
-        id: "TXN001",
-        date: "2024-11-20T09:30:00Z",
-        type: "DEBIT",
-        amount: 2500,
-        accountId: "ACC123",
-        status: "COMPLETED",
-        description: "Groceries",
-      },
-      {
-        id: "TXN002",
-        date: "2024-11-19T14:10:00Z",
-        type: "CREDIT",
-        amount: 40000,
-        accountId: "ACC456",
-        status: "COMPLETED",
-        description: "Salary",
-      },
-      {
-        id: "TXN003",
-        date: "2024-11-18T12:00:00Z",
-        type: "DEBIT",
-        amount: 1500,
-        accountId: "ACC123",
-        status: "FAILED",
-        description: "UPI Payment",
-      },
-    ]);
+    loadTransactions();
   }, []);
 
+  // 🔥 FILTERING LOGIC
   const filtered = useMemo(() => {
     return transactions.filter((t) => {
       if (typeFilter !== "ALL" && t.type !== typeFilter) return false;
       if (statusFilter !== "ALL" && t.status !== statusFilter) return false;
+
       if (
         search &&
         !(
-          t.id.toLowerCase().includes(search.toLowerCase()) ||
-          t.description.toLowerCase().includes(search.toLowerCase()) ||
-          t.accountId.toLowerCase().includes(search.toLowerCase())
+          t.id?.toLowerCase().includes(search.toLowerCase()) ||
+          t.description?.toLowerCase().includes(search.toLowerCase()) ||
+          t.accountId?.toLowerCase().includes(search.toLowerCase())
         )
-      )
+      ) {
         return false;
+      }
+
       return true;
     });
   }, [transactions, typeFilter, statusFilter, search]);
@@ -65,7 +60,7 @@ export default function TransactionsPage() {
       header: "Date",
       accessor: "date",
       render: (val) =>
-        format(new Date(val), "dd MMM yyyy, HH:mm"),
+        val ? format(new Date(val), "dd MMM yyyy, HH:mm") : "-",
     },
     { header: "Txn ID", accessor: "id" },
     { header: "Account", accessor: "accountId" },
@@ -87,7 +82,7 @@ export default function TransactionsPage() {
     {
       header: "Amount",
       accessor: "amount",
-      render: (val) => `₹ ${val.toLocaleString("en-IN")}`,
+      render: (val) => `₹ ${Number(val || 0).toLocaleString("en-IN")}`,
     },
     {
       header: "Status",
@@ -101,6 +96,7 @@ export default function TransactionsPage() {
     <DashboardLayout>
       <h1 className="text-2xl font-bold mb-4">Transactions</h1>
 
+      {/* 🔍 Filters */}
       <FilterBar>
         <input
           type="text"
@@ -132,7 +128,23 @@ export default function TransactionsPage() {
         </select>
       </FilterBar>
 
-      <Table columns={columns} data={filtered} />
+      {/* 🔥 Loading */}
+      {loading && <p className="text-gray-600">Loading transactions...</p>}
+
+      {/* 🚫 No transactions found */}
+      {!loading && filtered.length === 0 && (
+        <div className="p-6 bg-gray-100 text-gray-700 rounded-lg text-center">
+          <p className="text-lg font-medium">No transactions found.</p>
+          <p className="text-sm text-gray-500">
+            Try adjusting filters or check back later.
+          </p>
+        </div>
+      )}
+
+      {/* 📄 Data Table */}
+      {!loading && filtered.length > 0 && (
+        <Table columns={columns} data={filtered} />
+      )}
     </DashboardLayout>
   );
 }

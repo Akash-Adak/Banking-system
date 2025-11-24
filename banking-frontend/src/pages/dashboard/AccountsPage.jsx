@@ -4,7 +4,7 @@ import Table from "../../components/Table";
 import StatusBadge from "../../components/StatusBadge";
 import { format } from "date-fns";
 import api_account from "../../api/axiosAccount";
-
+import { useNavigate } from "react-router-dom";
 import Modal from "../../components/Modal";
 
 export default function AccountsPage() {
@@ -15,7 +15,7 @@ export default function AccountsPage() {
   const [message, setMessage] = useState("");
 
   const username = localStorage.getItem("username");
-
+const navigate = useNavigate();
   // 🔥 GET ALL ACCOUNTS FROM BACKEND
   const loadAccounts = async () => {
     try {
@@ -140,6 +140,27 @@ const maskAccountNumber = (num) => {
           Create Account
         </button>
       </Modal>
+
+        <button
+    onClick={() => navigate("/send-money")}
+    className="px-4 py-2 bg-blue-600 text-white rounded-lg"
+  >
+    💸 Send Money
+  </button>
+
+  <button
+    onClick={() => navigate("/add-money")}
+    className="px-4 py-2 bg-green-600 text-white rounded-lg"
+  >
+    ➕ Add Money
+  </button>
+
+  <button
+    onClick={() => navigate("/withdraw")}
+    className="px-4 py-2 bg-red-600 text-white rounded-lg"
+  >
+    🔻 Withdraw
+  </button>
     </DashboardLayout>
   );
 }

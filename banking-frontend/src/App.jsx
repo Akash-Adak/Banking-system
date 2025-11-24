@@ -10,12 +10,20 @@ import AdminDashboard from "./pages/dashboard/AdminDashboard";
 import ProtectedRoute from "./components/ProtectedRoute";
 import AdminRoute from "./components/AdminRoute";
 import ProfilePage from "./pages/dashboard/ProfilePage";
+import SendMoney from "./pages/money/SendMoney";
+import AddMoney from "./pages/money/AddMoney";
+import Withdraw from "./pages/money/WithDraw";
+import Home from "./pages/Home";
+
 
 export default function App() {
   return (
-    <BrowserRouter>
+    // <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Login />} />
+
+        <Route path="/" element={<Home/>} />
+
+        <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
 
         <Route
@@ -79,7 +87,15 @@ export default function App() {
             </AdminRoute>
           }
         />
+
+
+        <Route path="/send-money" element={<SendMoney />} />
+<Route path="/add-money" element={<AddMoney />} />
+<Route path="/withdraw" element={<Withdraw />} />
+
       </Routes>
-    </BrowserRouter>
+
+
+    // </BrowserRouter>
   );
 }
