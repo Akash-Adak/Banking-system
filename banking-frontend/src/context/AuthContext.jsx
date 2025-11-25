@@ -10,7 +10,13 @@ export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(localStorage.getItem("token"));
   const [loading, setLoading] = useState(true);
-
+  
+ const logout = () => {
+    localStorage.removeItem("token");
+    setToken(null);
+    setUser(null);
+    navigate("/"); // redirect to home page
+  };
   // Decode token + validate
   useEffect(() => {
     if (!token) {
@@ -48,12 +54,7 @@ export function AuthProvider({ children }) {
   };
 
   // Logout function
-  const logout = () => {
-    localStorage.removeItem("token");
-    setToken(null);
-    setUser(null);
-    navigate("/"); // redirect to home page
-  };
+ 
 
   return (
     <AuthContext.Provider value={{ user, token, login, logout, loading }}>

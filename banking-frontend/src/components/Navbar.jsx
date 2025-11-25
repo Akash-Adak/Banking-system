@@ -1,85 +1,129 @@
 import { useState, useEffect, useRef } from 'react';
 import { useAuth } from "../context/AuthContext";
 
+// --- COLOR CONFIGURATION ---
 const COLOR_MAP = {
-  blue: { bg: 'bg-blue-100', text: 'text-blue-600', groupBg: 'group-hover:from-blue-200', groupTo: 'group-hover:to-blue-300' },
-  green: { bg: 'bg-green-100', text: 'text-green-600', groupBg: 'group-hover:from-green-200', groupTo: 'group-hover:to-green-300' },
-  purple: { bg: 'bg-purple-100', text: 'text-purple-600', groupBg: 'group-hover:from-purple-200', groupTo: 'group-hover:to-purple-300' },
-  orange: { bg: 'bg-orange-100', text: 'text-orange-600', groupBg: 'group-hover:from-orange-200', groupTo: 'group-hover:to-orange-300' },
-  red: { bg: 'bg-red-100', text: 'text-red-600', groupBg: 'group-hover:from-red-200', groupTo: 'group-hover:to-red-300' },
-  teal: { bg: 'bg-teal-100', text: 'text-teal-600', groupBg: 'group-hover:from-teal-200', groupTo: 'group-hover:to-teal-300' },
+  blue: { bg: 'bg-blue-50', text: 'text-blue-600', border: 'border-blue-100', hover: 'hover:bg-blue-50', gradient: 'from-blue-500 to-blue-600' },
+  green: { bg: 'bg-emerald-50', text: 'text-emerald-600', border: 'border-emerald-100', hover: 'hover:bg-emerald-50', gradient: 'from-emerald-500 to-emerald-600' },
+  purple: { bg: 'bg-purple-50', text: 'text-purple-600', border: 'border-purple-100', hover: 'hover:bg-purple-50', gradient: 'from-purple-500 to-purple-600' },
+  orange: { bg: 'bg-orange-50', text: 'text-orange-600', border: 'border-orange-100', hover: 'hover:bg-orange-50', gradient: 'from-orange-500 to-orange-600' },
+  red: { bg: 'bg-rose-50', text: 'text-rose-600', border: 'border-rose-100', hover: 'hover:bg-rose-50', gradient: 'from-rose-500 to-rose-600' },
+  teal: { bg: 'bg-teal-50', text: 'text-teal-600', border: 'border-teal-100', hover: 'hover:bg-teal-50', gradient: 'from-teal-500 to-teal-600' },
+  indigo: { bg: 'bg-indigo-50', text: 'text-indigo-600', border: 'border-indigo-100', hover: 'hover:bg-indigo-50', gradient: 'from-indigo-500 to-indigo-600' },
 };
 
-// Icon mapping to fix any icon name mismatches
 const ICON_MAP = {
-  'piggy-bank': 'piggy-bank',
-  'building': 'building',
-  'money-check': 'money-check',
-  'globe-americas': 'globe-americas',
-  'hand-holding-usd': 'hand-holding-usd',
-  'home': 'home',
-  'car': 'car',
-  'briefcase': 'briefcase',
-  'credit-card': 'credit-card',
-  'id-card': 'id-card',
-  'wallet': 'wallet',
-  'mobile-alt': 'mobile-alt',
-  'file-invoice': 'file-invoice',
-  'exchange-alt': 'exchange-alt',
-  'chart-line': 'chart-line',
-  'chart-bar': 'chart-bar',
-  'shield-alt': 'shield-alt',
-  'chart-pie': 'chart-pie',
-  'calculator': 'calculator',
-  'gem': 'gem',
-  'project-diagram': 'project-diagram',
-  'rocket': 'rocket',
-  'file-contract': 'file-contract',
-  'landmark': 'landmark',
-  'balance-scale': 'balance-scale',
-  'dollar-sign': 'dollar-sign',
-  'chess-knight': 'chess-knight',
-  'paper-plane': 'paper-plane',
-  'receipt': 'receipt',
-  'phone-alt': 'phone-alt',
-  'envelope': 'envelope',
-  'map-marker-alt': 'map-marker-alt',
-  'question-circle': 'question-circle',
-  'university': 'university',
-  'cube': 'cube',
-  'concierge-bell': 'concierge-bell',
-  'gift': 'gift',
-  'sign-in-alt': 'sign-in-alt',
-  'user-plus': 'user-plus',
-  'sign-out-alt': 'sign-out-alt',
-  'times': 'times',
-  'bars': 'bars',
-  'chevron-down': 'chevron-down',
-  'chevron-right': 'chevron-right'
+  'piggy-bank': 'piggy-bank', 'building': 'building', 'money-check': 'money-check', 'globe-americas': 'globe-americas',
+  'hand-holding-usd': 'hand-holding-usd', 'home': 'home', 'car': 'car', 'briefcase': 'briefcase', 'credit-card': 'credit-card',
+  'id-card': 'id-card', 'wallet': 'wallet', 'mobile-alt': 'mobile-alt', 'file-invoice': 'file-invoice', 'exchange-alt': 'exchange-alt',
+  'chart-line': 'chart-line', 'chart-bar': 'chart-bar', 'shield-alt': 'shield-alt', 'chart-pie': 'chart-pie', 'calculator': 'calculator',
+  'gem': 'gem', 'project-diagram': 'project-diagram', 'rocket': 'rocket', 'file-contract': 'file-contract', 'landmark': 'landmark',
+  'balance-scale': 'balance-scale', 'dollar-sign': 'dollar-sign', 'chess-knight': 'chess-knight', 'paper-plane': 'paper-plane',
+  'receipt': 'receipt', 'phone-alt': 'phone-alt', 'envelope': 'envelope', 'map-marker-alt': 'map-marker-alt', 'question-circle': 'question-circle',
+  'university': 'university', 'cube': 'cube', 'concierge-bell': 'concierge-bell', 'gift': 'gift', 'sign-in-alt': 'sign-in-alt',
+  'user-plus': 'user-plus', 'sign-out-alt': 'sign-out-alt', 'times': 'times', 'bars': 'bars', 'chevron-down': 'chevron-down',
+  'chevron-right': 'chevron-right', 'plus': 'plus', 'minus': 'minus', 'arrow-up': 'arrow-up', 'arrow-down': 'arrow-down',
+  'award': 'award', 'bolt': 'bolt', 'crown': 'crown', 'star': 'star', 'shield-check': 'shield-check', 'lock': 'lock',
+  'percent': 'percent', 'rupee-sign': 'rupee-sign', 'shopping-bag': 'shopping-bag', 'tag': 'tag'
 };
+
+// --- SUB-COMPONENTS ---
+
+const Icon = ({ name, className = "" }) => {
+  const iconName = ICON_MAP[name] || name;
+  return <i className={`fas fa-${iconName} ${className}`} />;
+};
+
+// Promotional Banner Component
+const PromotionalBanner = () => {
+  const [currentOffer, setCurrentOffer] = useState(0);
+  
+  const offers = [
+    { text: "🎉 Get 7% interest on Savings Account + ₹1000 Amazon Voucher!", link: "/savings-offer", color: "blue" },
+    { text: "🚀 Pre-approved Personal Loan up to ₹25 Lakhs @10.5% p.a.", link: "/personal-loan", color: "green" },
+    { text: "💳 Zero Annual Fee Credit Cards - Limited Time Offer!", link: "/credit-cards", color: "purple" },
+    { text: "📈 Invest in Mutual Funds & Get Free Demat Account", link: "/invest", color: "orange" }
+  ];
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentOffer((prev) => (prev + 1) % offers.length);
+    }, 4000);
+    return () => clearInterval(interval);
+  }, [offers.length]);
+
+  const currentColor = COLOR_MAP[offers[currentOffer].color] || COLOR_MAP.blue;
+
+  return (
+    <div className={`bg-gradient-to-r ${currentColor.gradient} text-white py-2 text-sm relative overflow-hidden`}>
+      <div className="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-center">
+        <div className="flex items-center space-x-2 animate-pulse">
+          <Icon name="award" className="text-yellow-300" />
+          <a href={offers[currentOffer].link} className="font-bold hover:underline text-center">
+            {offers[currentOffer].text}
+          </a>
+        </div>
+      </div>
+      <div className="absolute bottom-0 left-0 right-0 flex justify-center space-x-1 pb-1">
+        {offers.map((_, index) => (
+          <button
+            key={index}
+            onClick={() => setCurrentOffer(index)}
+            className={`w-2 h-2 rounded-full transition-all ${
+              index === currentOffer ? 'bg-white' : 'bg-white/50'
+            }`}
+          />
+        ))}
+      </div>
+    </div>
+  );
+};
+
+// Market Ticker Component
+const MarketTicker = () => {
+  return (
+    <div className="bg-slate-900 text-white text-xs py-2 overflow-hidden border-b border-slate-800 relative z-10">
+      <div className="flex animate-marquee whitespace-nowrap space-x-8">
+        <span className="flex items-center space-x-1"><span className="text-slate-400 font-medium">SENSEX</span><span className="text-green-400 font-bold">65,982.40 ▲ 0.45%</span></span>
+        <span className="flex items-center space-x-1"><span className="text-slate-400 font-medium">NIFTY</span><span className="text-green-400 font-bold">19,765.20 ▲ 0.32%</span></span>
+        <span className="flex items-center space-x-1"><span className="text-slate-400 font-medium">GOLD</span><span className="text-red-400 font-bold">58,400.00 ▼ 0.12%</span></span>
+        <span className="flex items-center space-x-1"><span className="text-slate-400 font-medium">USD/INR</span><span className="text-green-400 font-bold">83.12 ▲ 0.05%</span></span>
+        <span className="flex items-center space-x-1"><span className="text-slate-400 font-medium">BITCOIN</span><span className="text-green-400 font-bold">$34,210 ▲ 2.3%</span></span>
+        {/* Duplicate for infinite scroll illusion */}
+        <span className="flex items-center space-x-1"><span className="text-slate-400 font-medium">SENSEX</span><span className="text-green-400 font-bold">65,982.40 ▲ 0.45%</span></span>
+        <span className="flex items-center space-x-1"><span className="text-slate-400 font-medium">NIFTY</span><span className="text-green-400 font-bold">19,765.20 ▲ 0.32%</span></span>
+        <span className="flex items-center space-x-1"><span className="text-slate-400 font-medium">GOLD</span><span className="text-red-400 font-bold">58,400.00 ▼ 0.12%</span></span>
+      </div>
+      <style>{`
+        @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+        .animate-marquee { animation: marquee 25s linear infinite; }
+      `}</style>
+    </div>
+  );
+};
+
+
 
 export default function Navbar() {
-  // Safe destructuring in case Context is not ready
   const auth = useAuth();
   const user = auth?.user;
   const logout = auth?.logout;
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [activeDropdown, setActiveDropdown] = useState(null); // 'products', 'services', 'invest', 'user' or null
+  const [activeDropdown, setActiveDropdown] = useState(null);
+  const [mobileExpanded, setMobileExpanded] = useState(null);
   const [scrolled, setScrolled] = useState(false);
   
   const dropdownRef = useRef(null);
 
-  // Scroll Handler
+  // Handle Scroll Effect
   useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 50);
-    };
+    const handleScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Close dropdowns when clicking outside (Specific for the User Click dropdown)
+  // Handle Click Outside (Desktop Dropdown)
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -90,22 +134,28 @@ export default function Navbar() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [activeDropdown]);
 
-  // Simplified Hover Handlers
-  const handleMouseEnter = (menu) => {
-    setActiveDropdown(menu);
-  };
+  // Lock Body Scroll when Mobile Menu is Open
+  useEffect(() => {
+    if (isMobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+  }, [isMobileMenuOpen]);
 
-  const handleMouseLeave = () => {
-    setActiveDropdown(null);
-  };
+  const handleMouseEnter = (menu) => setActiveDropdown(menu);
+  const handleMouseLeave = () => setActiveDropdown(null);
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
+    if (!isMobileMenuOpen) setMobileExpanded(null);
   };
 
-  const handleUserDropdownToggle = () => {
-    setActiveDropdown(activeDropdown === 'user' ? null : 'user');
+  const toggleMobileAccordion = (section) => {
+    setMobileExpanded(mobileExpanded === section ? null : section);
   };
+
+  const handleUserDropdownToggle = () => setActiveDropdown(activeDropdown === 'user' ? null : 'user');
 
   const handleLogout = () => {
     if (logout) logout();
@@ -113,465 +163,552 @@ export default function Navbar() {
     setActiveDropdown(null);
   };
 
-  // Icon component to handle icon rendering
-  const Icon = ({ name, className = "" }) => {
-    const iconName = ICON_MAP[name] || name;
-    return <i className={`fas fa-${iconName} ${className}`} />;
-  };
-
-  // --- DATA ARRAYS ---
+  // --- ENHANCED DATA ---
   const bankingProducts = [
-    {
-      category: "Accounts",
+    { 
+      category: "Accounts", 
       items: [
-        { name: "Savings Account", icon: "piggy-bank", link: "/savings", description: "High interest savings" },
-        { name: "Current Account", icon: "building", link: "/current", description: "For businesses" },
-        { name: "Salary Account", icon: "money-check", link: "/salary", description: "Zero balance" },
-        { name: "NRI Account", icon: "globe-americas", link: "/nri", description: "Global banking" }
-      ]
+        { name: "Savings Account", icon: "piggy-bank", link: "/savings", description: "Earn up to 7% Interest", badge: "Popular" },
+        { name: "Current Account", icon: "building", link: "/current", description: "For seamless business", badge: "Zero Balance" },
+        { name: "Salary Account", icon: "money-check", link: "/salary", description: "Premium benefits", badge: "New" }
+      ] 
     },
-    {
-      category: "Loans",
+    { 
+      category: "Loans", 
       items: [
-        { name: "Personal Loan", icon: "hand-holding-usd", link: "/personal-loan", description: "Up to ₹25L" },
-        { name: "Home Loan", icon: "home", link: "/home-loan", description: "Low interest rates" },
-        { name: "Car Loan", icon: "car", link: "/car-loan", description: "100% funding" },
-        { name: "Business Loan", icon: "briefcase", link: "/business-loan", description: "Quick approval" }
-      ]
+        { name: "Personal Loan", icon: "hand-holding-usd", link: "/personal-loan", description: "Quick disbursal", badge: "Pre-approved" },
+        { name: "Home Loan", icon: "home", link: "/home-loan", description: "Attractive rates", badge: "6.9%*" },
+        { name: "Car Loan", icon: "car", link: "/car-loan", description: "Drive home your dream", badge: "Low EMI" }
+      ] 
     },
-    {
-      category: "Cards",
+    { 
+      category: "Cards", 
       items: [
-        { name: "Credit Cards", icon: "credit-card", link: "/credit-cards", description: "Rewards & cashback" },
-        { name: "Debit Cards", icon: "id-card", link: "/debit-cards", description: "Instant issuance" },
-        { name: "Prepaid Cards", icon: "wallet", link: "/prepaid-cards", description: "Gift & travel" }
-      ]
+        { name: "Credit Cards", icon: "credit-card", link: "/credit-cards", description: "Lifetime free options", badge: "Rewards" },
+        { name: "Debit Cards", icon: "id-card", link: "/debit-cards", description: "Secure payments", badge: "Free" },
+        { name: "Prepaid Cards", icon: "shopping-bag", link: "/prepaid-cards", description: "Control your spending", badge: "Flexible" }
+      ] 
     }
   ];
 
   const bankingServices = [
-    {
-      category: "Payments",
+    { 
+      category: "Payments", 
       items: [
-        { name: "UPI Payments", icon: "mobile-alt", link: "/upi", description: "Instant transfers" },
-        { name: "Bill Payments", icon: "file-invoice", link: "/bill-pay", description: "Auto pay" },
-        { name: "Fund Transfer", icon: "exchange-alt", link: "/fund-transfer", description: "NEFT/IMPS" }
-      ]
+        { name: "UPI Payments", icon: "mobile-alt", link: "/upi", description: "Scan & Pay instantly", badge: "Fast" },
+        { name: "Bill Payments", icon: "file-invoice", link: "/bill-pay", description: "Electricity, Water, DTH", badge: "Easy" },
+        { name: "Tax Payments", icon: "calculator", link: "/tax-payment", description: "Income Tax, GST", badge: "Secure" }
+      ] 
     },
-    {
-      category: "Investments",
+    { 
+      category: "Wealth", 
       items: [
-        { name: "Mutual Funds", icon: "chart-line", link: "/mutual-funds", description: "Expert advice" },
-        { name: "Fixed Deposits", icon: "chart-bar", link: "/fixed-deposits", description: "High returns" },
-        { name: "Insurance", icon: "shield-alt", link: "/insurance", description: "Life & health" }
-      ]
+        { name: "Mutual Funds", icon: "chart-line", link: "/mutual-funds", description: "Start SIP at ₹500", badge: "Wealth+" },
+        { name: "Fixed Deposits", icon: "chart-bar", link: "/fixed-deposits", description: "Guaranteed returns", badge: "7.2%" },
+        { name: "Digital Gold", icon: "gem", link: "/digital-gold", description: "Buy 24K Gold", badge: "Safe" }
+      ] 
     },
-    {
-      category: "Services",
-      items: [
-        { name: "Demat Account", icon: "chart-pie", link: "/demat", description: "Trading account" },
-        { name: "Tax Services", icon: "calculator", link: "/tax", description: "e-filing" },
-        { name: "Wealth Management", icon: "gem", link: "/wealth", description: "Portfolio advice" }
-      ]
-    }
   ];
 
   const investmentOptions = [
-    {
-      category: "Stocks & ETFs",
+    { 
+      category: "Market", 
       items: [
-        { name: "Equity Trading", icon: "chart-line", link: "/equity", description: "Stock market" },
-        { name: "ETF Investments", icon: "project-diagram", link: "/etf", description: "Diversified funds" },
-        { name: "IPO", icon: "rocket", link: "/ipo", description: "Initial offerings" }
-      ]
+        { name: "Stocks", icon: "chart-line", link: "/equity", description: "Trade on NSE/BSE", badge: "Zero Brokerage" },
+        { name: "IPO", icon: "rocket", link: "/ipo", description: "Apply for new listings", badge: "Hot" },
+        { name: "Futures & Options", icon: "project-diagram", link: "/fno", description: "Advanced trading", badge: "Pro" }
+      ] 
     },
-    {
-      category: "Fixed Income",
+    { 
+      category: "Safe Haven", 
       items: [
-        { name: "Corporate Bonds", icon: "file-contract", link: "/bonds", description: "Fixed returns" },
-        { name: "Government Securities", icon: "landmark", link: "/govt-securities", description: "Safe investment" },
-        { name: "Debt Funds", icon: "balance-scale", link: "/debt-funds", description: "Regular income" }
-      ]
-    },
-    {
-      category: "Advanced",
-      items: [
-        { name: "Forex Trading", icon: "dollar-sign", link: "/forex", description: "Currency trading" },
-        { name: "Commodities", icon: "gem", link: "/commodities", description: "Gold & silver" },
-        { name: "Derivatives", icon: "chess-knight", link: "/derivatives", description: "Futures & options" }
-      ]
+        { name: "Gold Bonds", icon: "gem", link: "/gold", description: "Digital Gold", badge: "Sovereign" },
+        { name: "Govt Bonds", icon: "landmark", link: "/bonds", description: "Sovereign Guarantee", badge: "Safe" },
+        { name: "Corporate FDs", icon: "building", link: "/corporate-fd", description: "Higher returns", badge: "8.5%" }
+      ] 
     }
   ];
 
   const quickActions = [
-    { name: "Quick Transfer", icon: "paper-plane", link: "/quick-transfer", color: "blue" },
+    { name: "Transfer", icon: "paper-plane", link: "/quick-transfer", color: "blue" },
     { name: "Pay Bills", icon: "receipt", link: "/pay-bills", color: "green" },
     { name: "Recharge", icon: "mobile-alt", link: "/recharge", color: "purple" },
-    { name: "Book FD", icon: "chart-bar", link: "/book-fd", color: "orange" },
-    { name: "Apply Loan", icon: "hand-holding-usd", link: "/apply-loan", color: "red" },
-    { name: "Invest Now", icon: "chart-line", link: "/invest-now", color: "teal" }
+    { name: "Invest", icon: "chart-line", link: "/invest-now", color: "teal" },
+    { name: "Loans", icon: "hand-holding-usd", link: "/loans", color: "orange" },
+    { name: "Offers", icon: "tag", link: "/offers", color: "red" }
+  ];
+
+  const userMenuItems = [
+    { name: "Dashboard", icon: "chart-pie", link: "/dashboard" },
+    { name: "My Accounts", icon: "wallet", link: "/my-accounts" },
+    { name: "Transactions", icon: "receipt", link: "/transactions" },
+    { name: "Payments", icon: "rupee-sign", link: "/payments" },
+    { name: "Cards", icon: "credit-card", link: "/cards" },
+    { name: "Investments", icon: "chart-line", link: "/investments" },
+    { name: "Loans", icon: "hand-holding-usd", link: "/loans" },
+    { name: "Profile", icon: "user", link: "/profile" },
+    { name: "Settings", icon: "cog", link: "/settings" }
   ];
 
   return (
     <>
-      {/* Top Announcement Bar */}
-      <div className="bg-gradient-to-r from-blue-900 to-purple-900 text-white py-2 text-sm relative z-50">
-        <div className="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row justify-between items-center space-y-1 md:space-y-0">
-            <div className="flex items-center space-x-6">
-              <div className="flex items-center space-x-2">
-                <Icon name="phone-alt" className="text-yellow-400 text-xs" />
-                <span className="font-medium">24/7 Customer Care: 1800-123-4567</span>
-              </div>
-              <div className="hidden lg:flex items-center space-x-2">
-                <Icon name="envelope" className="text-yellow-400 text-xs" />
-                <span>support@bankease.com</span>
-              </div>
-            </div>
-            <div className="flex items-center space-x-4 text-xs">
-              <a href="/locator" className="flex items-center space-x-1 hover:text-yellow-400 transition-colors">
-                <Icon name="map-marker-alt" />
-                <span>Branch & ATM Locator</span>
-              </a>
-              <span className="text-gray-400">|</span>
-              <a href="/help" className="flex items-center space-x-1 hover:text-yellow-400 transition-colors">
-                <Icon name="question-circle" />
-                <span>Help & Support</span>
-              </a>
-            </div>
+      {/* 1. Promotional Banner */}
+      <PromotionalBanner />
+
+      {/* 2. Top Bar */}
+      <div className="bg-slate-900 text-slate-300 py-2 text-xs relative z-[60] border-b border-slate-800 hidden md:block">
+        <div className="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
+          <div className="flex items-center space-x-6">
+            <span className="flex items-center gap-2 hover:text-white transition-colors cursor-pointer">
+              <Icon name="phone-alt" className="text-blue-400" /> 
+              <span>1800-123-4567</span>
+            </span>
+            <span className="flex items-center gap-2 hover:text-white transition-colors cursor-pointer">
+              <Icon name="envelope" className="text-green-400" /> 
+              <span>support@bankease.com</span>
+            </span>
+          </div>
+          <div className="flex items-center space-x-4">
+            <a href="/locator" className="hover:text-white flex items-center gap-1 transition-colors">
+              <Icon name="map-marker-alt" /> 
+              <span>Branch & ATM Locator</span>
+            </a>
+            <a href="/help" className="hover:text-white flex items-center gap-1 transition-colors">
+              <Icon name="question-circle" /> 
+              <span>24x7 Support</span>
+            </a>
+            <div className="w-px h-4 bg-slate-600"></div>
+            <a href="/nri" className="hover:text-white flex items-center gap-1 transition-colors">
+              <Icon name="globe-americas" /> 
+              <span>NRI Banking</span>
+            </a>
           </div>
         </div>
       </div>
 
-      {/* Main Navigation */}
-      <nav className={`bg-gradient-to-r from-white to-blue-50 shadow-lg sticky top-0 z-50 transition-all duration-300 ${scrolled ? 'shadow-xl bg-white' : ''}`}>
+
+
+      {/* 4. Main Navbar */}
+      <nav 
+        className={`sticky top-0 z-[50] transition-all duration-300 border-b border-gray-100 
+        ${scrolled ? 'bg-white/95 backdrop-blur-md shadow-lg' : 'bg-white'}`}
+      >
         <div className="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-20">
+          <div className="flex justify-between items-center h-16 xl:h-20">
             
             {/* Logo */}
-            <div className="flex-shrink-0 flex items-center">
+            <div className="flex-shrink-0 flex items-center z-[60]">
               <a href="/" className="flex items-center space-x-3 group">
-                <div className="w-12 h-12 bg-gradient-to-r from-blue-600 to-blue-800 rounded-2xl flex items-center justify-center group-hover:scale-105 transition-transform shadow-lg">
-                  <Icon name="university" className="text-white text-xl" />
+                <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-indigo-700 rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-blue-200 transition-all duration-300 group-hover:scale-105">
+                  <Icon name="university" className="text-white text-lg" />
                 </div>
                 <div>
-                  <div className="text-2xl font-black bg-gradient-to-r from-blue-900 to-blue-700 bg-clip-text text-transparent group-hover:from-blue-800 group-hover:to-blue-600 transition-all duration-300">BankEase</div>
-                  <div className="text-xs text-gray-600 -mt-1 font-medium">Digital Banking</div>
+                  <div className="text-2xl font-black text-slate-800 tracking-tight leading-none group-hover:text-blue-700 transition-colors">BankEase</div>
+                  <div className="text-[10px] text-slate-500 font-bold uppercase tracking-widest">Digital Banking</div>
                 </div>
               </a>
             </div>
 
-            {/* Desktop Navigation - NOT LOGGED IN */}
+            {/* Desktop Menu (Hidden on Mobile) */}
             {!user && (
               <div className="hidden xl:flex items-center space-x-8">
+                {[
+                  { id: 'products', label: 'Products', icon: 'cube', color: 'blue', data: bankingProducts },
+                  { id: 'services', label: 'Services', icon: 'concierge-bell', color: 'green', data: bankingServices },
+                  { id: 'invest', label: 'Invest', icon: 'chart-line', color: 'purple', data: investmentOptions }
+                ].map((menu) => (
+                  <div 
+                    key={menu.id}
+                    className="relative group h-full flex items-center"
+                    onMouseEnter={() => handleMouseEnter(menu.id)}
+                    onMouseLeave={handleMouseLeave}
+                  >
+                    <button className="flex items-center space-x-1.5 text-slate-600 hover:text-blue-700 font-bold text-sm py-2 px-1 rounded-md transition-colors group-hover:bg-blue-50/50 px-3">
+                      <Icon name={menu.icon} className={`text-${menu.color}-500 group-hover:text-${menu.color}-600`} />
+                      <span>{menu.label}</span>
+                      <Icon name="chevron-down" className={`text-[10px] transition-transform duration-300 ${activeDropdown === menu.id ? 'rotate-180 text-blue-600' : 'text-slate-400'}`} />
+                    </button>
+                    
+                    {/* Desktop Dropdown */}
+                    {activeDropdown === menu.id && (
+                      <div className="absolute top-[80%] left-1/2 transform -translate-x-1/2 w-[700px] bg-white rounded-2xl shadow-2xl border border-gray-100 py-6 z-50 animate-fadeInUp">
+                        <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-white transform rotate-45 border-t border-l border-gray-100"></div>
+                        <div className="grid grid-cols-3 gap-8 px-8 relative">
+                          {menu.data.map((section, index) => (
+                            <div key={index}>
+                              <h3 className={`font-bold text-xs uppercase tracking-wider text-${menu.color}-600 mb-3 border-b border-gray-100 pb-2 flex items-center gap-2`}>
+                                <Icon name={menu.icon} className="text-sm" />
+                                {section.category}
+                              </h3>
+                              <div className="space-y-1">
+                                {section.items.map((item, itemIndex) => (
+                                  <a 
+                                    key={itemIndex} 
+                                    href={item.link} 
+                                    className={`flex items-start space-x-3 p-2 rounded-lg hover:bg-${menu.color}-50 transition-all group/item relative`}
+                                  >
+                                    <div className={`mt-0.5 text-${menu.color}-500 group-hover/item:scale-110 transition-transform flex-shrink-0`}>
+                                        <Icon name={item.icon} />
+                                    </div>
+                                    <div className="flex-1 min-w-0">
+                                        <div className="text-sm font-bold text-slate-700 group-hover/item:text-slate-900 flex items-center gap-2">
+                                          {item.name}
+                                          {item.badge && (
+                                            <span className={`text-[10px] px-1.5 py-0.5 rounded-full bg-${menu.color}-100 text-${menu.color}-700 font-bold`}>
+                                              {item.badge}
+                                            </span>
+                                          )}
+                                        </div>
+                                        <div className="text-xs text-slate-400 group-hover/item:text-slate-500 truncate">{item.description}</div>
+                                    </div>
+                                  </a>
+                                ))}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                ))}
                 
-                {/* Products Dropdown */}
-                <div 
-                  className="relative group"
-                  onMouseEnter={() => handleMouseEnter('products')}
-                  onMouseLeave={handleMouseLeave}
-                >
-                  <button className="flex items-center space-x-2 text-gray-800 hover:text-blue-700 font-semibold py-6 transition-colors group relative focus:outline-none">
-                    <Icon name="cube" className="text-blue-600 group-hover:scale-110 transition-transform" />
-                    <span>Products</span>
-                    <Icon name="chevron-down" className={`text-xs transition-transform ${activeDropdown === 'products' ? 'rotate-180' : ''}`} />
-                    <div className="absolute bottom-4 left-0 w-0 h-0.5 bg-blue-600 group-hover:w-full transition-all duration-300"></div>
-                  </button>
-                  
-                  {activeDropdown === 'products' && (
-                    <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-[900px] bg-white rounded-2xl shadow-2xl border border-gray-200 py-6 z-50">
-                      <div className="grid grid-cols-3 gap-8 px-8">
-                        {bankingProducts.map((section, index) => (
-                          <div key={index} className="space-y-1">
-                            <h3 className="font-bold text-gray-900 text-sm mb-4 uppercase tracking-wide border-b border-blue-100 pb-2">{section.category}</h3>
-                            <div className="space-y-2">
-                              {section.items.map((item, itemIndex) => (
-                                <a key={itemIndex} href={item.link} className="flex items-center space-x-4 p-3 rounded-xl hover:bg-blue-50 transition-all duration-200 group/item border border-transparent hover:border-blue-200">
-                                  <div className="w-12 h-12 bg-gradient-to-br from-blue-100 to-blue-200 rounded-xl flex items-center justify-center group-hover/item:from-blue-200 group-hover/item:to-blue-300 transition-all duration-200 shadow-sm">
-                                    <Icon name={item.icon} className="text-blue-600 text-lg" />
-                                  </div>
-                                  <div className="flex-1 min-w-0">
-                                    <div className="text-gray-800 font-semibold text-sm group-hover/item:text-blue-700 truncate">{item.name}</div>
-                                    <div className="text-gray-500 text-xs truncate">{item.description}</div>
-                                  </div>
-                                  <Icon name="chevron-right" className="text-gray-300 text-xs group-hover/item:text-blue-500 transition-colors flex-shrink-0" />
-                                </a>
-                              ))}
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                      <div className="mt-6 pt-4 border-t border-gray-100 px-8 text-center">
-                         <a href="/products" className="text-blue-600 font-semibold hover:underline">View All Products</a>
-                      </div>
-                    </div>
-                  )}
-                </div>
+                <div className="h-6 w-px bg-slate-200 mx-2"></div>
 
-                {/* Services Dropdown */}
-                <div 
-                  className="relative group"
-                  onMouseEnter={() => handleMouseEnter('services')}
-                  onMouseLeave={handleMouseLeave}
-                >
-                  <button className="flex items-center space-x-2 text-gray-800 hover:text-green-700 font-semibold py-6 transition-colors group relative focus:outline-none">
-                    <Icon name="concierge-bell" className="text-green-600 group-hover:scale-110 transition-transform" />
-                    <span>Services</span>
-                    <Icon name="chevron-down" className={`text-xs transition-transform ${activeDropdown === 'services' ? 'rotate-180' : ''}`} />
-                    <div className="absolute bottom-4 left-0 w-0 h-0.5 bg-green-600 group-hover:w-full transition-all duration-300"></div>
-                  </button>
-                  
-                  {activeDropdown === 'services' && (
-                    <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-[900px] bg-white rounded-2xl shadow-2xl border border-gray-200 py-6 z-50">
-                      <div className="grid grid-cols-3 gap-8 px-8">
-                        {bankingServices.map((section, index) => (
-                          <div key={index} className="space-y-1">
-                            <h3 className="font-bold text-gray-900 text-sm mb-4 uppercase tracking-wide border-b border-green-100 pb-2">{section.category}</h3>
-                            <div className="space-y-2">
-                              {section.items.map((item, itemIndex) => (
-                                <a key={itemIndex} href={item.link} className="flex items-center space-x-4 p-3 rounded-xl hover:bg-green-50 transition-all duration-200 group/item border border-transparent hover:border-green-200">
-                                  <div className="w-12 h-12 bg-gradient-to-br from-green-100 to-green-200 rounded-xl flex items-center justify-center group-hover/item:from-green-200 group-hover/item:to-green-300 transition-all duration-200 shadow-sm">
-                                    <Icon name={item.icon} className="text-green-600 text-lg" />
-                                  </div>
-                                  <div className="flex-1 min-w-0">
-                                    <div className="text-gray-800 font-semibold text-sm group-hover/item:text-green-700 truncate">{item.name}</div>
-                                    <div className="text-gray-500 text-xs truncate">{item.description}</div>
-                                  </div>
-                                  <Icon name="chevron-right" className="text-gray-300 text-xs group-hover/item:text-green-500 transition-colors flex-shrink-0" />
-                                </a>
-                              ))}
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                </div>
-
-                 {/* Invest Dropdown */}
-                 <div 
-                  className="relative group"
-                  onMouseEnter={() => handleMouseEnter('invest')}
-                  onMouseLeave={handleMouseLeave}
-                >
-                  <button className="flex items-center space-x-2 text-gray-800 hover:text-purple-700 font-semibold py-6 transition-colors group relative focus:outline-none">
-                    <Icon name="chart-line" className="text-purple-600 group-hover:scale-110 transition-transform" />
-                    <span>Invest</span>
-                    <Icon name="chevron-down" className={`text-xs transition-transform ${activeDropdown === 'invest' ? 'rotate-180' : ''}`} />
-                    <div className="absolute bottom-4 left-0 w-0 h-0.5 bg-purple-600 group-hover:w-full transition-all duration-300"></div>
-                  </button>
-                  
-                  {activeDropdown === 'invest' && (
-                    <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-[900px] bg-white rounded-2xl shadow-2xl border border-gray-200 py-6 z-50">
-                      <div className="grid grid-cols-3 gap-8 px-8">
-                        {investmentOptions.map((section, index) => (
-                          <div key={index} className="space-y-1">
-                            <h3 className="font-bold text-gray-900 text-sm mb-4 uppercase tracking-wide border-b border-purple-100 pb-2">{section.category}</h3>
-                            <div className="space-y-2">
-                              {section.items.map((item, itemIndex) => (
-                                <a key={itemIndex} href={item.link} className="flex items-center space-x-4 p-3 rounded-xl hover:bg-purple-50 transition-all duration-200 group/item border border-transparent hover:border-purple-200">
-                                  <div className="w-12 h-12 bg-gradient-to-br from-purple-100 to-purple-200 rounded-xl flex items-center justify-center group-hover/item:from-purple-200 group-hover/item:to-purple-300 transition-all duration-200 shadow-sm">
-                                    <Icon name={item.icon} className="text-purple-600 text-lg" />
-                                  </div>
-                                  <div className="flex-1 min-w-0">
-                                    <div className="text-gray-800 font-semibold text-sm group-hover/item:text-purple-700 truncate">{item.name}</div>
-                                    <div className="text-gray-500 text-xs truncate">{item.description}</div>
-                                  </div>
-                                  <Icon name="chevron-right" className="text-gray-300 text-xs group-hover/item:text-purple-500 transition-colors flex-shrink-0" />
-                                </a>
-                              ))}
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                </div>
-
-                <a href="/offers" className="flex items-center space-x-2 text-gray-800 hover:text-red-700 font-semibold py-2 transition-colors group relative">
-                  <Icon name="gift" className="text-red-600 group-hover:scale-110 transition-transform" />
-                  <span>Offers</span>
-                  <span className="bg-red-500 text-white text-xs px-2 py-1 rounded-full ml-1 animate-pulse">New</span>
-                  <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-red-600 group-hover:w-full transition-all duration-300"></div>
-                </a>
-
-                <div className="flex items-center space-x-4">
-                  <a href="/login" className="flex items-center space-x-2 text-blue-700 hover:text-blue-800 font-semibold px-4 py-2 transition-colors group border border-blue-200 rounded-lg hover:bg-blue-50">
-                    <Icon name="sign-in-alt" className="group-hover:scale-110 transition-transform" />
-                    <span>Net Banking</span>
+                <div className="flex items-center space-x-3">
+                  <a href="/login" className="text-slate-700 font-bold text-sm hover:text-blue-700 transition-colors px-3 py-2 rounded-lg hover:bg-slate-50 flex items-center gap-2">
+                    <Icon name="sign-in-alt" />
+                    Login
                   </a>
-                  <a href="/signup" className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold px-6 py-3 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 flex items-center space-x-2">
+                  <a href="/signup" className="bg-gradient-to-r from-blue-600 to-indigo-700 hover:from-blue-700 hover:to-indigo-800 text-white font-bold text-sm px-5 py-2.5 rounded-full shadow-lg hover:shadow-blue-200 transition-all transform hover:-translate-y-0.5 flex items-center gap-2">
                     <Icon name="user-plus" />
-                    <span>Open Account</span>
+                    Open Account
                   </a>
                 </div>
               </div>
             )}
 
-            {/* Desktop Navigation - LOGGED IN */}
+            {/* Logged In Desktop */}
             {user && (
               <div className="hidden xl:flex items-center space-x-6">
-                {/* Quick Actions Grid */}
-                <div className="flex items-center space-x-2">
-                  {quickActions.slice(0, 4).map((action, index) => {
+                 {/* Quick Actions */}
+                 <div className="flex items-center space-x-3 bg-slate-50 p-1.5 rounded-xl border border-slate-100">
+                  {quickActions.map((action, index) => {
                      const colors = COLOR_MAP[action.color] || COLOR_MAP['blue'];
                      return (
-                      <a key={index} href={action.link} className="flex flex-col items-center p-3 rounded-xl hover:bg-white hover:shadow-md transition-all duration-200 group border border-transparent hover:border-gray-200">
-                        <div className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all duration-200 shadow-sm mb-2 bg-gradient-to-br ${colors.bg} to-white ${colors.groupBg} ${colors.groupTo}`}>
-                          <Icon name={action.icon} className={`${colors.text} text-lg`} />
+                      <a 
+                        key={index} 
+                        href={action.link} 
+                        className="flex flex-col items-center justify-center w-16 py-2 rounded-lg hover:bg-white hover:shadow-sm transition-all group relative"
+                      >
+                        <div className={`w-8 h-8 rounded-full flex items-center justify-center mb-1 ${colors.bg} ${colors.text} group-hover:scale-110 transition-transform`}>
+                          <Icon name={action.icon} className="text-xs" />
                         </div>
-                        <span className="text-xs font-medium text-gray-700 text-center leading-tight">{action.name}</span>
+                        <span className="text-[10px] font-bold text-slate-600">{action.name}</span>
                       </a>
                     );
                   })}
                 </div>
-
-                <div className="h-8 w-px bg-gradient-to-b from-transparent via-gray-300 to-transparent"></div>
-
-                {/* User Dropdown */}
-                <div className="relative" ref={dropdownRef}>
-                  <button
-                    onClick={handleUserDropdownToggle}
-                    className="flex items-center space-x-3 bg-white hover:bg-gray-50 rounded-xl px-4 py-2 transition-all duration-200 border border-gray-200 hover:border-gray-300 shadow-sm hover:shadow-md focus:outline-none"
-                  >
-                    <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full flex items-center justify-center shadow-lg">
-                      <span className="text-white font-bold text-sm">
-                        {user.email.charAt(0).toUpperCase()}
-                      </span>
-                    </div>
-                    <div className="text-left">
-                      <div className="text-sm font-semibold text-gray-900">{user.email.split("@")[0]}</div>
-                      <div className="text-xs text-gray-500">View Profile</div>
-                    </div>
-                    <Icon name="chevron-down" className={`text-gray-400 text-xs transition-transform ${activeDropdown === 'user' ? 'rotate-180' : ''}`} />
-                  </button>
-
-                  {/* Dropdown Menu */}
-                  {activeDropdown === 'user' && (
-                    <div className="absolute right-0 mt-2 w-80 bg-white rounded-2xl shadow-2xl border border-gray-200 py-4 z-50">
-                      <div className="px-4 pb-3 border-b border-gray-100">
-                        <div className="flex items-center space-x-3">
-                          <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full flex items-center justify-center shadow-lg">
-                            <span className="text-white font-bold text-lg">
-                              {user.email.charAt(0).toUpperCase()}
-                            </span>
-                          </div>
-                          <div className="flex-1">
-                            <div className="font-semibold text-gray-900">{user.email.split("@")[0]}</div>
-                            <div className="text-sm text-gray-500">{user.email}</div>
-                          </div>
+                
+                {/* User Profile with Dropdown */}
+                <div className="relative group" ref={dropdownRef}>
+                    <button 
+                      onClick={handleUserDropdownToggle} 
+                      className="flex items-center space-x-3 focus:outline-none bg-slate-50 hover:bg-slate-100 rounded-xl px-3 py-2 transition-colors border border-slate-100"
+                    >
+                        <div className="text-right hidden md:block">
+                            <div className="text-sm font-bold text-slate-800">{user.email.split('@')[0]}</div>
+                            <div className="text-xs text-slate-500 flex items-center gap-1">
+                              <Icon name="star" className="text-amber-500 text-[10px]" />
+                              Premium Customer
+                            </div>
                         </div>
-                      </div>
+                        <div className="w-10 h-10 bg-gradient-to-tr from-blue-500 to-indigo-600 rounded-full flex items-center justify-center text-white font-bold shadow-md border-2 border-white ring-2 ring-blue-50">
+                            {user.email.charAt(0).toUpperCase()}
+                        </div>
+                        <Icon name="chevron-down" className={`text-slate-400 transition-transform ${activeDropdown === 'user' ? 'rotate-180' : ''}`} />
+                    </button>
+                    {activeDropdown === 'user' && (
+                        <div className="absolute right-0 top-full mt-2 w-80 bg-white rounded-2xl shadow-xl border border-gray-100 py-3 z-50 animate-fadeInUp">
+                            {/* User Summary */}
+                            <div className="px-4 py-3 border-b border-gray-50 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-t-2xl">
+                                <div className="flex items-center space-x-3">
+                                    <div className="w-12 h-12 bg-gradient-to-tr from-blue-500 to-indigo-600 rounded-full flex items-center justify-center text-white font-bold text-lg">
+                                        {user.email.charAt(0).toUpperCase()}
+                                    </div>
+                                    <div className="flex-1 min-w-0">
+                                        <p className="text-sm font-bold text-slate-800 truncate">{user.email.split('@')[0]}</p>
+                                        <p className="text-xs text-slate-500 truncate">{user.email}</p>
+                                        <div className="flex items-center gap-1 mt-1">
+                                            <span className="text-[10px] bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full font-bold">Premium</span>
+                                            <span className="text-[10px] bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full font-bold">Gold</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            {/* Quick Stats */}
+                            <div className="grid grid-cols-3 gap-2 px-4 py-3 border-b border-gray-50">
+                                <div className="text-center">
+                                    <div className="text-xs text-slate-500">Accounts</div>
+                                    <div className="text-sm font-bold text-slate-800">3</div>
+                                </div>
+                                <div className="text-center">
+                                    <div className="text-xs text-slate-500">Cards</div>
+                                    <div className="text-sm font-bold text-slate-800">2</div>
+                                </div>
+                                <div className="text-center">
+                                    <div className="text-xs text-slate-500">Loans</div>
+                                    <div className="text-sm font-bold text-slate-800">1</div>
+                                </div>
+                            </div>
 
-                      <div className="py-2">
-                        <a href="/my-accounts" className="flex items-center space-x-3 px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors group">
-                          <Icon name="wallet" className="text-gray-400 w-5 group-hover:text-blue-500" />
-                          <span>My Accounts</span>
-                        </a>
-                        <a href="/transactions" className="flex items-center space-x-3 px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors group">
-                          <Icon name="receipt" className="text-gray-400 w-5 group-hover:text-blue-500" />
-                          <span>Transactions</span>
-                        </a>
-                      </div>
+                            {/* Menu Items */}
+                            <div className="max-h-60 overflow-y-auto">
+                                {userMenuItems.map((item, index) => (
+                                    <a 
+                                        key={index}
+                                        href={item.link} 
+                                        className="flex items-center space-x-3 px-4 py-2 text-sm text-slate-700 hover:bg-blue-50 transition-colors"
+                                    >
+                                        <Icon name={item.icon} className="text-slate-400 w-4 text-center" />
+                                        <span>{item.name}</span>
+                                    </a>
+                                ))}
+                            </div>
 
-                      <div className="pt-2 border-t border-gray-100">
-                        <button onClick={handleLogout} className="flex items-center space-x-3 px-4 py-2 text-red-600 hover:bg-red-50 transition-colors w-full text-left group">
-                          <Icon name="sign-out-alt" className="text-red-500 w-5 group-hover:scale-110 transition-transform" />
-                          <span>Logout</span>
-                        </button>
-                      </div>
-                    </div>
-                  )}
+                            <div className="border-t border-gray-50 mt-1"></div>
+                            <button 
+                                onClick={handleLogout} 
+                                className="w-full text-left px-4 py-2 text-sm text-red-600 font-bold hover:bg-red-50 flex items-center space-x-3 transition-colors"
+                            >
+                                <Icon name="sign-out-alt" />
+                                <span>Sign out</span>
+                            </button>
+                        </div>
+                    )}
                 </div>
               </div>
             )}
 
-            {/* Mobile menu button */}
-            <div className="xl:hidden flex items-center">
+            {/* Mobile Hamburger */}
+            <div className="xl:hidden flex items-center z-[60]">
               <button
                 onClick={toggleMobileMenu}
-                className="inline-flex items-center justify-center p-3 rounded-xl text-gray-700 hover:text-blue-600 hover:bg-blue-50 transition-colors focus:outline-none"
+                className="p-2 rounded-lg text-slate-700 hover:bg-slate-100 transition-colors focus:outline-none relative"
               >
-                <Icon name={isMobileMenuOpen ? 'times' : 'bars'} className="text-xl" />
+                <Icon name={isMobileMenuOpen ? 'times' : 'bars'} className="text-2xl" />
+                {user && (
+                  <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-400 rounded-full border-2 border-white"></div>
+                )}
               </button>
             </div>
           </div>
         </div>
+      </nav>
 
-        {/* Mobile Menu */}
-        <div className={`xl:hidden transition-all duration-300 ease-in-out bg-white ${isMobileMenuOpen ? 'max-h-[90vh] overflow-y-auto opacity-100 border-t border-gray-200' : 'max-h-0 opacity-0 overflow-hidden'}`}>
-          <div className="px-4 py-6">
+      {/* 5. Ticker (Below Navbar) */}
+      <MarketTicker />
+
+      {/* 6. SOLID MOBILE MENU OVERLAY */}
+      {isMobileMenuOpen && (
+        <div className="fixed inset-0 top-[64px] z-40 bg-white border-t border-slate-100 overflow-y-auto animate-fadeIn pb-24">
+          <div className="p-4 space-y-6">
+            
+            {/* NOT LOGGED IN MOBILE */}
             {!user ? (
-              <div className="space-y-6">
-                <div className="space-y-3">
-                  <h3 className="font-bold text-gray-900 text-lg border-b border-gray-200 pb-2">Banking Products</h3>
-                  <div className="grid grid-cols-2 gap-3">
-                    {bankingProducts.flatMap(section => section.items).slice(0, 6).map((item, index) => (
-                      <a key={index} href={item.link} className="flex items-center space-x-2 p-3 bg-gray-50 rounded-lg hover:bg-blue-50 transition-colors" onClick={() => setIsMobileMenuOpen(false)}>
-                        <Icon name={item.icon} className="text-blue-600 text-sm" />
-                        <span className="text-sm font-medium text-gray-700 flex-1">{item.name}</span>
-                      </a>
-                    ))}
-                  </div>
-                </div>
+              <div className="space-y-4">
+                 {/* Promo Card */}
+                 <div className="bg-gradient-to-r from-blue-600 to-indigo-700 rounded-2xl p-4 text-white">
+                    <div className="flex items-center justify-between">
+                        <div>
+                            <div className="font-bold text-lg">Get ₹1000 Welcome Bonus!</div>
+                            <div className="text-blue-100 text-sm">Open your account now</div>
+                        </div>
+                        <Icon name="gift" className="text-2xl text-yellow-300" />
+                    </div>
+                    <a href="/signup" className="inline-block mt-3 bg-white text-blue-600 font-bold px-4 py-2 rounded-lg text-sm">
+                        Claim Offer
+                    </a>
+                 </div>
 
-                <div className="space-y-3">
-                  <h3 className="font-bold text-gray-900 text-lg border-b border-gray-200 pb-2">Services</h3>
-                  <div className="grid grid-cols-2 gap-3">
-                    {bankingServices.flatMap(section => section.items).slice(0, 6).map((item, index) => (
-                      <a key={index} href={item.link} className="flex items-center space-x-2 p-3 bg-gray-50 rounded-lg hover:bg-green-50 transition-colors" onClick={() => setIsMobileMenuOpen(false)}>
-                        <Icon name={item.icon} className="text-green-600 text-sm" />
-                        <span className="text-sm font-medium text-gray-700 flex-1">{item.name}</span>
-                      </a>
-                    ))}
-                  </div>
-                </div>
+                 {/* Accordions */}
+                 {[
+                   { id: 'products', label: 'Products', icon: 'cube', color: 'blue', data: bankingProducts },
+                   { id: 'services', label: 'Services', icon: 'concierge-bell', color: 'green', data: bankingServices },
+                   { id: 'invest', label: 'Invest', icon: 'chart-line', color: 'purple', data: investmentOptions }
+                 ].map((section) => (
+                    <div key={section.id} className="border border-slate-100 rounded-xl overflow-hidden bg-white shadow-sm">
+                        <button 
+                            onClick={() => toggleMobileAccordion(section.id)}
+                            className="w-full flex items-center justify-between p-4 bg-white active:bg-slate-50 transition-colors"
+                        >
+                            <div className="flex items-center space-x-3">
+                                <div className={`w-9 h-9 rounded-lg ${COLOR_MAP[section.color].bg} flex items-center justify-center`}>
+                                    <Icon name={section.icon} className={COLOR_MAP[section.color].text} />
+                                </div>
+                                <span className="font-bold text-slate-800 text-lg">{section.label}</span>
+                            </div>
+                            <div className={`transition-transform duration-300 ${mobileExpanded === section.id ? 'rotate-180' : ''}`}>
+                              <Icon name="chevron-down" className="text-slate-400" />
+                            </div>
+                        </button>
+                        
+                        {/* Smooth Expand */}
+                        <div className={`transition-all duration-300 ease-in-out ${mobileExpanded === section.id ? 'max-h-[800px] opacity-100' : 'max-h-0 opacity-0'}`}>
+                            <div className="px-4 pb-4 space-y-1 bg-white">
+                                <div className="h-px bg-slate-50 mb-2"></div>
+                                {section.data.flatMap(g => g.items).map((item, idx) => (
+                                    <a 
+                                      key={idx} 
+                                      href={item.link} 
+                                      className="flex items-start space-x-3 p-3 rounded-lg hover:bg-slate-50 transition-colors"
+                                    >
+                                        <div className={`mt-0.5 ${COLOR_MAP[section.color].text}`}>
+                                          <Icon name={item.icon} />
+                                        </div>
+                                        <div className="flex-1">
+                                          <div className="text-sm font-bold text-slate-700 flex items-center gap-2">
+                                            {item.name}
+                                            {item.badge && (
+                                              <span className={`text-[10px] px-1.5 py-0.5 rounded-full bg-${section.color}-100 text-${section.color}-700 font-bold`}>
+                                                {item.badge}
+                                              </span>
+                                            )}
+                                          </div>
+                                          <div className="text-xs text-slate-400">{item.description}</div>
+                                        </div>
+                                    </a>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                 ))}
 
-                <div className="pt-4 space-y-3">
-                  <a href="/login" className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold text-center block hover:bg-blue-700 transition-colors shadow-lg">Login to Net Banking</a>
-                  <a href="/signup" className="w-full border-2 border-blue-600 text-blue-600 py-3 rounded-lg font-semibold text-center block hover:bg-blue-50 transition-colors">Open New Account</a>
-                </div>
+                 <div className="pt-6 space-y-3 px-2">
+                    <a href="/login" className="block w-full text-center bg-blue-600 text-white font-bold py-3.5 rounded-xl shadow-lg shadow-blue-200 active:scale-95 transition-transform flex items-center justify-center gap-2">
+                      <Icon name="sign-in-alt" />
+                      Login Securely
+                    </a>
+                    <a href="/signup" className="block w-full text-center bg-white border-2 border-slate-100 text-slate-700 font-bold py-3.5 rounded-xl active:bg-slate-50 transition-colors flex items-center justify-center gap-2">
+                      <Icon name="user-plus" />
+                      Open New Account
+                    </a>
+                 </div>
               </div>
             ) : (
+              // LOGGED IN MOBILE
               <div className="space-y-6">
-                <div className="flex items-center space-x-4 p-4 bg-gradient-to-r from-blue-50 to-blue-100 rounded-2xl border border-blue-200">
-                  <div className="w-14 h-14 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full flex items-center justify-center shadow-lg">
-                    <span className="text-white font-bold text-lg">{user.email.charAt(0).toUpperCase()}</span>
-                  </div>
-                  <div className="flex-1">
-                    <div className="font-bold text-gray-900">{user.email.split("@")[0]}</div>
-                    <div className="text-sm text-gray-600">{user.email}</div>
+                {/* User Card */}
+                <div className="bg-gradient-to-br from-blue-600 to-indigo-700 rounded-2xl p-6 text-white shadow-xl shadow-blue-100">
+                    <div className="flex items-center space-x-4">
+                        <div className="w-14 h-14 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center text-xl font-bold border border-white/30">
+                            {user.email.charAt(0).toUpperCase()}
+                        </div>
+                        <div className="flex-1">
+                            <div className="font-bold text-lg">{user.email.split('@')[0]}</div>
+                            <div className="text-blue-100 text-sm">{user.email}</div>
+                            <div className="flex items-center gap-2 mt-1">
+                                <span className="text-[10px] bg-amber-500 text-white px-2 py-0.5 rounded-full">Premium</span>
+                                <span className="text-[10px] bg-blue-500 text-white px-2 py-0.5 rounded-full">Gold</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Account Summary */}
+                <div className="bg-white rounded-xl border border-slate-100 p-4 shadow-sm">
+                    <div className="flex justify-between items-center mb-3">
+                        <h3 className="font-bold text-slate-800">Account Summary</h3>
+                        <a href="/accounts" className="text-blue-600 text-sm font-bold">View All</a>
+                    </div>
+                    <div className="grid grid-cols-3 gap-4 text-center">
+                        <div>
+                            <div className="text-xs text-slate-500">Balance</div>
+                            <div className="text-sm font-bold text-slate-800">₹45,670</div>
+                        </div>
+                        <div>
+                            <div className="text-xs text-slate-500">Cards</div>
+                            <div className="text-sm font-bold text-slate-800">2 Active</div>
+                        </div>
+                        <div>
+                            <div className="text-xs text-slate-500">Loans</div>
+                            <div className="text-sm font-bold text-slate-800">1 Active</div>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Quick Actions Grid */}
+                <div>
+                  <h3 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4 px-1">Quick Actions</h3>
+                  <div className="grid grid-cols-3 gap-3">
+                    {quickActions.map((action, index) => {
+                       const colors = COLOR_MAP[action.color] || COLOR_MAP['blue'];
+                       return (
+                        <a 
+                          href={action.link} 
+                          key={index} 
+                          className={`flex flex-col items-center justify-center p-3 rounded-xl border border-slate-100 bg-white shadow-sm ${colors.hover} active:scale-95 transition-transform`}
+                        >
+                          <div className={`w-12 h-12 rounded-full flex items-center justify-center mb-2 ${colors.bg}`}>
+                            <Icon name={action.icon} className={`${colors.text} text-lg`} />
+                          </div>
+                          <span className="text-xs font-bold text-slate-700 text-center">{action.name}</span>
+                        </a>
+                      );
+                    })}
                   </div>
                 </div>
 
-                <div className="grid grid-cols-3 gap-3">
-                  {quickActions.map((action, index) => {
-                     const colors = COLOR_MAP[action.color] || COLOR_MAP['blue'];
-                     return (
-                      <a href={action.link} key={index} className="flex flex-col items-center p-3 bg-white rounded-xl hover:bg-gray-50 transition-colors border border-gray-200" onClick={() => setIsMobileMenuOpen(false)}>
-                        <div className={`w-10 h-10 rounded-xl flex items-center justify-center mb-2 ${colors.bg}`}>
-                          <Icon name={action.icon} className={`${colors.text} text-base`} />
-                        </div>
-                        <span className="text-xs font-medium text-gray-700 text-center leading-tight">{action.name}</span>
-                      </a>
-                    );
-                  })}
+                {/* User Menu */}
+                <div className="bg-white rounded-xl border border-slate-100 overflow-hidden">
+                  {userMenuItems.slice(0, 6).map((item, index) => (
+                    <a 
+                      key={index}
+                      href={item.link} 
+                      className="flex items-center justify-between p-4 border-b border-slate-50 active:bg-slate-50 transition-colors"
+                    >
+                      <div className="flex items-center gap-3">
+                        <Icon name={item.icon} className="text-slate-400" /> 
+                        <span className="font-semibold text-slate-700">{item.name}</span>
+                      </div>
+                      <Icon name="chevron-right" className="text-xs text-slate-300" />
+                    </a>
+                  ))}
                 </div>
                 
-                <button onClick={handleLogout} className="w-full flex items-center space-x-3 p-3 rounded-lg bg-red-50 hover:bg-red-100 transition-colors text-red-600 border border-red-200">
-                  <Icon name="sign-out-alt" className="text-red-500" />
-                  <span className="font-semibold">Logout</span>
+                <button 
+                  onClick={handleLogout} 
+                  className="w-full flex items-center justify-center space-x-2 p-4 rounded-xl bg-red-50 text-red-600 font-bold mt-8 border border-red-100 active:bg-red-100 transition-colors"
+                >
+                  <Icon name="sign-out-alt" />
+                  <span>Sign Out</span>
                 </button>
               </div>
             )}
           </div>
         </div>
+      )}
 
-        {/* Overlay (Only for clicks if needed, removed from Hover menus to avoid bad UX) */}
-        {isMobileMenuOpen && (
-          <div className="fixed inset-0 bg-black/50 z-40" onClick={() => setIsMobileMenuOpen(false)}></div>
-        )}
-      </nav>
+      {/* Animation Styles */}
+      <style>{`
+        @keyframes fadeInUp { 
+          from { opacity: 0; transform: translate(-50%, 10px); } 
+          to { opacity: 1; transform: translate(-50%, 0); } 
+        }
+        .animate-fadeInUp { animation: fadeInUp 0.2s ease-out forwards; }
+        
+        @keyframes fadeIn { 
+          from { opacity: 0; } 
+          to { opacity: 1; } 
+        }
+        .animate-fadeIn { animation: fadeIn 0.2s ease-out forwards; }
+        
+        @keyframes pulse {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0.7; }
+        }
+        .animate-pulse { animation: pulse 2s infinite; }
+      `}</style>
     </>
   );
 }
