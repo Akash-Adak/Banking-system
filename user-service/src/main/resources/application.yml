@@ -36,7 +36,6 @@ spring:
       password: KiIpJJ24Oh46m4SfPWcDh3JuVcPWjPWQ
       timeout: 3000
 #      ssl: true
-
 jwt:
   expiration: 3600000
 

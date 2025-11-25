@@ -27,6 +27,11 @@ public class KafkaListeners {
         handler.processTransaction(message);
     }
 
+    @KafkaListener(topics = "banking-loans", groupId = "notification-group")
+    public void loanMsg(String message) throws MessagingException {
+        handler.processLoans(message);
+    }
+
 //    @KafkaListener(topics = "loan_approved", groupId = "notification-group")
 //    public void loanApproved(String message) {
 //        handler.processLoanApproval(message);

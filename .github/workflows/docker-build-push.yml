@@ -25,6 +25,8 @@ jobs:
             image: banking-transaction
           - service: notification-server
             image: banking-notify
+          - service: loan-server
+            image: banking-loan
 
     steps:
       # Step 1: Checkout code

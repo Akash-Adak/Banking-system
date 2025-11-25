@@ -1,6 +1,7 @@
 package com.banking.notification.service;
 
 import com.banking.notification.model.AccountCreatedEvent;
+import com.banking.notification.model.LoansEvent;
 import com.banking.notification.model.TransactionCompletedEvent;
 import com.banking.notification.model.UserRegisteredEvent;
 import com.google.gson.Gson;
@@ -30,6 +31,12 @@ public class NotificationService {
     public void processTransaction(String message) throws MessagingException {
         TransactionCompletedEvent event = new Gson().fromJson(message, TransactionCompletedEvent.class);
         emailService.sendEmail(event.getEmail(), String.valueOf(event.getAmount()),event.getBody());
+
+    }
+
+    public void processLoans(String message) throws MessagingException {
+        LoansEvent event = new Gson().fromJson(message, LoansEvent.class);
+        emailService.sendEmail(event.getEmail(), String.valueOf(event.getUsername()),event.getBody());
 
     }
 }
