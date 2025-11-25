@@ -1,108 +1,203 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 
 const features = [
   {
-    title: "Instant Money Transfer",
-    description: "Send money to any bank account in India within seconds using UPI, IMPS, or NEFT. Real-time processing with complete security.",
-    image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&h=400&fit=crop",
-    stats: "50M+ transactions monthly"
+    id: 1,
+    title: "Instant Global Transfers",
+    description: "Send money across 100+ countries with real-time currency conversion. Zero hidden fees and best-in-class exchange rates.",
+    image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=1000&auto=format&fit=crop",
+    stats: "50M+ Transactions",
+    icon: "globe"
   },
   {
-    title: "Smart Investments",
-    description: "AI-powered investment recommendations and portfolio management for maximum returns. Expert advisory and tax-saving options.",
-    image: "https://images.unsplash.com/photo-1553877522-43269d4ea984?w=600&h=400&fit=crop",
-    stats: "12-18% average returns"
+    id: 2,
+    title: "AI-Powered Wealth",
+    description: "Smart portfolio management that adapts to market trends. Get personalized investment insights and automated rebalancing.",
+    image: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?q=80&w=1000&auto=format&fit=crop",
+    stats: "18% Avg Returns",
+    icon: "chart-line"
   },
   {
-    title: "24/7 Customer Support",
-    description: "Round-the-clock customer service with instant query resolution via chat, call, or email. Dedicated relationship managers.",
-    image: "https://images.unsplash.com/photo-1584433144859-1fc3ab64a957?w=600&h=400&fit=crop",
-    stats: "2 min average response time"
+    id: 3,
+    title: "Priority Support 24/7",
+    description: "Skip the queue with our dedicated relationship managers. Instant resolution via video call, chat, or phone anytime, anywhere.",
+    image: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=1000&auto=format&fit=crop",
+    stats: "< 60s Response",
+    icon: "headset"
   },
   {
-    title: "Advanced Security",
-    description: "Multi-layer security with biometric authentication and real-time fraud detection. 256-bit encryption for all transactions.",
-    image: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=600&h=400&fit=crop",
-    stats: "Zero fraud incidents"
+    id: 4,
+    title: "Bank-Grade Security",
+    description: "Fortified with biometric authentication, 256-bit encryption, and real-time fraud monitoring to keep your assets safe.",
+    image: "https://images.unsplash.com/photo-1563986768609-322da13575f3?q=80&w=1000&auto=format&fit=crop",
+    stats: "100% Secure",
+    icon: "shield-alt"
   }
 ];
 
 export default function FeaturesCarousel() {
-  const [currentFeature, setCurrentFeature] = useState(0);
+  const [activeIdx, setActiveIdx] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
 
+  // Auto-rotation logic
   useEffect(() => {
+    if (isPaused) return;
+
     const interval = setInterval(() => {
-      setCurrentFeature((prev) => (prev + 1) % features.length);
+      setActiveIdx((prev) => (prev + 1) % features.length);
     }, 5000);
+
     return () => clearInterval(interval);
-  }, []);
+  }, [isPaused]);
 
   return (
-    <section className="py-20 bg-white">
+    <section className="py-24 bg-gray-50 font-sans overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl font-black text-gray-900 mb-4">
-            Why Choose <span className="text-blue-600">BankEase?</span>
+        
+        {/* Section Header */}
+        <div className="text-center max-w-3xl mx-auto mb-16">
+          <h2 className="text-blue-900 font-bold uppercase tracking-widest text-sm mb-3">
+            Premium Banking Experience
           </h2>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Experience banking like never before with our cutting-edge features and premium services
-          </p>
+         
+         
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          <div className="relative h-96 rounded-3xl overflow-hidden shadow-2xl">
-            <img 
-              src={features[currentFeature].image}
-              alt={features[currentFeature].title}
-              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-            />
-            <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-8 text-white">
-              <div className="text-sm font-semibold text-yellow-400 mb-2">{features[currentFeature].stats}</div>
-              <h3 className="text-2xl font-bold mb-2">{features[currentFeature].title}</h3>
-              <p className="text-blue-100 text-sm">{features[currentFeature].description}</p>
-            </div>
-          </div>
-
-          <div className="space-y-6">
-            <div className="space-y-4">
-              {features.map((feature, index) => (
-                <button
-                  key={index}
-                  onClick={() => setCurrentFeature(index)}
-                  className={`w-full text-left p-6 rounded-2xl transition-all duration-300 border-2 ${
-                    index === currentFeature 
-                      ? 'bg-blue-600 text-white border-blue-600 shadow-xl transform -translate-y-1' 
-                      : 'bg-white text-gray-700 border-gray-200 hover:border-blue-300 hover:bg-blue-50 hover:shadow-lg'
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-stretch">
+          
+          {/* Left Column: Interactive Feature List (Accordion Style) */}
+          <div className="flex flex-col justify-center space-y-4">
+            {features.map((feature, index) => {
+              const isActive = index === activeIdx;
+              return (
+                <div 
+                  key={feature.id}
+                  className={`relative p-6 rounded-2xl cursor-pointer transition-all duration-500 border ${
+                    isActive 
+                    ? "bg-white border-blue-100 shadow-xl scale-100 lg:scale-105 z-10" 
+                    : "bg-transparent border-transparent hover:bg-white/50 hover:border-gray-200 opacity-70 hover:opacity-100"
                   }`}
+                  onClick={() => setActiveIdx(index)}
+                  onMouseEnter={() => setIsPaused(true)}
+                  onMouseLeave={() => setIsPaused(false)}
                 >
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-4">
-                      <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${
-                        index === currentFeature ? 'bg-white/20' : 'bg-blue-100'
-                      }`}>
-                        <i className={`fas fa-${['money-bill-transfer', 'chart-line', 'headset', 'shield-alt'][index]} ${
-                          index === currentFeature ? 'text-white' : 'text-blue-600'
-                        } text-lg`}></i>
-                      </div>
-                      <div>
-                        <div className={`font-bold text-lg mb-1 ${index === currentFeature ? 'text-white' : 'text-gray-900'}`}>
+                  <div className="flex items-start gap-5">
+                    {/* Icon Box */}
+                    <div className={`flex-shrink-0 w-12 h-12 rounded-xl flex items-center justify-center transition-colors duration-300 ${
+                      isActive ? "bg-blue-600 text-white shadow-lg shadow-blue-500/30" : "bg-blue-50 text-blue-600"
+                    }`}>
+                      <i className={`fas fa-${feature.icon} text-xl`}></i>
+                    </div>
+
+                    {/* Text Content */}
+                    <div className="flex-1">
+                      <div className="flex justify-between items-center mb-1">
+                        <h4 className={`text-xl font-bold ${isActive ? "text-gray-900" : "text-gray-600"}`}>
                           {feature.title}
-                        </div>
-                        <div className={`text-sm ${index === currentFeature ? 'text-blue-100' : 'text-gray-600'}`}>
-                          {feature.stats}
+                        </h4>
+                        {isActive && (
+                          <span className="text-xs font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded-full animate-fade-in">
+                            {feature.stats}
+                          </span>
+                        )}
+                      </div>
+                      
+                      {/* Expanded Content (Description + Mobile Image) */}
+                      <div className={`overflow-hidden transition-all duration-500 ease-in-out ${isActive ? "max-h-96 opacity-100 mt-2" : "max-h-0 opacity-0"}`}>
+                        <p className="text-gray-600 leading-relaxed text-sm">
+                          {feature.description}
+                        </p>
+                        
+                        {/* Mobile Only: Inline Image for context when right column is hidden */}
+                        <div className="lg:hidden mt-4 rounded-lg overflow-hidden h-48 w-full relative shadow-md">
+                           <img src={feature.image} alt={feature.title} className="w-full h-full object-cover" />
+                           <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                           <div className="absolute bottom-3 left-3 text-white text-xs font-bold">
+                             {feature.stats}
+                           </div>
                         </div>
                       </div>
                     </div>
-                    {index === currentFeature && (
-                      <i className="fas fa-chevron-right text-white text-lg"></i>
-                    )}
                   </div>
-                </button>
-              ))}
-            </div>
+
+                  {/* Progress Bar Animation for Active Item */}
+                  {isActive && !isPaused && (
+                     <div className="absolute bottom-0 left-0 h-1 bg-blue-600 rounded-b-2xl transition-all duration-linear w-full origin-left animate-progress"></div>
+                  )}
+                </div>
+              );
+            })}
           </div>
+
+          {/* Right Column: Visual Preview (Hidden on Mobile, Visible on Desktop) */}
+          <div className="hidden lg:block relative h-[600px] rounded-[2.5rem] overflow-hidden shadow-2xl border-8 border-white bg-gray-900">
+             
+             {/* Abstract Background Blobs */}
+             <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
+             <div className="absolute bottom-0 left-0 w-64 h-64 bg-purple-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000"></div>
+
+             {/* Stacked Images with Transitions */}
+             {features.map((feature, index) => (
+               <div 
+                 key={feature.id}
+                 className={`absolute inset-0 transition-all duration-700 ease-in-out transform ${
+                   index === activeIdx 
+                   ? "opacity-100 scale-100 translate-x-0" 
+                   : "opacity-0 scale-110 translate-x-10"
+                 }`}
+               >
+                  <img 
+                    src={feature.image} 
+                    alt={feature.title} 
+                    className="w-full h-full object-cover"
+                  />
+                  {/* Overlay Gradient */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+                  
+                  {/* Floating Content Card */}
+                  <div className="absolute bottom-8 left-8 right-8 bg-white/10 backdrop-blur-md border border-white/20 p-6 rounded-2xl text-white transform transition-transform duration-700 delay-100 translate-y-0 shadow-lg">
+                    <div className="flex items-center gap-4 mb-4">
+                       <div className="w-10 h-10 rounded-full bg-green-500 flex items-center justify-center shadow-lg shadow-green-500/30">
+                         <i className="fas fa-check text-white"></i>
+                       </div>
+                       <div>
+                         <p className="text-xs text-blue-200 uppercase tracking-wider font-bold">Key Benefit</p>
+                         <p className="font-bold text-lg">{feature.stats}</p>
+                       </div>
+                    </div>
+                    <p className="text-sm text-gray-200 leading-relaxed border-t border-white/10 pt-4">
+                      "{feature.description}"
+                    </p>
+                  </div>
+               </div>
+             ))}
+          </div>
+
         </div>
       </div>
+      
+      {/* Styles for Animations */}
+      <style>{`
+        @keyframes progress {
+          from { width: 0%; }
+          to { width: 100%; }
+        }
+        .animate-progress {
+          animation: progress 5s linear;
+        }
+        .animate-blob {
+          animation: blob 7s infinite;
+        }
+        @keyframes blob {
+          0% { transform: translate(0px, 0px) scale(1); }
+          33% { transform: translate(30px, -50px) scale(1.1); }
+          66% { transform: translate(-20px, 20px) scale(0.9); }
+          100% { transform: translate(0px, 0px) scale(1); }
+        }
+        .animation-delay-2000 {
+          animation-delay: 2s;
+        }
+      `}</style>
     </section>
   );
 }

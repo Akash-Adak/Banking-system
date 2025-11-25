@@ -8,7 +8,7 @@ export default function PublicLayout({ children }) {
 
       <main className="flex-1">{children}</main>
 
-      <Footer />
+      
     </div>
   );
 }

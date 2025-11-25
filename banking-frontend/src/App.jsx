@@ -15,7 +15,7 @@ import AddMoney from "./pages/money/AddMoney";
 import Withdraw from "./pages/money/WithDraw";
 import Home from "./pages/Home";
 import Navbar from "./components/Navbar";
-
+import Footer from "./components/Footer";
 
 
 export default function App() {
@@ -99,7 +99,7 @@ export default function App() {
 
       </Routes>
 
-
+<Footer />
     // {/* // </BrowserRouter> */}
 </>
   );
