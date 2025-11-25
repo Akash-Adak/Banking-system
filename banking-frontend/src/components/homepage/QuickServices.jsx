@@ -68,14 +68,7 @@ export default function QuickServices() {
         
         {/* Header Section with Navigation Buttons */}
         <div className="flex flex-col md:flex-row justify-between items-end mb-8 md:mb-12 gap-6">
-          <div className="max-w-2xl">
-            <h2 className="text-3xl md:text-4xl font-black text-gray-900 leading-tight">
-              Banking <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-700 to-indigo-600">Reimagined.</span>
-            </h2>
-            <p className="mt-3 text-lg text-gray-600">
-              Explore powerful financial tools designed for your lifestyle.
-            </p>
-          </div>
+      
           
           {/* Navigation Controls (Visible on all screens, but most useful on Desktop) */}
           <div className="flex gap-3">
