@@ -14,13 +14,17 @@ import SendMoney from "./pages/money/SendMoney";
 import AddMoney from "./pages/money/AddMoney";
 import Withdraw from "./pages/money/WithDraw";
 import Home from "./pages/Home";
+import Navbar from "./components/Navbar";
+
 
 
 export default function App() {
   return (
     // <BrowserRouter>
+    <>
+        <Navbar/>
       <Routes>
-
+      
         <Route path="/" element={<Home/>} />
 
         <Route path="/login" element={<Login />} />
@@ -96,6 +100,7 @@ export default function App() {
       </Routes>
 
 
-    // </BrowserRouter>
+    // {/* // </BrowserRouter> */}
+</>
   );
 }

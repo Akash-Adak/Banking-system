@@ -1,0 +1,311 @@
+package com.banking.loan.service;
+
+import com.banking.loan.model.*;
+import com.banking.loan.repository.LoanRepository;
+import com.banking.loan.response.LoanMsg;
+import com.banking.loan.response.User;
+import com.google.gson.Gson;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.List;
+
+@Service
+@Transactional
+public class LoanServiceImpl implements LoanService {
+    @Autowired
+    private RedisService redisService;
+    @Autowired
+    private  LoanRepository loanRepository;
+
+    @Autowired
+    private  KafkaProducerService kafkaProducerService;
+
+    @Override
+    public LoanResponseDto applyLoan(LoanRequestDto req) {
+        BigDecimal emi = calculateEmi(req.getPrincipalAmount(), req.getInterestRate(), req.getTenureMonths());
+
+        Loan loan = Loan.builder()
+                .accountNumber(req.getAccountNumber())
+                .loanType(req.getLoanType())
+                .principalAmount(req.getPrincipalAmount())
+                .interestRate(req.getInterestRate())
+                .tenureMonths(req.getTenureMonths())
+                .emiAmount(emi)
+                .status(LoanStatus.PENDING)
+                .createdAt(LocalDate.now())
+                .updatedAt(LocalDate.now())
+                .build();
+
+        Loan saved = loanRepository.save(loan);
+
+        User user = redisService.get(req.getAccountNumber(), User.class);
+
+        LoanMsg event = new LoanMsg();
+        String fullname = user.getUsername();
+        String email = user.getEmail();
+        String subject = "✅ Your Account Details Updated Successfully";
+
+// HTML Email body
+        String body = "<!DOCTYPE html>" +
+                "<html>" +
+                "<head>" +
+                "  <meta charset='UTF-8'>" +
+                "  <style>" +
+                "    body { font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 0; }" +
+                "    .container { background-color: #ffffff; padding: 20px; margin: 30px auto; width: 90%; max-width: 600px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }" +
+                "    .header { background-color: #0046be; color: white; padding: 15px; border-radius: 10px 10px 0 0; text-align: center; }" +
+                "    .logo { max-width: 100px; margin-bottom: 10px; }" +
+                "    .content { padding: 20px; color: #333333; line-height: 1.6; }" +
+                "    .footer { text-align: center; font-size: 12px; color: #888888; padding-top: 15px; }" +
+                "    .highlight { font-weight: bold; color: #0046be; }" +
+                "  </style>" +
+                "</head>" +
+                "<body>" +
+                "  <div class='container'>" +
+                "    <div class='header'>" +
+                "      <img src='YOUR_LOGO_URL_HERE' alt='EFB Logo' class='logo'>" +
+                "      <h1>Loan Application Received 📝</h1>" +
+                "    </div>" +
+                "    <div class='content'>" +
+                "      <p>Hello <strong>" + fullname + "</strong>,</p>" +
+                "      <p>Your loan application for <span class='highlight'>" + req.getLoanType() + "</span> has been successfully submitted.</p>" +
+                "      <p><strong>Loan Amount:</strong> ₹" + req.getPrincipalAmount() + "</p>" +
+                "      <p>Our team is currently reviewing your request. You will receive an update as soon as your loan is processed.</p>" +
+                "      <p>Thank you for choosing <strong>EFB – Equinox Finance Bank</strong>.</p>" +
+                "    </div>" +
+                "    <div class='footer'>" +
+                "      &copy; 2025 EFB – Equinox Finance Bank. All rights reserved." +
+                "    </div>" +
+                "  </div>" +
+                "</body>" +
+                "</html>";
+
+
+// Set event for Kafka or email sending
+        event.setUsername(subject); // Email subject
+        event.setEmail(email);      // Recipient email
+        event.setBody(body);        // HTML email body
+
+
+        String json = new Gson().toJson(event);
+        kafkaProducerService.sendLoanMsg("banking-loans", json);
+
+        return mapToDto(saved);
+    }
+
+    @Override
+    public LoanResponseDto approveLoan(Long loanId) {
+        Loan loan = loanRepository.findById(loanId)
+                .orElseThrow(() -> new RuntimeException("Loan not found"));
+
+        loan.setStatus(LoanStatus.APPROVED);
+        loan.setStartDate(LocalDate.now());
+        loan.setEndDate(LocalDate.now().plusMonths(loan.getTenureMonths()));
+        loan.setUpdatedAt(LocalDate.now());
+
+        Loan saved = loanRepository.save(loan);
+
+        User user = redisService.get(loan.getAccountNumber(), User.class);
+
+        LoanMsg event = new LoanMsg();
+        String fullname = user.getUsername();
+        String email = user.getEmail();
+        String subject = "✅ Your Account Details Updated Successfully";
+
+// HTML Email body
+        String body = "<!DOCTYPE html>" +
+                "<html>" +
+                "<head>" +
+                "  <meta charset='UTF-8'>" +
+                "  <style>" +
+                "    body { font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 0; }" +
+                "    .container { background-color: #ffffff; padding: 20px; margin: 30px auto; width: 90%; max-width: 600px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }" +
+                "    .header { background-color: #0046be; color: white; padding: 15px; border-radius: 10px 10px 0 0; text-align: center; }" +
+                "    .logo { max-width: 100px; margin-bottom: 10px; }" +
+                "    .content { padding: 20px; color: #333333; line-height: 1.6; }" +
+                "    .footer { text-align: center; font-size: 12px; color: #888888; padding-top: 15px; }" +
+                "    .highlight { font-weight: bold; color: #0046be; }" +
+                "  </style>" +
+                "</head>" +
+                "<body>" +
+                "  <div class='container'>" +
+                "    <div class='header'>" +
+                "      <img src='YOUR_LOGO_URL_HERE' alt='EFB Logo' class='logo'>" +
+                "      <h1>Loan Approved ✔️</h1>" +
+                "    </div>" +
+                "    <div class='content'>" +
+                "      <p>Hello <strong>" + fullname + "</strong>,</p>" +
+                "      <p>Good news! Your <span class='highlight'>" + loan.getLoanType() + "</span> loan application has been <span class='highlight'>approved</span>.</p>" +
+                "      <p><strong>Approved Amount:</strong> ₹" + loan.getPrincipalAmount() + "</p>" +
+                "      <p><strong>EMI Amount:</strong> ₹" + loan.getEmiAmount() + "</p>" +
+                "      <p><strong>Tenure:</strong> " + loan.getTenureMonths() + " months</p>" +
+                "      <p>You can now view your repayment schedule in your <strong>EFB Dashboard</strong>.</p>" +
+                "      <p>Thank you for banking with us.</p>" +
+                "    </div>" +
+                "    <div class='footer'>" +
+                "      &copy; 2025 EFB – Equinox Finance Bank. All rights reserved." +
+                "    </div>" +
+                "  </div>" +
+                "</body>" +
+                "</html>";
+
+// Set event for Kafka or email sending
+        event.setUsername(subject); // Email subject
+        event.setEmail(email);      // Recipient email
+        event.setBody(body);        // HTML email body
+
+
+        String json = new Gson().toJson(event);
+        kafkaProducerService.sendLoanMsg("banking-loans", json);
+
+        return mapToDto(saved);
+    }
+
+    @Override
+    public LoanResponseDto rejectLoan(Long loanId) {
+        Loan loan = loanRepository.findById(loanId)
+                .orElseThrow(() -> new RuntimeException("Loan not found"));
+
+        loan.setStatus(LoanStatus.REJECTED);
+        loan.setUpdatedAt(LocalDate.now());
+
+        Loan saved = loanRepository.save(loan);
+        return mapToDto(saved);
+    }
+
+    @Override
+    public List<LoanResponseDto> getLoansByAccountNumber(String accountNumber) {
+        return loanRepository.findByAccountNumber(accountNumber)
+                .stream()
+                .map(this::mapToDto)
+                .toList();
+    }
+
+    @Override
+    public LoanResponseDto getLoanById(Long id) {
+        return loanRepository.findById(id)
+                .map(this::mapToDto)
+                .orElseThrow(() -> new RuntimeException("Loan not found"));
+    }
+
+    @Override
+    public LoanResponseDto makeRepayment(RepaymentDto repaymentDto) {
+
+        Loan loan = loanRepository.findById(repaymentDto.getLoanId())
+                .orElseThrow(() -> new RuntimeException("Loan not found"));
+
+        // Calculate remaining amount BEFORE repayment
+        BigDecimal principal = loan.getPrincipalAmount();
+        BigDecimal emiPaid = repaymentDto.getAmountPaid();
+
+        // Prevent over-payment negative balance
+        BigDecimal remainingBefore = principal;
+
+        // New remaining balance
+        BigDecimal remainingAfter = remainingBefore.subtract(emiPaid);
+        if (remainingAfter.compareTo(BigDecimal.ZERO) < 0) {
+            remainingAfter = BigDecimal.ZERO;
+        }
+
+        // Update loan status
+        if (remainingAfter.compareTo(BigDecimal.ZERO) == 0) {
+            loan.setStatus(LoanStatus.CLOSED);
+        } else {
+            loan.setStatus(LoanStatus.ACTIVE);
+        }
+
+        loan.setPrincipalAmount(remainingAfter);
+        loan.setUpdatedAt(LocalDate.now());
+
+        Loan saved = loanRepository.save(loan);
+
+        // FETCH USER FROM REDIS
+        User user = redisService.get(loan.getAccountNumber(), User.class);
+        String fullname = user.getUsername();
+        String email = user.getEmail();
+
+        // EMAIL SUBJECT
+        String subject = "💳 Loan Repayment Successful – EFB Bank";
+
+        // FINAL EMAIL HTML BODY
+        String body = "<!DOCTYPE html>" +
+                "<html>" +
+                "<head>" +
+                "  <meta charset='UTF-8'>" +
+                "  <style>" +
+                "    body { font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 0; }" +
+                "    .container { background-color: #ffffff; padding: 20px; margin: 30px auto; width: 90%; max-width: 600px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }" +
+                "    .header { background-color: #0046be; color: white; padding: 15px; border-radius: 10px 10px 0 0; text-align: center; }" +
+                "    .logo { max-width: 100px; margin-bottom: 10px; }" +
+                "    .content { padding: 20px; color: #333333; line-height: 1.6; }" +
+                "    .footer { text-align: center; font-size: 12px; color: #888888; padding-top: 15px; }" +
+                "    .highlight { font-weight: bold; color: #0046be; }" +
+                "  </style>" +
+                "</head>" +
+                "<body>" +
+                "  <div class='container'>" +
+                "    <div class='header'>" +
+                "      <img src='YOUR_LOGO_URL_HERE' alt='EFB Logo' class='logo'>" +
+                "      <h1>Payment Successful 💳</h1>" +
+                "    </div>" +
+                "    <div class='content'>" +
+                "      <p>Hello <strong>" + fullname + "</strong>,</p>" +
+                "      <p>Your EMI repayment has been received successfully.</p>" +
+                "      <p><strong>Loan Type:</strong> " + loan.getLoanType() + "</p>" +
+                "      <p><strong>Amount Paid:</strong> ₹" + emiPaid + "</p>" +
+                "      <p><strong>Remaining Balance:</strong> ₹" + remainingAfter + "</p>" +
+                "      <p>Status: <strong>" + loan.getStatus() + "</strong></p>" +
+                "      <p>Thank you for maintaining a good repayment record.</p>" +
+                "    </div>" +
+                "    <div class='footer'>" +
+                "      &copy; 2025 EFB – Equinox Finance Bank. All rights reserved." +
+                "    </div>" +
+                "  </div>" +
+                "</body>" +
+                "</html>";
+
+        // KAFKA EVENT
+        LoanMsg event = new LoanMsg();
+        event.setUsername(fullname);
+        event.setEmail(email);
+//        event.setSubject(subject);
+        event.setBody(body);
+
+        String json = new Gson().toJson(event);
+        kafkaProducerService.sendLoanMsg("banking-loans", json);
+
+        return mapToDto(saved);
+    }
+
+    private LoanResponseDto mapToDto(Loan l) {
+        return LoanResponseDto.builder()
+                .id(l.getId())
+                .accountNumber(l.getAccountNumber())
+                .loanType(l.getLoanType())
+                .principalAmount(l.getPrincipalAmount())
+                .interestRate(l.getInterestRate())
+                .tenureMonths(l.getTenureMonths())
+                .emiAmount(l.getEmiAmount())
+                .status(l.getStatus())
+                .startDate(l.getStartDate())
+                .endDate(l.getEndDate())
+                .build();
+    }
+
+    // Basic EMI formula
+    private BigDecimal calculateEmi(BigDecimal principal, double annualInterest, int tenureMonths) {
+        double monthlyRate = annualInterest / 12 / 100.0;
+        if (monthlyRate == 0) {
+            return principal.divide(BigDecimal.valueOf(tenureMonths), BigDecimal.ROUND_HALF_UP);
+        }
+        double emi = (principal.doubleValue() * monthlyRate * Math.pow(1 + monthlyRate, tenureMonths))
+                / (Math.pow(1 + monthlyRate, tenureMonths) - 1);
+        return BigDecimal.valueOf(emi).setScale(2, BigDecimal.ROUND_HALF_UP);
+    }
+}

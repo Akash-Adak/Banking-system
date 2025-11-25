@@ -166,6 +166,28 @@ services:
     networks:
       - banking-network
 
+  loan-service:
+    build:
+      context: ./loan-service
+      dockerfile: Dockerfile
+    container_name: loan-service
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/banking_loans?createDatabaseIfNotExist=true
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root
+      - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+    depends_on:
+      - mysql
+      - kafka
+      - eureka-server
+    ports:
+      - "8086:8086"
+    networks:
+      - banking-net
+
+
   # Notification Service
   notification-service:
     image: akta2910/banking-notify:latest
