@@ -1,10 +1,12 @@
-# Dockerfile
 FROM eclipse-temurin:17-jdk-alpine
 
 WORKDIR /app
 
-COPY target/loan-service-0.0.1-SNAPSHOT.jar loan-service.jar
+COPY target/loan-server-0.0.1-SNAPSHOT.jar loan-server.jar
 
-EXPOSE 8085
+RUN mkdir -p /app/config && \
+    chmod 755 /app/config
 
-ENTRYPOINT ["java","-jar","loan-service.jar"]
+EXPOSE 8082
+
+ENTRYPOINT ["java", "-jar", "loan-server.jar"]
