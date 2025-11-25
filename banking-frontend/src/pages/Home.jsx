@@ -15,11 +15,10 @@ export default function Home() {
     <PublicLayout>
       <LiveRatesTicker />
       <HeroSection />
-      <BankStats />
+      {/* <BankStats /> */}
       <QuickServices />
+       <PremiumCards />
       <FeaturesCarousel />
-      <BankingProducts />
-      <PremiumCards />
       <LoanProducts />
       <Testimonials />
       <FinalCTA />
