@@ -89,16 +89,22 @@ public class UserController {
         return new ResponseEntity<>(saved,HttpStatus.OK);
     }
 
-//    @PutMapping("/{accountNumber}")
-//    public ResponseEntity<?> addAccount(@PathVariable String accountNumber){
-//
-//        return  ResponseEntity.ok(userService.addAccountNumber(accountNumber));
-//    }
+
 
     @PatchMapping("/{username}/addAccountNumber/{accountNumber}")
     public ResponseEntity<?> addAccountNumber( @PathVariable String username,@PathVariable String accountNumber){
-
-        return  ResponseEntity.ok(userService.addAccountNumber(username,accountNumber));
+       User u= userService.addAccountNumber(username,accountNumber);
+        User cachedUser = redisService.get(u.getUsername(), User.class);
+        if (cachedUser != null) {
+            Optional<User> users = userService.getUserByUsername(u.getUsername());
+            if (users.isPresent()) {
+                User userObj = users.get();
+                redisService.set(u.getUsername(), userObj, 3600L);
+                redisService.set(u.getAccountNumber(), userObj, 3600L);
+                return new ResponseEntity<>(userObj, HttpStatus.OK);
+            }
+        }
+        return  ResponseEntity.ok(u);
     }
 
 
