@@ -8,7 +8,7 @@ const premiumCards = [
   {
     name: "Regalia Gold",
     type: "Lifestyle",
-    image: "https://images.unsplash.com/photo-1599137265934-1c6d32bf6cc0?q=80&w=600&auto=format&fit=crop",
+    image: "https://www.cardexpert.in/wp-content/uploads/2023/11/hdfc-regalia-gold-credit-card-1024x576.jpg",
     benefits: ["12 Lounge Visits", "Marriott Membership", "Air Accident Cover"]
   }
 ];

@@ -12,7 +12,7 @@ const quickServices = [
     name: "Net Banking", 
     desc: "Bank from anywhere",
     link: "/login", 
-    image: "https://tse4.mm.bing.net/th/id/OIP.OTC8GrlTT-tpnDseZetd7QHaE8?rs=1&pid=ImgDetMain&o=7&rm=3",
+    image: "https://streetwisejournal.com/wp-content/uploads/2023/02/63e1692b5cbb3.jpg",
     icon: "globe"
   },
   { 

@@ -7,6 +7,7 @@ export default defineConfig({
     include: ['**/*.js', '**/*.jsx'] // Process both .js and .jsx files as JSX
   })],
    server: {
+     host: '0.0.0.0', 
     port: 9090,   // 👈 change this to whatever port you want
   },
 })
