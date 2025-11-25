@@ -30,17 +30,19 @@ public class LoanServiceImpl implements LoanService {
     public LoanResponseDto applyLoan(LoanRequestDto req) {
         BigDecimal emi = calculateEmi(req.getPrincipalAmount(), req.getInterestRate(), req.getTenureMonths());
 
-        Loan loan = Loan.builder()
-                .accountNumber(req.getAccountNumber())
-                .loanType(req.getLoanType())
-                .principalAmount(req.getPrincipalAmount())
-                .interestRate(req.getInterestRate())
-                .tenureMonths(req.getTenureMonths())
-                .emiAmount(emi)
-                .status(LoanStatus.PENDING)
-                .createdAt(LocalDate.now())
-                .updatedAt(LocalDate.now())
-                .build();
+        Loan loan = new Loan();
+
+
+        loan.setAccountNumber(req.getAccountNumber());
+        loan.setLoanType(req.getLoanType());
+        loan.setPrincipalAmount(req.getPrincipalAmount());
+        loan.setInterestRate(req.getInterestRate());
+        loan.setTenureMonths(req.getTenureMonths());
+        loan.setEmiAmount(emi);
+        loan.setStatus(LoanStatus.PENDING);
+        loan.setCreatedAt(LocalDate.now());
+        loan.setUpdatedAt(LocalDate.now());
+
 
         Loan saved = loanRepository.save(loan);
 
@@ -282,21 +284,23 @@ public class LoanServiceImpl implements LoanService {
 
         return mapToDto(saved);
     }
-
     private LoanResponseDto mapToDto(Loan l) {
-        return LoanResponseDto.builder()
-                .id(l.getId())
-                .accountNumber(l.getAccountNumber())
-                .loanType(l.getLoanType())
-                .principalAmount(l.getPrincipalAmount())
-                .interestRate(l.getInterestRate())
-                .tenureMonths(l.getTenureMonths())
-                .emiAmount(l.getEmiAmount())
-                .status(l.getStatus())
-                .startDate(l.getStartDate())
-                .endDate(l.getEndDate())
-                .build();
+        LoanResponseDto dto = new LoanResponseDto();
+
+        dto.setId(l.getId());
+        dto.setAccountNumber(l.getAccountNumber());
+        dto.setLoanType(l.getLoanType());
+        dto.setPrincipalAmount(l.getPrincipalAmount());
+        dto.setInterestRate(l.getInterestRate());
+        dto.setTenureMonths(l.getTenureMonths());
+        dto.setEmiAmount(l.getEmiAmount());
+        dto.setStatus(l.getStatus());
+        dto.setStartDate(l.getStartDate());
+        dto.setEndDate(l.getEndDate());
+
+        return dto;
     }
+
 
     // Basic EMI formula
     private BigDecimal calculateEmi(BigDecimal principal, double annualInterest, int tenureMonths) {

@@ -8,6 +8,7 @@ import com.banking.loan.service.LoanService;
 import com.banking.loan.service.RedisService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -15,12 +16,12 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/loans")
-@RequiredArgsConstructor
+
 public class LoanController {
-
-    private final LoanService loanService;
-
-    private final RedisService redisService;
+    @Autowired
+    private  LoanService loanService;
+    @Autowired
+    private  RedisService redisService;
 
     // ✅ Apply for a loan (Only own account)
     @PostMapping

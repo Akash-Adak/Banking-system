@@ -104,7 +104,7 @@
         </dependency>
 
 
-        <!-- No need to explicitly declare lettuce-core -->
+
 
 
         <dependency>
