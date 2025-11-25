@@ -51,8 +51,6 @@ const ICON_MAP = {
   'gift': 'gift',
   'sign-in-alt': 'sign-in-alt',
   'user-plus': 'user-plus',
-  'wallet': 'wallet',
-  'receipt': 'receipt',
   'sign-out-alt': 'sign-out-alt',
   'times': 'times',
   'bars': 'bars',
