@@ -29,7 +29,7 @@ export default function Signup() {
       };
 
       await axios.post(`${API}/api/auth/register`, payload);
-      navigate("/");
+      navigate("/login");
     } catch (e) {
       setError(e.response?.data?.message || "Signup failed");
     }
@@ -101,7 +101,7 @@ export default function Signup() {
 
         <p className="text-center mt-4 text-sm">
           Already have an account?{" "}
-          <Link to="/" className="text-blue-600 font-semibold">
+          <Link to="/login" className="text-blue-600 font-semibold">
             Login
           </Link>
         </p>
