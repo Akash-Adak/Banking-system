@@ -61,32 +61,44 @@ export default function HeroSection() {
     return (
       <section className="relative min-h-[85vh] flex flex-col font-sans">
         <div className="relative flex-1 flex items-center">
-          <div className="absolute inset-0 z-0">
-             <img 
-               src="/homepage.jpg" 
-               alt="Bank Background" 
-               className="w-full h-full object-cover object-[50%_20%] sm:object-center"
-               loading="eager"
-             />
-             <div className="absolute inset-0 bg-white/40"></div>
-          </div>
+          {/* Background Image - Hidden on mobile */}
+          {!isMobile && (
+            <div className="absolute inset-0 z-0">
+              <img 
+                src="/homepage.jpg" 
+                alt="Bank Background" 
+                className="w-full h-full object-cover object-[50%_20%] sm:object-center"
+                loading="eager"
+              />
+              <div className="absolute inset-0 bg-white/40"></div>
+            </div>
+          )}
+          
+          {/* Mobile background color */}
+          {isMobile && (
+            <div className="absolute inset-0 z-0 bg-gradient-to-b from-blue-900 to-blue-700"></div>
+          )}
 
           <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-8 lg:py-12">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
-              <div className="lg:col-span-8 space-y-6 lg:space-y-8 text-blue-900 text-center lg:text-left">
-                <div className="inline-flex items-center gap-3 bg-white/60 backdrop-blur-md border border-white/40 px-4 py-2 rounded-full text-sm shadow-sm">
+              <div className={`lg:col-span-8 space-y-6 lg:space-y-8 text-center lg:text-left ${isMobile ? 'text-white' : 'text-blue-900'}`}>
+                <div className={`inline-flex items-center gap-3 backdrop-blur-md border px-4 py-2 rounded-full text-sm shadow-sm ${
+                  isMobile ? 'bg-white/20 border-white/30 text-white' : 'bg-white/60 border-white/40 text-blue-900'
+                }`}>
                   <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
                   <span className="font-bold">Welcome back, {user.username || user.name}!</span>
                 </div>
-                <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight text-slate-900">
+                <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight">
                   Your Financial <br className="hidden sm:block" />
                   <span className="text-yellow-500 border-b-4 border-yellow-500">Dashboard</span>
                 </h1>
                 <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center lg:justify-start">
-                  <button onClick={() => navigate("/dashboard")} className="bg-blue-900 hover:bg-blue-800 text-white font-bold py-3 px-6 rounded-lg shadow-lg transition-all active:scale-95">
+                  <button onClick={() => navigate("/dashboard")} className="bg-yellow-500 hover:bg-yellow-400 text-blue-900 font-bold py-3 px-6 rounded-lg shadow-lg transition-all active:scale-95">
                     Go to Dashboard
                   </button>
-                  <button onClick={handleLogout} className="bg-transparent border-2 border-blue-900 hover:bg-blue-900 hover:text-white text-blue-900 font-bold py-3 px-6 rounded-lg transition-all">
+                  <button onClick={handleLogout} className={`bg-transparent border-2 py-3 px-6 rounded-lg transition-all font-bold ${
+                    isMobile ? 'border-white text-white hover:bg-white hover:text-blue-900' : 'border-blue-900 text-blue-900 hover:bg-blue-900 hover:text-white'
+                  }`}>
                     Logout
                   </button>
                 </div>
@@ -103,77 +115,80 @@ export default function HeroSection() {
     <section className="relative min-h-[85vh] flex flex-col font-sans">
       
       {/* Main Container */}
-      <div className="relative flex-1 flex items-center py-8 lg:py-0">
+      <div className="relative flex-1 flex items-center py-4 lg:py-0">
         
-        {/* Background Image */}
-        <div className="absolute inset-0 z-0">
-          <img 
-            src="/homepage.jpg" 
-            alt="Bank Staff Helping Customer" 
-            className="w-full h-full object-cover object-[50%_20%] sm:object-center"
-            loading="eager"
-          />
-          {/* Light Gradient Overlay for Text Readability on Light Backgrounds */}
-          {/* <div className="absolute inset-0 bg-gradient-to-b from-white/90 via-white/50 to-transparent lg:bg-gradient-to-r lg:from-white/90 lg:via-white/40 lg:to-transparent"></div> */}
-        </div>
+        {/* Background Image - Hidden on mobile */}
+        {!isMobile && (
+          <div className="absolute inset-0 z-0">
+            <img 
+              src="/homepage.jpg" 
+              alt="Bank Staff Helping Customer" 
+              className="w-full h-full object-cover object-[50%_20%] sm:object-center"
+              loading="eager"
+            />
+          </div>
+        )}
+        
+        {/* Mobile background */}
+        {isMobile && (
+          <div className="absolute inset-0 z-0 bg-gradient-to-b from-blue-900 via-blue-800 to-blue-900"></div>
+        )}
 
         {/* Content Container */}
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-20 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-20 items-center">
             
-            {/* LEFT: Marketing Text (UPDATED TO DARK TEXT) */}
-            <div className="lg:col-span-7 space-y-6 lg:space-y-8 text-center lg:text-left pt-8 lg:pt-0">
-              <div className="inline-block bg-blue-100/80 backdrop-blur-md border border-blue-200 px-4 py-1 rounded-full text-sm font-bold tracking-wide text-blue-900">
-                #BankingApkeSaath
-              </div>
-              
-              {/* Changed text-white to text-slate-900 for visibility on light bg */}
-              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight text-slate-900">
-                Turning Your Dreams <br className="hidden sm:block" />
-                Into <span className="text-yellow-500 border-b-4 border-yellow-500">Reality</span>
-              </h1>
-              
-              {/* Changed text-blue-100 to text-slate-600 */}
-              <p className="text-base sm:text-lg md:text-xl text-slate-700 max-w-xl mx-auto lg:mx-0 leading-relaxed font-medium">
-                Experience India's most trusted banking partner. 
-                From <strong>Instant Home Loans</strong> to <strong>Wealth Management</strong>, 
-                we are here for every step of your journey.
-              </p>
-
-              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center lg:justify-start">
-                <button className="bg-yellow-500 hover:bg-yellow-400 text-blue-900 font-bold py-3 px-6 sm:px-8 rounded-lg shadow-lg transition-all active:scale-95 text-sm sm:text-base">
-                  Open Savings Account
-                </button>
-                {/* Updated Secondary Button to Dark Blue */}
-                <button className="bg-transparent border-2 border-blue-900 hover:bg-blue-900 hover:text-white text-blue-900 font-bold py-3 px-6 sm:px-8 rounded-lg transition-all text-sm sm:text-base">
-                  Apply for Loan
-                </button>
-              </div>
-
-              {/* Mobile Stats - Dark Text */}
-              {isMobile && (
-                <div className="grid grid-cols-3 gap-4 pt-4 border-t border-slate-300/50">
-                  <div className="text-center">
-                    <div className="text-blue-900 font-bold text-lg">50L+</div>
-                    <div className="text-slate-600 text-xs font-semibold">Customers</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-blue-900 font-bold text-lg">5k+</div>
-                    <div className="text-slate-600 text-xs font-semibold">Branches</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-blue-900 font-bold text-lg">45+</div>
-                    <div className="text-slate-600 text-xs font-semibold">Years</div>
-                  </div>
+            {/* LEFT: Marketing Text - Hidden on mobile, shown on desktop */}
+            {!isMobile && (
+              <div className="lg:col-span-7 space-y-6 lg:space-y-8 text-center lg:text-left pt-8 lg:pt-0">
+                <div className="inline-block bg-blue-100/80 backdrop-blur-md border border-blue-200 px-4 py-1 rounded-full text-sm font-bold tracking-wide text-blue-900">
+                  #BankingApkeSaath
                 </div>
-              )}
-            </div>
+                
+                <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight text-slate-900">
+                  Turning Your Dreams <br className="hidden sm:block" />
+                  Into <span className="text-yellow-500 border-b-4 border-yellow-500">Reality</span>
+                </h1>
+                
+                <p className="text-base sm:text-lg md:text-xl text-slate-700 max-w-xl mx-auto lg:mx-0 leading-relaxed font-medium">
+                  Experience India's most trusted banking partner. 
+                  From <strong>Instant Home Loans</strong> to <strong>Wealth Management</strong>, 
+                  we are here for every step of your journey.
+                </p>
+
+                <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center lg:justify-start">
+                  <button className="bg-yellow-500 hover:bg-yellow-400 text-blue-900 font-bold py-3 px-6 sm:px-8 rounded-lg shadow-lg transition-all active:scale-95 text-sm sm:text-base">
+                    Open Savings Account
+                  </button>
+                  <button className="bg-transparent border-2 border-blue-900 hover:bg-blue-900 hover:text-white text-blue-900 font-bold py-3 px-6 sm:px-8 rounded-lg transition-all text-sm sm:text-base">
+                    Apply for Loan
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* Mobile Header - Only shown on mobile */}
+            {isMobile && (
+              <div className="text-center mb-6 pt-4">
+                <div className="inline-block bg-white/20 backdrop-blur-md border border-white/30 px-4 py-1 rounded-full text-sm font-bold tracking-wide text-white mb-4">
+                  #BankingApkeSaath
+                </div>
+                <h1 className="text-2xl sm:text-3xl font-extrabold leading-tight text-white mb-2">
+                  Turning Your Dreams Into <span className="text-yellow-300">Reality</span>
+                </h1>
+                <p className="text-white/90 text-sm leading-relaxed px-4">
+                  Experience India's most trusted banking partner
+                </p>
+              </div>
+            )}
 
             {/* RIGHT: Login Widget */}
-            <div className="lg:col-span-4 lg:col-start-9 mt-8 lg:mt-0 w-full max-w-md mx-auto lg:max-w-none">
+            <div className={`${isMobile ? 'w-full' : 'lg:col-span-4 lg:col-start-9'} mt-4 lg:mt-0 w-full max-w-md mx-auto lg:max-w-none`}>
               
               {/* GLASS CARD CONTAINER */}
-              <div className="bg-white/70 backdrop-blur-xl border border-white/60 rounded-xl shadow-2xl overflow-hidden">
+              <div className={`backdrop-blur-xl border rounded-xl shadow-2xl overflow-hidden ${
+                isMobile ? 'bg-white/90 border-white/40' : 'bg-white/70 border-white/60'
+              }`}>
                 
                 {/* Tabs */}
                 <div className="flex text-sm font-bold border-b border-gray-300/50">
@@ -267,23 +282,52 @@ export default function HeroSection() {
                 </div>
               </div>
 
-              {/* Mobile App Download */}
+              {/* Mobile App Download & Stats */}
               {isMobile && (
-                <div className="flex gap-3 mt-4">
-                  <button className="flex items-center gap-2 bg-slate-900 hover:bg-black text-white px-4 py-3 rounded-lg text-xs flex-1 justify-center transition-colors shadow-lg">
-                    <i className="fab fa-google-play text-lg"></i>
-                    <div className="text-left">
-                      <div className="text-[10px] uppercase opacity-80">Get it on</div>
-                      <div className="font-bold leading-none">Google Play</div>
+                <div className="space-y-4 mt-6">
+                  {/* Stats */}
+                  <div className="grid grid-cols-3 gap-3 pt-4 border-t border-white/30">
+                    <div className="text-center">
+                      <div className="text-white font-bold text-lg">50L+</div>
+                      <div className="text-white/80 text-xs font-semibold">Customers</div>
                     </div>
-                  </button>
-                  <button className="flex items-center gap-2 bg-slate-900 hover:bg-black text-white px-4 py-3 rounded-lg text-xs flex-1 justify-center transition-colors shadow-lg">
-                    <i className="fab fa-apple text-lg"></i>
-                    <div className="text-left">
-                      <div className="text-[10px] uppercase opacity-80">Download on</div>
-                      <div className="font-bold leading-none">App Store</div>
+                    <div className="text-center">
+                      <div className="text-white font-bold text-lg">5k+</div>
+                      <div className="text-white/80 text-xs font-semibold">Branches</div>
                     </div>
-                  </button>
+                    <div className="text-center">
+                      <div className="text-white font-bold text-lg">45+</div>
+                      <div className="text-white/80 text-xs font-semibold">Years</div>
+                    </div>
+                  </div>
+
+                  {/* App Download Buttons */}
+                  <div className="flex gap-3">
+                    <button className="flex items-center gap-2 bg-white hover:bg-gray-100 text-blue-900 px-4 py-3 rounded-lg text-xs flex-1 justify-center transition-colors shadow-lg font-bold">
+                      <i className="fab fa-google-play text-lg"></i>
+                      <div className="text-left">
+                        <div className="text-[10px] uppercase opacity-80">Get it on</div>
+                        <div className="leading-none">Google Play</div>
+                      </div>
+                    </button>
+                    <button className="flex items-center gap-2 bg-white hover:bg-gray-100 text-blue-900 px-4 py-3 rounded-lg text-xs flex-1 justify-center transition-colors shadow-lg font-bold">
+                      <i className="fab fa-apple text-lg"></i>
+                      <div className="text-left">
+                        <div className="text-[10px] uppercase opacity-80">Download on</div>
+                        <div className="leading-none">App Store</div>
+                      </div>
+                    </button>
+                  </div>
+
+                  {/* Quick Action Buttons */}
+                  <div className="flex gap-2">
+                    <button className="flex-1 bg-yellow-500 hover:bg-yellow-400 text-blue-900 font-bold py-3 rounded-lg transition-all text-sm">
+                      Open Account
+                    </button>
+                    <button className="flex-1 bg-transparent border-2 border-white text-white hover:bg-white hover:text-blue-900 font-bold py-3 rounded-lg transition-all text-sm">
+                      Apply Loan
+                    </button>
+                  </div>
                 </div>
               )}
             </div>
