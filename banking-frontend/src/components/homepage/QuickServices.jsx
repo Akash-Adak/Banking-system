@@ -1,161 +1,207 @@
-import React, { useRef } from 'react';
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+
+// Note: Ensure you have FontAwesome loaded in your index.html for the icons to work
+// <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
 
 const quickServices = [
-  { 
-    name: "Open Account", 
-    desc: "Digital savings in 5 mins",
-    link: "/open-account", 
-    image: "https://tse2.mm.bing.net/th/id/OIP.q9aCFsdaerT2AaCPdOrNEwHaFa?rs=1&pid=ImgDetMain&o=7&rm=3",
-    icon: "user-plus"
+  {
+    id: 1,
+    name: "Digital Account",
+    desc: "Open a zero-balance savings account in just 5 minutes with video KYC.",
+    link: "/open-account",
+    image: "https://images.unsplash.com/photo-1563986768609-322da13575f3?q=80&w=1000&auto=format&fit=crop",
+    icon: "user-plus",
+    bgClass: "bg-blue-50",
+    textAccent: "text-blue-600",
+    buttonGradient: "from-blue-600 to-blue-700",
+    badge: "Instant"
   },
-  { 
-    name: "Net Banking", 
-    desc: "Bank from anywhere",
-    link: "/login", 
-    image: "https://streetwisejournal.com/wp-content/uploads/2023/02/63e1692b5cbb3.jpg",
-    icon: "globe"
+  {
+    id: 2,
+    name: "Net Banking",
+    desc: "Experience secure, 24/7 banking with military-grade encryption access.",
+    link: "/login",
+    image: "https://images.unsplash.com/photo-1616077168079-7e09a677fb2c?q=80&w=1000&auto=format&fit=crop",
+    icon: "laptop-code",
+    bgClass: "bg-emerald-50",
+    textAccent: "text-emerald-600",
+    buttonGradient: "from-emerald-600 to-emerald-700",
+    badge: "Secure"
   },
-  { 
-    name: "Credit Cards", 
-    desc: "Lifetime free premium cards",
-    link: "/credit-cards", 
-    image: "https://images.unsplash.com/photo-1556742111-a301076d9d18?q=80&w=800&auto=format&fit=crop",
-    icon: "credit-card"
+  {
+    id: 3,
+    name: "Premium Cards",
+    desc: "Lifetime free credit cards with exclusive airport lounge access and rewards.",
+    link: "/credit-cards",
+    image: "https://www.vijaymaheshwari.com/wp-content/uploads/2023/12/cc-1024x577.jpg",
+    icon: "credit-card",
+    bgClass: "bg-purple-50",
+    textAccent: "text-purple-600",
+    buttonGradient: "from-purple-600 to-purple-700",
+    badge: "Premium"
   },
-  { 
-    name: "Instant Loans", 
-    desc: "Approvals in seconds",
-    link: "/loans", 
-    image: "https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?q=80&w=800&auto=format&fit=crop",
-    icon: "hand-holding-usd"
-  },
-  { 
-    name: "Investments", 
-    desc: "Grow your wealth",
-    link: "/investments", 
-    image: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?q=80&w=800&auto=format&fit=crop",
-    icon: "chart-line"
-  },
-  { 
-    name: "Insurance", 
-    desc: "Secure your future",
-    link: "/insurance", 
-    image: "https://images.unsplash.com/photo-1516733968668-dbdce39c4651?q=80&w=800&auto=format&fit=crop",
-    icon: "shield-alt"
+  {
+    id: 4,
+    name: "Instant Loans",
+    desc: "Get pre-approved personal loans disbursed to your account in 10 minutes.",
+    link: "/loans",
+    image: "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?q=80&w=1000&auto=format&fit=crop",
+    icon: "hand-holding-dollar",
+    bgClass: "bg-orange-50",
+    textAccent: "text-orange-600",
+    buttonGradient: "from-orange-600 to-orange-700",
+    badge: "Paperless"
   }
 ];
 
 export default function QuickServices() {
-  const scrollRef = useRef(null);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isAnimating, setIsAnimating] = useState(false);
+  const navigate = useNavigate();
 
-  // Function to handle manual scrolling via buttons
-  const scroll = (direction) => {
-    const { current } = scrollRef;
-    if (current) {
-      // Scroll by the width of one card + gap (approx 340px)
-      const scrollAmount = 340; 
-      if (direction === 'left') {
-        current.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
-      } else {
-        current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
-      }
-    }
+  const nextService = () => {
+    if (isAnimating) return;
+    setIsAnimating(true);
+    setCurrentIndex((prev) => (prev + 1) % quickServices.length);
+    setTimeout(() => setIsAnimating(false), 600);
   };
 
+  const prevService = () => {
+    if (isAnimating) return;
+    setIsAnimating(true);
+    setCurrentIndex((prev) => (prev - 1 + quickServices.length) % quickServices.length);
+    setTimeout(() => setIsAnimating(false), 600);
+  };
+
+  // Auto-rotate
+  useEffect(() => {
+    const interval = setInterval(() => {
+      nextService();
+    }, 6000);
+    return () => clearInterval(interval);
+  }, [currentIndex]);
+
+  const currentService = quickServices[currentIndex];
+
   return (
-    <section className="bg-gradient-to-b from-white to-gray-50 py-16 lg:py-24 font-sans overflow-hidden">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
-        {/* Header Section with Navigation Buttons */}
-        <div className="flex flex-col md:flex-row justify-between items-end mb-8 md:mb-12 gap-6">
+    <section className="relative py-20 bg-white font-sans overflow-hidden">
       
-          
-          {/* Navigation Controls (Visible on all screens, but most useful on Desktop) */}
-          <div className="flex gap-3">
-             <button 
-                onClick={() => scroll('left')}
-                className="w-12 h-12 rounded-full border border-gray-300 flex items-center justify-center text-gray-600 hover:bg-blue-600 hover:text-white hover:border-blue-600 transition-all duration-300 shadow-sm active:scale-95 bg-white"
-                aria-label="Scroll Left"
-             >
-                <i className="fas fa-arrow-left"></i>
-             </button>
-             <button 
-                onClick={() => scroll('right')}
-                className="w-12 h-12 rounded-full bg-blue-600 text-white flex items-center justify-center hover:bg-blue-700 transition-all duration-300 shadow-md active:scale-95 hover:shadow-lg"
-                aria-label="Scroll Right"
-             >
-                <i className="fas fa-arrow-right"></i>
-             </button>
-          </div>
+      {/* Decorative Background Elements */}
+      <div className="absolute top-0 left-0 w-full h-full overflow-hidden z-0">
+        <div className="absolute -top-24 -left-24 w-96 h-96 bg-blue-100 rounded-full blur-3xl opacity-50"></div>
+        <div className="absolute top-1/2 right-0 w-64 h-64 bg-purple-100 rounded-full blur-3xl opacity-50"></div>
+      </div>
+
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        {/* Header */}
+        <div className="text-center mb-12">
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+            Banking at Your Fingertips
+          </h2>
+          <p className="text-gray-500 max-w-2xl mx-auto">
+            Discover our range of digital services designed to make your financial life easier.
+          </p>
         </div>
 
-        {/* Horizontal Scroll Container */}
-        <div className="relative w-full">
+        {/* Carousel Container */}
+        <div className="relative max-w-6xl mx-auto">
           
-          {/* CSS to Hide Scrollbars while keeping functionality */}
-          <style>{`
-            .no-scrollbar::-webkit-scrollbar {
-              display: none;
-            }
-            .no-scrollbar {
-              -ms-overflow-style: none;  /* IE and Edge */
-              scrollbar-width: none;  /* Firefox */
-            }
-          `}</style>
-
-          {/* The Scrollable Area */}
-          <div 
-            ref={scrollRef}
-            className="flex overflow-x-auto snap-x snap-mandatory gap-5 pb-8 no-scrollbar -mx-4 px-4 sm:mx-0 sm:px-0" 
-            style={{ scrollBehavior: 'smooth' }}
+          {/* Navigation Buttons (Outside Card) */}
+          <button 
+            onClick={prevService}
+            className="hidden md:flex absolute -left-16 top-1/2 -translate-y-1/2 w-12 h-12 items-center justify-center rounded-full bg-white border border-gray-200 text-gray-600 hover:text-blue-600 hover:border-blue-200 shadow-sm hover:shadow-md transition-all z-20"
           >
-            
-            {quickServices.map((service, index) => (
-              <a
-                key={index}
-                href={service.link}
-                className="relative flex-shrink-0 w-[85vw] sm:w-[300px] md:w-[340px] h-[450px] rounded-3xl overflow-hidden snap-center group cursor-pointer shadow-lg hover:shadow-2xl transition-all duration-500 border border-gray-100 bg-gray-900"
-              >
-                {/* Image Background */}
-                <div className="absolute inset-0 z-0">
-                  <img 
-                    src={service.image} 
-                    alt={service.name}
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-90"
-                    loading="lazy"
-                  />
-                  {/* Gradient Overlay for Text Readability */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-blue-900/95 via-blue-900/40 to-transparent"></div>
-                </div>
+            <i className="fas fa-chevron-left"></i>
+          </button>
+          
+          <button 
+            onClick={nextService}
+            className="hidden md:flex absolute -right-16 top-1/2 -translate-y-1/2 w-12 h-12 items-center justify-center rounded-full bg-white border border-gray-200 text-gray-600 hover:text-blue-600 hover:border-blue-200 shadow-sm hover:shadow-md transition-all z-20"
+          >
+            <i className="fas fa-chevron-right"></i>
+          </button>
 
-                {/* Card Content */}
-                <div className="absolute inset-0 z-10 p-8 flex flex-col justify-end text-white">
-                  <div className="transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
-                    
-                    {/* Icon Badge */}
-                    <div className="w-12 h-12 mb-4 rounded-xl bg-white/20 backdrop-blur-md flex items-center justify-center border border-white/30">
-                       <i className={`fas fa-${service.icon} text-xl text-yellow-400`}></i>
+          {/* Main Card */}
+          <div className="bg-white rounded-3xl shadow-2xl shadow-gray-200/50 overflow-hidden border border-gray-100 h-[600px] md:h-[500px]">
+            <div className="grid grid-cols-1 md:grid-cols-2 h-full">
+              
+              {/* Left Column: Content */}
+              <div className={`relative h-full p-8 md:p-12 flex flex-col justify-center transition-colors duration-500 ${currentService.bgClass}`}>
+                {/* Animated Content Wrapper */}
+                <div className={`transition-all duration-500 ease-in-out ${isAnimating ? 'opacity-0 translate-y-4' : 'opacity-100 translate-y-0'}`}>
+                  
+                  {/* Badge & Icon */}
+                  <div className="flex items-center gap-4 mb-6">
+                    <div className={`w-12 h-12 rounded-xl bg-white flex items-center justify-center shadow-sm ${currentService.textAccent}`}>
+                      <i className={`fas fa-${currentService.icon} text-xl`}></i>
                     </div>
-
-                    <h3 className="text-3xl font-bold mb-2 leading-tight">{service.name}</h3>
-                    
-                    <p className="text-gray-300 text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100 transform translate-y-2 group-hover:translate-y-0">
-                      {service.desc}
-                    </p>
-
-                    {/* Action Line */}
-                    <div className="mt-6 flex items-center gap-2 text-yellow-400 font-bold text-sm uppercase tracking-wider opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-200">
-                      <span>Explore</span> <i className="fas fa-arrow-right"></i>
-                    </div>
+                    <span className={`px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-white/80 ${currentService.textAccent}`}>
+                      {currentService.badge}
+                    </span>
                   </div>
-                </div>
-              </a>
-            ))}
 
-            {/* Spacer for Mobile Right Padding ensures last card isn't flush against edge */}
-            <div className="w-4 flex-shrink-0 sm:hidden"></div>
+                  {/* Text */}
+                  <h3 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4 leading-tight">
+                    {currentService.name}
+                  </h3>
+                  <p className="text-lg text-gray-600 mb-8 leading-relaxed">
+                    {currentService.desc}
+                  </p>
+
+                  {/* Actions */}
+                  <div className="flex flex-wrap items-center gap-4">
+                    <button 
+                      onClick={() => navigate(currentService.link)}
+                      className={`px-8 py-3.5 rounded-xl text-white font-semibold shadow-lg shadow-blue-500/20 hover:shadow-xl hover:scale-105 transition-all duration-300 bg-gradient-to-r ${currentService.buttonGradient}`}
+                    >
+                      Get Started <i className="fas fa-arrow-right ml-2"></i>
+                    </button>
+                    <button className="px-6 py-3.5 rounded-xl bg-white text-gray-700 font-semibold border border-gray-200 hover:bg-gray-50 hover:border-gray-300 transition-all">
+                      Learn More
+                    </button>
+                  </div>
+
+                </div>
+
+                {/* Progress Indicators (Mobile/Tablet inside card) */}
+                <div className="absolute bottom-8 left-8 md:left-12 flex gap-2">
+                  {quickServices.map((_, idx) => (
+                    <div 
+                      key={idx}
+                      className={`h-1.5 rounded-full transition-all duration-300 ${idx === currentIndex ? 'w-8 bg-gray-800' : 'w-2 bg-gray-300'}`}
+                    />
+                  ))}
+                </div>
+              </div>
+
+              {/* Right Column: Image */}
+              <div className="relative h-full overflow-hidden hidden md:block group">
+                {/* The Image - Fixed here! */}
+                <img 
+                  src={currentService.image} 
+                  alt={currentService.name}
+                  className={`w-full h-full object-cover transition-transform duration-700 ease-out ${isAnimating ? 'scale-110 blur-sm' : 'scale-100 blur-0'}`}
+                />
+                
+                {/* Overlay Gradient for Text Contrast (if needed) or aesthetic */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+              </div>
+
+              {/* Mobile Image (Banner style for small screens) */}
+              <div className="md:hidden h-48 relative overflow-hidden order-first">
+                 <img 
+                  src={currentService.image} 
+                  alt={currentService.name}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+
+            </div>
           </div>
         </div>
+
       </div>
     </section>
   );
