@@ -230,7 +230,7 @@ export default function Navbar() {
   ];
 
   const quickActions = [
-    { name: "Transfer", icon: "paper-plane", link: "/quick-transfer", color: "blue" },
+    { name: "Transfer", icon: "paper-plane", link: "/send-money", color: "blue" },
     { name: "Pay Bills", icon: "receipt", link: "/pay-bills", color: "green" },
     { name: "Recharge", icon: "mobile-alt", link: "/recharge", color: "purple" },
     { name: "Invest", icon: "chart-line", link: "/invest-now", color: "teal" },
@@ -241,12 +241,12 @@ export default function Navbar() {
   const userMenuItems = [
     { name: "Dashboard", icon: "chart-pie", link: "/dashboard" },
     { name: "My Accounts", icon: "wallet", link: "/my-accounts" },
-    { name: "Transactions", icon: "receipt", link: "/transactions" },
+    { name: "Transactions", icon: "receipt", link: "/dashboard/transactions" },
     { name: "Payments", icon: "rupee-sign", link: "/payments" },
     { name: "Cards", icon: "credit-card", link: "/cards" },
     { name: "Investments", icon: "chart-line", link: "/investments" },
     { name: "Loans", icon: "hand-holding-usd", link: "/loans" },
-    { name: "Profile", icon: "user", link: "/profile" },
+    { name: "Profile", icon: "user", link: "/dashboard/profile" },
     { name: "Settings", icon: "cog", link: "/settings" }
   ];
 
