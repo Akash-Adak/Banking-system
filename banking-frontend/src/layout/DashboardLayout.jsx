@@ -1,13 +1,25 @@
+import { useState } from "react";
 import Sidebar from "./Sidebar";
+import Navbar from "../components/Navbar";
 
 export default function DashboardLayout({ children }) {
-  return (
-    <div className="flex">
-      <Sidebar />
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
-      <main className="ml-64 w-full min-h-screen bg-gray-50 p-8">
-        {children}
-      </main>
+  return (
+    <div className="min-h-screen bg-gray-50 flex">
+      {/* Sidebar */}
+      <Sidebar isOpen={sidebarOpen} setIsOpen={setSidebarOpen} />
+      
+      {/* Main Content Area */}
+      {/* <div className="flex-1 flex flex-col lg:ml-64"> */}
+        {/* Navbar */}
+        {/* <Navbar onMenuClick={() => setSidebarOpen(!sidebarOpen)} /> */}
+        
+        {/* Page Content */}
+        <main className="flex-1 pt-16 px-4 md:px-6 lg:px-8 pb-8 overflow-auto">
+          {children}
+        </main>
+      {/* </div> */}
     </div>
   );
 }
