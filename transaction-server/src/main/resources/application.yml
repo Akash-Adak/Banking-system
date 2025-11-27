@@ -2,6 +2,8 @@ server:
   port: 8084
 
 spring:
+  application:
+    name: transaction
   datasource:
     url: jdbc:mysql://localhost:3306/banking_system
     username: root

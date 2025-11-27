@@ -253,7 +253,7 @@ export default function Navbar() {
   return (
     <>
       {/* 1. Promotional Banner */}
-      <PromotionalBanner />
+      {/* <PromotionalBanner /> */}
 
       {/* 2. Top Bar */}
       <div className="bg-slate-900 text-slate-300 py-2 text-xs relative z-[60] border-b border-slate-800 hidden md:block">
