@@ -3,12 +3,14 @@ package com.banking.loan.service;
 import com.banking.loan.model.LoanRequestDto;
 import com.banking.loan.model.LoanResponseDto;
 import com.banking.loan.model.RepaymentDto;
+import jakarta.validation.Valid;
 
+import java.nio.file.AccessDeniedException;
 import java.util.List;
 
 public interface LoanService {
 
-    LoanResponseDto applyLoan(LoanRequestDto request);
+    LoanResponseDto applyLoan(LoanRequestDto request,String username,String token) throws AccessDeniedException;
 
     LoanResponseDto approveLoan(Long loanId);
 
@@ -19,4 +21,6 @@ public interface LoanService {
     LoanResponseDto getLoanById(Long id);
 
     LoanResponseDto makeRepayment(RepaymentDto repaymentDto);
+
+//    Object applyxdLoan(@Valid LoanRequestDto request);
 }

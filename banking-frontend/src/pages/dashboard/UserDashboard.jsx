@@ -77,7 +77,7 @@ export default function UserDashboard() {
   const [rewardPoints, setRewardPoints] = useState(0);
   
   const username = localStorage.getItem("username");
-  const accountNumber = localStorage.getItem("accountNumber");
+  const accountNumber = localStorage.getItem(`accountNumber-${username}`);
 
   // --- DATA FETCHING ---
   const loadDashboard = async () => {
@@ -95,7 +95,7 @@ export default function UserDashboard() {
       try {
         const accRes = await api_account.get(`/api/accounts/user/${accountNumber}`);
         accounts = Array.isArray(accRes.data) ? accRes.data : [accRes.data];
-        
+        console.log(localStorage.getItem('accountNumber'))
         if (accounts.length === 0) {
           throw new Error("No accounts found");
         }
@@ -188,7 +188,7 @@ export default function UserDashboard() {
 
       // 6. Fetch Loans
       try {
-        const loanRes = await api_loan.get(`/api/loans/user/${accountNumber}`);
+        const loanRes = await api_loan.get(`/api/loans/account/${accountNumber}`);
         const activeLoansData = loanRes.data?.filter(loan => 
           loan.status === "ACTIVE" || loan.status === "APPROVED"
         ) || [];

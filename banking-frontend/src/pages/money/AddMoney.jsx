@@ -5,7 +5,8 @@ import api_account from "../../api/axiosAccount";
 export default function AddMoney() {
   const [amount, setAmount] = useState("");
   const [message, setMessage] = useState("");
-  const accountNumber=localStorage.getItem("accountNumber");
+  const username=localStorage.getItem("username");
+  const accountNumber=localStorage.getItem(`accountNumber-${username}`);
   const handleAdd = async () => {
     try {
       await api_account.post("/api/accounts/credit", {accountNumber, amount });

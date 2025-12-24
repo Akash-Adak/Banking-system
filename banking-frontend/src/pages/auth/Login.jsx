@@ -30,6 +30,7 @@ export default function Login() {
       // Simulate network delay for "verifying" feel
       setTimeout(() => {
         localStorage.setItem("username", form.username);
+        console.log(res);
         login(res.data);
         navigate("/");
       }, 800);

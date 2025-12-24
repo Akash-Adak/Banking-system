@@ -72,6 +72,14 @@ public class AuthService {
                 UserResponse.class
         );
 
+
+//        ResponseEntity<AccountResponse> response2 = restTemplate.exchange(
+//                "http://ACCOUNT/api/accounts",
+//                HttpMethod.POST,
+//                entity,
+//                UserResponse.class
+//        );
+
         if (!response.getStatusCode().is2xxSuccessful() || response.getBody() == null) {
             throw new RunTimeException("Failed to create user in user-service");
         }

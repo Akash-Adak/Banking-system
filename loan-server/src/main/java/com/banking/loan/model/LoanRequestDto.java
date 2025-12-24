@@ -12,19 +12,6 @@ public class LoanRequestDto {
     @NotNull
     private String accountNumber;
 
-    @NotNull
-    private LoanType loanType;
-
-    @NotNull
-    @Min(1)
-    private BigDecimal principalAmount;
-
-    @Min(1)
-    private double interestRate;
-
-    @Min(1)
-    private int tenureMonths;
-
     public String getAccountNumber() {
         return accountNumber;
     }
@@ -64,5 +51,20 @@ public class LoanRequestDto {
     public void setTenureMonths(int tenureMonths) {
         this.tenureMonths = tenureMonths;
     }
+
+    @NotNull
+    private LoanType loanType;
+
+    @NotNull
+    @Min(1)
+    private BigDecimal principalAmount;
+
+    @Min(1)
+    private double interestRate;
+
+    @Min(1)
+    private int tenureMonths;
+
+
 }
 

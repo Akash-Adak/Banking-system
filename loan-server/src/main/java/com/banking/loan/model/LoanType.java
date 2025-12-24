@@ -1,9 +1,9 @@
 package com.banking.loan.model;
 
 public enum LoanType {
-    PERSONAL,
-    HOME,
-    EDUCATION,
-    VEHICLE,
-    BUSINESS
+    PERSONAL_LOAN,
+    HOME_LOAN,
+    EDUCATION_LOAN,
+    VEHICLE_LOAN,
+    BUSINESS_LOAN
 }

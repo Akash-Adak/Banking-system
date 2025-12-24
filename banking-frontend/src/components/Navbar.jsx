@@ -234,7 +234,7 @@ export default function Navbar() {
     { name: "Pay Bills", icon: "receipt", link: "/pay-bills", color: "green" },
     { name: "Recharge", icon: "mobile-alt", link: "/recharge", color: "purple" },
     { name: "Invest", icon: "chart-line", link: "/invest-now", color: "teal" },
-    { name: "Loans", icon: "hand-holding-usd", link: "/loans", color: "orange" },
+    { name: "Loans", icon: "hand-holding-usd", link: "#loan", color: "orange" },
     { name: "Offers", icon: "tag", link: "/offers", color: "red" }
   ];
 

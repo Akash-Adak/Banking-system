@@ -13,7 +13,7 @@ export default function TransactionsPage() {
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
 
-  const accountNumber = localStorage.getItem("accountNumber");
+  const accountNumber = localStorage.getItem(`accountNumber-${username}`);
 
   // 🔥 LOAD TRANSACTIONS FROM BACKEND
   const loadTransactions = async () => {
