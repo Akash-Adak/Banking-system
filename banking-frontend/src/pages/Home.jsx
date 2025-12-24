@@ -18,7 +18,10 @@ export default function Home() {
       <QuickServices />
        <PremiumCards />
       <FeaturesCarousel />
-      <LoanProducts />
+    
+        <section id="loan">
+          <LoanProducts />
+      </section>
       <Testimonials />
       <FinalCTA />
     </PublicLayout>

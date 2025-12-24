@@ -3,9 +3,11 @@ package com.banking.loan.controller;
 import com.banking.loan.model.LoanRequestDto;
 import com.banking.loan.model.LoanResponseDto;
 import com.banking.loan.model.RepaymentDto;
+import com.banking.loan.repository.LoanRepository;
 import com.banking.loan.response.User;
 import com.banking.loan.service.LoanService;
 import com.banking.loan.service.RedisService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +15,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+
+import java.nio.file.AccessDeniedException;
 
 @RestController
 @RequestMapping("/api/loans")
@@ -22,23 +26,18 @@ public class LoanController {
     private  LoanService loanService;
     @Autowired
     private  RedisService redisService;
-
+    @Autowired
+    private LoanRepository loanRepository;
     // ✅ Apply for a loan (Only own account)
     @PostMapping
-    public ResponseEntity<?> applyLoan(@Valid @RequestBody LoanRequestDto request) {
+    public ResponseEntity<?> applyLoan(@Valid @RequestBody LoanRequestDto request , HttpServletRequest  request2) throws AccessDeniedException {
 
-        // AUTH USER
+
         String jwtUsername = SecurityContextHolder.getContext().getAuthentication().getName();
 
-        // FETCH USER FROM REDIS USING accountNumber
-        User user = redisService.get(request.getAccountNumber(), User.class);
-
-        if (user == null || !user.getUsername().equals(jwtUsername)) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body("❌ You cannot apply for a loan on someone else’s account.");
-        }
-
-        return ResponseEntity.ok(loanService.applyLoan(request));
+        String tokenWithBearer = request2.getHeader("Authorization");
+        String token = tokenWithBearer.replaceFirst("(?i)^Bearer\\s+", "");
+        return ResponseEntity.ok(loanService.applyLoan(request,jwtUsername,token));
     }
 
 
@@ -61,12 +60,12 @@ public class LoanController {
 
         String jwtUsername = SecurityContextHolder.getContext().getAuthentication().getName();
 
-        User user = redisService.get(accountNumber, User.class);
-
-        if (user == null || !user.getUsername().equals(jwtUsername)) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body("❌ You cannot view loans of another account.");
-        }
+//        User user = redisService.get(accountNumber, User.class);
+//
+//        if (user == null || !user.getUsername().equals(jwtUsername)) {
+//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+//                    .body("❌ You cannot view loans of another account.");
+//        }
 
         return ResponseEntity.ok(loanService.getLoansByAccountNumber(accountNumber));
     }

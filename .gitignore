@@ -35,3 +35,7 @@ auth-server/src/main/resources/private.key
 **/src/main/resources/private.key
 **/src/main/resources/public.key
 **/src/main/resources/application.yml
+user-service/src/main/resources/application.yml
+loan-server/src/main/resources/application.yml
+auth-server/src/main/resources/application.yml
+account-service/src/main/resources/application.yml

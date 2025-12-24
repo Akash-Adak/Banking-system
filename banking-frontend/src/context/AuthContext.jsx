@@ -48,6 +48,7 @@ export function AuthProvider({ children }) {
 
   // Login function
   const login = (jwt) => {
+    console.log(jwt);
     localStorage.setItem("token", jwt);
     setToken(jwt);
     navigate("/dashboard"); // redirect after login
