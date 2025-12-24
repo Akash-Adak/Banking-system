@@ -1,91 +1,143 @@
-# 🏦 Banking Management System
-
 <div align="center">
 
-![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.2.x-brightgreen?style=for-the-badge&logo=spring&logoColor=white)
-![Java](https://img.shields.io/badge/Java-21-orange?style=for-the-badge&logo=java&logoColor=white)
-![Kafka](https://img.shields.io/badge/Apache%20Kafka-Latest-black?style=for-the-badge&logo=apache-kafka&logoColor=white)
-![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?style=for-the-badge&logo=docker&logoColor=white)
-![MySQL](https://img.shields.io/badge/MySQL-8.0-4479A1?style=for-the-badge&logo=mysql&logoColor=white)
-![Redis](https://img.shields.io/badge/Redis-Latest-DC382D?style=for-the-badge&logo=redis&logoColor=white)
-![Prometheus](https://img.shields.io/badge/Prometheus-Monitoring-E6522C?style=for-the-badge&logo=prometheus&logoColor=white)
-![Grafana](https://img.shields.io/badge/Grafana-Dashboards-F46800?style=for-the-badge&logo=grafana&logoColor=white)
+# 🏦 Enterprise Banking Management System
+
+[![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.2.x-brightgreen?style=for-the-badge&logo=spring&logoColor=white)](https://spring.io/projects/spring-boot)
+[![Java](https://img.shields.io/badge/Java-21-orange?style=for-the-badge&logo=java&logoColor=white)](https://www.oracle.com/java/)
+[![Kafka](https://img.shields.io/badge/Apache%20Kafka-Latest-black?style=for-the-badge&logo=apache-kafka&logoColor=white)](https://kafka.apache.org/)
+[![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/)
+[![MySQL](https://img.shields.io/badge/MySQL-8.0-4479A1?style=for-the-badge&logo=mysql&logoColor=white)](https://www.mysql.com/)
+[![Redis](https://img.shields.io/badge/Redis-Latest-DC382D?style=for-the-badge&logo=redis&logoColor=white)](https://redis.io/)
 
 **A production-ready microservices architecture for modern banking operations**
 
-[Features](#-features) • [Quick Start](#-quick-start) • [Architecture](#-architecture) • [Monitoring](#-monitoring) • [Contributing](#-contributing)
-
-</div>
+[Features](#-features) • [Quick Start](#-quick-start) • [Architecture](#-architecture) • [API Documentation](#-api-documentation) • [Monitoring](#-monitoring)
 
 ---
 
-## 🌟 Features
+</div>
+
+## 📋 Table of Contents
+
+- [Overview](#-overview)
+- [Features](#-features)
+- [Architecture](#-architecture)
+- [Technology Stack](#-technology-stack)
+- [Getting Started](#-getting-started)
+- [Service Details](#-service-details)
+- [API Documentation](#-api-documentation)
+- [Security](#-security)
+- [Monitoring & Observability](#-monitoring--observability)
+- [Development](#-development)
+- [Deployment](#-deployment)
+- [Contributing](#-contributing)
+- [License](#-license)
+
+---
+
+## 🎯 Overview
+
+The **Enterprise Banking Management System** is a full-featured, production-grade microservices application built with Spring Boot. It demonstrates modern software architecture patterns including:
+
+- **Microservices Architecture** with Spring Cloud
+- **Event-Driven Design** using Apache Kafka
+- **Distributed Tracing** with OpenTelemetry
+- **Centralized Authentication** with JWT
+- **Real-time Monitoring** via Prometheus & Grafana
+- **Container Orchestration** with Docker Compose
+
+### 🎬 Live Demo
+
+🔗 **Frontend**: [https://etb-bank.vercel.app](https://etb-bank.vercel.app)
+
+---
+
+## ✨ Features
 
 <table>
 <tr>
 <td width="50%">
 
-### 🔐 **Security First**
-- RS256 JWT Authentication
+### 🔐 Security & Authentication
+- RS256 JWT token authentication
 - Redis-backed token revocation
 - Role-based access control (RBAC)
 - API Gateway security layer
+- Session management
+- Password encryption with BCrypt
 
-### 💼 **Core Banking Operations**
+### 💼 Core Banking Operations
 - Multi-account management
-- Real-time transactions
-- Loan processing & approvals
-- Balance tracking & auditing
+- Real-time fund transfers
+- Transaction history & auditing
+- Balance tracking & reconciliation
+- Account statement generation
+- Currency support
 
 </td>
 <td width="50%">
 
-### ⚡ **Event-Driven Architecture**
-- Kafka-based messaging
-- Async notification system
+### ⚡ Event-Driven Architecture
+- Kafka-based messaging system
+- Asynchronous notification system
 - Email & SMS alerts
 - Transaction event streaming
+- Event sourcing capabilities
+- Dead letter queue handling
 
-### 📊 **Production Ready**
-- Prometheus metrics
+### 📊 Production Ready
+- Prometheus metrics collection
 - Grafana dashboards
 - Health checks & monitoring
 - CI/CD with GitHub Actions
+- Load balancing
+- Fault tolerance & circuit breakers
 
 </td>
 </tr>
 </table>
 
+### 🏦 Additional Features
+
+- **Loan Management**: Apply, approve, and manage loans with EMI calculation
+- **Notification System**: Real-time email/SMS notifications for all transactions
+- **Service Discovery**: Eureka-based dynamic service registration
+- **API Gateway**: Centralized routing and load balancing
+- **Distributed Logging**: Centralized log aggregation
+- **Database Per Service**: Independent data management
+
 ---
 
 ## 🏗️ Architecture
 
+### System Architecture Diagram
+
 ```mermaid
 graph TB
-    Client[🖥️ Client Applications]
-    Gateway[🚪 API Gateway<br/>Port: 8080]
-    Eureka[📡 Eureka Server<br/>Port: 8761]
+    Client[🖥️ Client Applications<br/>Web/Mobile]
+    Gateway[🚪 API Gateway<br/>Port: 8080<br/>Spring Cloud Gateway]
+    Eureka[📡 Eureka Server<br/>Port: 8761<br/>Service Discovery]
     
-    Auth[🔐 Auth Service<br/>Port: 8081]
-    User[👤 User Service<br/>Port: 8082]
-    Account[💼 Account Service<br/>Port: 8083]
-    Transaction[💰 Transaction Service<br/>Port: 8084]
-    Notification[📢 Notification Service<br/>Port: 8085]
-    Loan[🏦 Loan Service<br/>Port: 8086]
+    Auth[🔐 Auth Service<br/>Port: 8081<br/>JWT Authentication]
+    User[👤 User Service<br/>Port: 8082<br/>User Management]
+    Account[💼 Account Service<br/>Port: 8083<br/>Account Operations]
+    Transaction[💰 Transaction Service<br/>Port: 8084<br/>Fund Transfers]
+    Notification[📢 Notification Service<br/>Port: 8085<br/>Email/SMS]
+    Loan[🏦 Loan Service<br/>Port: 8086<br/>Loan Processing]
     
-    Kafka[📨 Kafka Broker<br/>Port: 9092]
-    MySQL[(🗄️ MySQL<br/>Port: 3306)]
-    Redis[(⚡ Redis<br/>Port: 6379)]
+    Kafka[📨 Kafka Broker<br/>Port: 9092<br/>Message Queue]
+    MySQL[(🗄️ MySQL Database<br/>Port: 3306<br/>Relational DB)]
+    Redis[(⚡ Redis Cache<br/>Port: 6379<br/>Session Store)]
     
-    Prometheus[📊 Prometheus<br/>Port: 9090]
-    Grafana[📈 Grafana<br/>Port: 3000]
+    Prometheus[📊 Prometheus<br/>Port: 9090<br/>Metrics Collection]
+    Grafana[📈 Grafana<br/>Port: 3000<br/>Visualization]
     
-    Client --> Gateway
-    Gateway --> Auth
-    Gateway --> User
-    Gateway --> Account
-    Gateway --> Transaction
-    Gateway --> Loan
+    Client -->|HTTPS| Gateway
+    Gateway -->|Route| Auth
+    Gateway -->|Route| User
+    Gateway -->|Route| Account
+    Gateway -->|Route| Transaction
+    Gateway -->|Route| Loan
     
     Auth -.->|Register| Eureka
     User -.->|Register| Eureka
@@ -93,17 +145,21 @@ graph TB
     Transaction -.->|Register| Eureka
     Notification -.->|Register| Eureka
     Loan -.->|Register| Eureka
+    Gateway -.->|Discover| Eureka
     
     Transaction -->|Events| Kafka
     Account -->|Events| Kafka
     User -->|Events| Kafka
+    Loan -->|Events| Kafka
     Kafka -->|Consume| Notification
     
-    Auth --> Redis
-    User --> MySQL
-    Account --> MySQL
-    Transaction --> MySQL
-    Loan --> MySQL
+    Auth -->|Sessions| Redis
+    Auth -->|Token Blacklist| Redis
+    
+    User -->|Persist| MySQL
+    Account -->|Persist| MySQL
+    Transaction -->|Persist| MySQL
+    Loan -->|Persist| MySQL
     
     Auth -->|Metrics| Prometheus
     User -->|Metrics| Prometheus
@@ -112,7 +168,7 @@ graph TB
     Notification -->|Metrics| Prometheus
     Loan -->|Metrics| Prometheus
     
-    Prometheus --> Grafana
+    Prometheus -->|Dashboard| Grafana
     
     style Gateway fill:#4CAF50,stroke:#2E7D32,color:#fff
     style Kafka fill:#231F20,stroke:#000,color:#fff
@@ -123,377 +179,554 @@ graph TB
     style Redis fill:#DC382D,stroke:#A41E11,color:#fff
 ```
 
+### Microservices Communication
+
+| From Service | To Service | Protocol | Purpose |
+|--------------|------------|----------|---------|
+| API Gateway | All Services | HTTP/REST | Request routing |
+| Transaction Service | Account Service | HTTP/REST | Balance validation |
+| All Services | Eureka | HTTP | Service registration |
+| Auth Service | Redis | TCP | Token management |
+| All Services | MySQL | TCP | Data persistence |
+| Transaction/Account/User | Kafka | TCP | Event publishing |
+| Notification Service | Kafka | TCP | Event consumption |
+
 ---
 
-## 🚀 Quick Start
+## 🛠️ Technology Stack
+
+### Backend
+- **Framework**: Spring Boot 3.2.x
+- **Language**: Java 21 (LTS)
+- **Build Tool**: Maven 3.9.x
+- **Spring Cloud**: 2023.0.x
+
+### Microservices Components
+- **Service Discovery**: Netflix Eureka
+- **API Gateway**: Spring Cloud Gateway
+- **Config Server**: Spring Cloud Config
+- **Circuit Breaker**: Resilience4j
+
+### Database & Cache
+- **RDBMS**: MySQL 8.0
+- **Cache**: Redis 7.x
+- **ORM**: Spring Data JPA / Hibernate
+
+### Messaging & Events
+- **Message Broker**: Apache Kafka 3.x
+- **Serialization**: Apache Avro / JSON
+
+### Security
+- **Authentication**: JWT (RS256)
+- **Authorization**: Spring Security
+- **Password Hashing**: BCrypt
+
+### Monitoring & Observability
+- **Metrics**: Micrometer + Prometheus
+- **Visualization**: Grafana
+- **Logging**: SLF4J + Logback
+- **Tracing**: Spring Cloud Sleuth
+
+### DevOps
+- **Containerization**: Docker
+- **Orchestration**: Docker Compose
+- **CI/CD**: GitHub Actions
+- **Version Control**: Git
+
+---
+
+## 🚀 Getting Started
 
 ### Prerequisites
 
+Before you begin, ensure you have the following installed:
+
 ```bash
-# Required installations
-- Docker 20.x+
-- Docker Compose 2.x+
-- Git
+# Check installations
+docker --version        # Docker 20.x or higher
+docker-compose --version # Docker Compose 2.x or higher
+git --version           # Git 2.x or higher
+java --version          # Java 21 (optional, for local dev)
+mvn --version          # Maven 3.9.x (optional, for local dev)
 ```
 
-### 🐳 One-Command Setup
+### Installation
+
+#### 🐳 Option 1: Docker Compose (Recommended)
 
 ```bash
-# Clone the repository
+# 1. Clone the repository
 git clone https://github.com/Akash-Adak/Banking-system.git
 cd Banking-system
 
-# Start all services
+# 2. Configure environment variables (optional)
+cp .env.example .env
+nano .env  # Edit as needed
+
+# 3. Start all services
 docker-compose up -d
 
-# Check service health
+# 4. Verify services are running
 docker-compose ps
 
-# View logs
+# 5. View logs
 docker-compose logs -f
+
+# 6. Wait for services to be healthy (2-3 minutes)
+# Check health: http://localhost:8761
+```
+
+#### 💻 Option 2: Local Development
+
+```bash
+# 1. Clone and setup
+git clone https://github.com/Akash-Adak/Banking-system.git
+cd Banking-system
+
+# 2. Start infrastructure services
+docker-compose up -d mysql redis kafka zookeeper
+
+# 3. Build all services
+mvn clean install -DskipTests
+
+# 4. Start Eureka Server
+cd eureka-server
+mvn spring-boot:run &
+
+# 5. Start other services (in separate terminals)
+cd auth-service && mvn spring-boot:run &
+cd user-service && mvn spring-boot:run &
+cd account-service && mvn spring-boot:run &
+cd transaction-service && mvn spring-boot:run &
+cd notification-service && mvn spring-boot:run &
+cd loan-service && mvn spring-boot:run &
 ```
 
 ### 🎯 Access Points
 
-| Service | URL | Credentials |
-|---------|-----|-------------|
-| 🚪 API Gateway | `http://localhost:8080` | - |
-| 📡 Eureka Dashboard | `http://localhost:8761` | - |
-| 📊 Prometheus | `http://localhost:9090` | - |
-| 📈 Grafana | `http://localhost:3000` | admin / admin |
-| 🗄️ MySQL | `localhost:3306` | root / rootpassword |
-| ⚡ Redis | `localhost:6379` | - |
-| 📨 Kafka | `localhost:9092` | - |
+| Service | URL | Credentials | Description |
+|---------|-----|-------------|-------------|
+| 🚪 API Gateway | `http://localhost:8080` | - | Main entry point |
+| 📡 Eureka Dashboard | `http://localhost:8761` | - | Service registry |
+| 📊 Prometheus | `http://localhost:9090` | - | Metrics |
+| 📈 Grafana | `http://localhost:3000` | admin / admin | Dashboards |
+| 🗄️ MySQL | `localhost:3306` | root / rootpassword | Database |
+| ⚡ Redis | `localhost:6379` | - | Cache |
+| 📨 Kafka | `localhost:9092` | - | Message broker |
 
----
+### Health Check
 
-## 🐳 Docker Compose Configuration
+```bash
+# Check all services health
+curl http://localhost:8761/actuator/health
 
-<details>
-<summary><b>📄 Click to view complete docker-compose.yml</b></summary>
-
-```yaml
-version: '3.8'
-
-services:
-  # ==================== Infrastructure ====================
-  
-  mysql:
-    image: mysql:8.0
-    container_name: banking-mysql
-    environment:
-      MYSQL_ROOT_PASSWORD: rootpassword
-      MYSQL_DATABASE: banking_db
-    ports:
-      - "3306:3306"
-    volumes:
-      - mysql-data:/var/lib/mysql
-    networks:
-      - banking-network
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-
-  redis:
-    image: redis:7-alpine
-    container_name: banking-redis
-    ports:
-      - "6379:6379"
-    volumes:
-      - redis-data:/data
-    networks:
-      - banking-network
-    healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-
-  zookeeper:
-    image: confluentinc/cp-zookeeper:7.5.0
-    container_name: banking-zookeeper
-    environment:
-      ZOOKEEPER_CLIENT_PORT: 2181
-      ZOOKEEPER_TICK_TIME: 2000
-    ports:
-      - "2181:2181"
-    networks:
-      - banking-network
-
-  kafka:
-    image: confluentinc/cp-kafka:7.5.0
-    container_name: banking-kafka
-    depends_on:
-      - zookeeper
-    ports:
-      - "9092:9092"
-    environment:
-      KAFKA_BROKER_ID: 1
-      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://localhost:9092
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
-      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
-      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-    networks:
-      - banking-network
-    healthcheck:
-      test: ["CMD", "kafka-broker-api-versions", "--bootstrap-server", "localhost:9092"]
-      interval: 30s
-      timeout: 10s
-      retries: 5
-
-  # ==================== Service Discovery ====================
-  
-  eureka-server:
-    build:
-      context: ./eureka-server
-      dockerfile: Dockerfile
-    container_name: banking-eureka
-    ports:
-      - "8761:8761"
-    networks:
-      - banking-network
-    environment:
-      SPRING_PROFILES_ACTIVE: docker
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8761/actuator/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 5
-
-  # ==================== Microservices ====================
-  
-  auth-service:
-    build:
-      context: ./auth-service
-      dockerfile: Dockerfile
-    container_name: banking-auth
-    ports:
-      - "8081:8081"
-    depends_on:
-      mysql:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
-      eureka-server:
-        condition: service_healthy
-    environment:
-      SPRING_PROFILES_ACTIVE: docker
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/banking_db
-      SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: rootpassword
-      SPRING_REDIS_HOST: redis
-      SPRING_REDIS_PORT: 6379
-      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
-    networks:
-      - banking-network
-    restart: on-failure
-
-  user-service:
-    build:
-      context: ./user-service
-      dockerfile: Dockerfile
-    container_name: banking-user
-    ports:
-      - "8082:8082"
-    depends_on:
-      mysql:
-        condition: service_healthy
-      kafka:
-        condition: service_healthy
-      eureka-server:
-        condition: service_healthy
-    environment:
-      SPRING_PROFILES_ACTIVE: docker
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/banking_db
-      SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: rootpassword
-      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
-      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
-    networks:
-      - banking-network
-    restart: on-failure
-
-  account-service:
-    build:
-      context: ./account-service
-      dockerfile: Dockerfile
-    container_name: banking-account
-    ports:
-      - "8083:8083"
-    depends_on:
-      mysql:
-        condition: service_healthy
-      kafka:
-        condition: service_healthy
-      eureka-server:
-        condition: service_healthy
-    environment:
-      SPRING_PROFILES_ACTIVE: docker
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/banking_db
-      SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: rootpassword
-      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
-      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
-    networks:
-      - banking-network
-    restart: on-failure
-
-  transaction-service:
-    build:
-      context: ./transaction-service
-      dockerfile: Dockerfile
-    container_name: banking-transaction
-    ports:
-      - "8084:8084"
-    depends_on:
-      mysql:
-        condition: service_healthy
-      kafka:
-        condition: service_healthy
-      eureka-server:
-        condition: service_healthy
-    environment:
-      SPRING_PROFILES_ACTIVE: docker
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/banking_db
-      SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: rootpassword
-      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
-      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
-    networks:
-      - banking-network
-    restart: on-failure
-
-  notification-service:
-    build:
-      context: ./notification-service
-      dockerfile: Dockerfile
-    container_name: banking-notification
-    ports:
-      - "8085:8085"
-    depends_on:
-      kafka:
-        condition: service_healthy
-      eureka-server:
-        condition: service_healthy
-    environment:
-      SPRING_PROFILES_ACTIVE: docker
-      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
-      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
-    networks:
-      - banking-network
-    restart: on-failure
-
-  loan-service:
-    build:
-      context: ./loan-service
-      dockerfile: Dockerfile
-    container_name: banking-loan
-    ports:
-      - "8086:8086"
-    depends_on:
-      mysql:
-        condition: service_healthy
-      kafka:
-        condition: service_healthy
-      eureka-server:
-        condition: service_healthy
-    environment:
-      SPRING_PROFILES_ACTIVE: docker
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/banking_db
-      SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: rootpassword
-      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
-      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
-    networks:
-      - banking-network
-    restart: on-failure
-
-  # ==================== Monitoring ====================
-  
-  prometheus:
-    image: prom/prometheus:latest
-    container_name: banking-prometheus
-    ports:
-      - "9090:9090"
-    volumes:
-      - ./prometheus.yml:/etc/prometheus/prometheus.yml
-      - prometheus-data:/prometheus
-    command:
-      - '--config.file=/etc/prometheus/prometheus.yml'
-      - '--storage.tsdb.path=/prometheus'
-    networks:
-      - banking-network
-    depends_on:
-      - auth-service
-      - user-service
-      - account-service
-      - transaction-service
-      - notification-service
-      - loan-service
-
-  grafana:
-    image: grafana/grafana:latest
-    container_name: banking-grafana
-    ports:
-      - "3000:3000"
-    environment:
-      GF_SECURITY_ADMIN_USER: admin
-      GF_SECURITY_ADMIN_PASSWORD: admin
-      GF_INSTALL_PLUGINS: grafana-piechart-panel
-    volumes:
-      - grafana-data:/var/lib/grafana
-      - ./grafana/dashboards:/etc/grafana/provisioning/dashboards
-      - ./grafana/datasources:/etc/grafana/provisioning/datasources
-    networks:
-      - banking-network
-    depends_on:
-      - prometheus
-
-networks:
-  banking-network:
-    driver: bridge
-
-volumes:
-  mysql-data:
-  redis-data:
-  prometheus-data:
-  grafana-data:
-```
-
-</details>
-
-### 📦 Multi-Stage Dockerfile (All Services)
-
-```dockerfile
-# Build stage
-FROM eclipse-temurin:21-jdk-alpine AS build
-WORKDIR /app
-COPY pom.xml .
-COPY src ./src
-RUN apk add --no-cache maven
-RUN mvn clean package -DskipTests
-
-# Runtime stage
-FROM eclipse-temurin:21-jre-alpine
-WORKDIR /app
-COPY --from=build /app/target/*.jar app.jar
-EXPOSE 8080
-ENTRYPOINT ["java", "-jar", "app.jar"]
+# Check specific service
+curl http://localhost:8081/actuator/health  # Auth Service
+curl http://localhost:8082/actuator/health  # User Service
+curl http://localhost:8083/actuator/health  # Account Service
 ```
 
 ---
 
-## 📊 Monitoring
+## 🔧 Service Details
 
-### Prometheus Configuration
+### 1. 🔐 Auth Service (Port: 8081)
+
+**Purpose**: Centralized authentication and authorization
+
+**Key Features**:
+- User registration and login
+- JWT token generation (RS256)
+- Token validation and refresh
+- Redis-based token revocation
+- Role-based access control
+
+**Endpoints**:
+```
+POST   /api/auth/register     - Register new user
+POST   /api/auth/login        - Login and get JWT token
+POST   /api/auth/refresh      - Refresh access token
+POST   /api/auth/logout       - Logout and revoke token
+GET    /api/auth/validate     - Validate JWT token
+```
+
+### 2. 👤 User Service (Port: 8082)
+
+**Purpose**: User profile and information management
+
+**Key Features**:
+- User profile CRUD operations
+- User search and filtering
+- Profile picture management
+- KYC verification status
+- User preferences
+
+**Endpoints**:
+```
+GET    /api/users             - Get all users (admin)
+GET    /api/users/{id}        - Get user by ID
+PUT    /api/users/{id}        - Update user profile
+DELETE /api/users/{id}        - Delete user (admin)
+GET    /api/users/me          - Get current user profile
+PUT    /api/users/me/password - Change password
+```
+
+### 3. 💼 Account Service (Port: 8083)
+
+**Purpose**: Bank account management
+
+**Key Features**:
+- Create multiple account types (Savings, Current, Fixed Deposit)
+- Account balance management
+- Account statement generation
+- Interest calculation
+- Account freeze/unfreeze
+
+**Endpoints**:
+```
+POST   /api/accounts                  - Create new account
+GET    /api/accounts                  - Get all accounts for user
+GET    /api/accounts/{accountNumber}  - Get account details
+PUT    /api/accounts/{accountNumber}  - Update account info
+DELETE /api/accounts/{accountNumber}  - Close account
+GET    /api/accounts/{accountNumber}/balance - Get balance
+GET    /api/accounts/{accountNumber}/statement - Get statement
+```
+
+### 4. 💰 Transaction Service (Port: 8084)
+
+**Purpose**: Handle all financial transactions
+
+**Key Features**:
+- Fund transfers (within bank)
+- Deposit and withdrawal
+- Transaction history
+- Transaction status tracking
+- Rollback support
+- Duplicate transaction prevention
+
+**Endpoints**:
+```
+POST   /api/transactions/transfer     - Transfer funds
+POST   /api/transactions/deposit      - Deposit money
+POST   /api/transactions/withdraw     - Withdraw money
+GET    /api/transactions              - Get transaction history
+GET    /api/transactions/{id}         - Get transaction details
+GET    /api/transactions/account/{accountNumber} - Get account transactions
+```
+
+### 5. 📢 Notification Service (Port: 8085)
+
+**Purpose**: Send notifications to users
+
+**Key Features**:
+- Email notifications
+- SMS notifications (Twilio integration)
+- Kafka event consumption
+- Notification templates
+- Delivery status tracking
+- Retry mechanism
+
+**Kafka Topics Consumed**:
+```
+user.registered           - Welcome email
+transaction.completed     - Transaction alert
+account.credit           - Credit notification
+account.debit            - Debit notification
+loan.approved            - Loan approval
+loan.rejected            - Loan rejection
+```
+
+### 6. 🏦 Loan Service (Port: 8086)
+
+**Purpose**: Loan application and management
+
+**Key Features**:
+- Loan application submission
+- Credit score verification
+- Loan approval workflow
+- EMI calculation
+- Repayment tracking
+- Loan closure
+
+**Endpoints**:
+```
+POST   /api/loans/apply              - Apply for loan
+GET    /api/loans                    - Get all loans
+GET    /api/loans/{id}               - Get loan details
+PUT    /api/loans/{id}/approve       - Approve loan (admin)
+PUT    /api/loans/{id}/reject        - Reject loan (admin)
+POST   /api/loans/{id}/repay         - Make EMI payment
+GET    /api/loans/{id}/schedule      - Get EMI schedule
+```
+
+### 7. 📡 Eureka Server (Port: 8761)
+
+**Purpose**: Service discovery and registration
+
+**Features**:
+- Dynamic service registration
+- Health monitoring
+- Load balancing support
+- Failover handling
+
+### 8. 🚪 API Gateway (Port: 8080)
+
+**Purpose**: Single entry point for all services
+
+**Features**:
+- Request routing
+- Load balancing
+- Rate limiting
+- Authentication filter
+- CORS handling
+- Request/response logging
+
+---
+
+## 📚 API Documentation
+
+### Authentication Flow
+
+```mermaid
+sequenceDiagram
+    participant Client
+    participant Gateway
+    participant Auth
+    participant Redis
+    
+    Client->>Gateway: POST /api/auth/register
+    Gateway->>Auth: Forward request
+    Auth->>Auth: Validate & Hash password
+    Auth->>Redis: Store user session
+    Auth-->>Gateway: User created
+    Gateway-->>Client: 201 Created
+    
+    Client->>Gateway: POST /api/auth/login
+    Gateway->>Auth: Forward credentials
+    Auth->>Auth: Validate credentials
+    Auth->>Redis: Generate & store token
+    Auth-->>Gateway: JWT Token
+    Gateway-->>Client: 200 OK + Token
+    
+    Client->>Gateway: GET /api/users/me<br/>(Authorization: Bearer Token)
+    Gateway->>Auth: Validate token
+    Auth->>Redis: Check token validity
+    Auth-->>Gateway: Token valid
+    Gateway->>User: Forward request
+    User-->>Client: User profile data
+```
+
+### Sample API Requests
+
+#### 1. Register User
+
+```bash
+curl -X POST http://localhost:8080/api/auth/register \
+  -H "Content-Type: application/json" \
+  -d '{
+    "username": "john.doe",
+    "email": "john@example.com",
+    "password": "SecurePass123!",
+    "firstName": "John",
+    "lastName": "Doe",
+    "phoneNumber": "+1234567890"
+  }'
+```
+
+**Response**:
+```json
+{
+  "id": "usr_123456",
+  "username": "john.doe",
+  "email": "john@example.com",
+  "firstName": "John",
+  "lastName": "Doe",
+  "createdAt": "2024-12-23T10:30:00Z"
+}
+```
+
+#### 2. Login
+
+```bash
+curl -X POST http://localhost:8080/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{
+    "username": "john.doe",
+    "password": "SecurePass123!"
+  }'
+```
+
+**Response**:
+```json
+{
+  "accessToken": "eyJhbGciOiJSUzI1NiIs...",
+  "refreshToken": "eyJhbGciOiJSUzI1NiIs...",
+  "tokenType": "Bearer",
+  "expiresIn": 3600
+}
+```
+
+#### 3. Create Account
+
+```bash
+curl -X POST http://localhost:8080/api/accounts \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "accountType": "SAVINGS",
+    "currency": "USD",
+    "initialDeposit": 1000.00
+  }'
+```
+
+**Response**:
+```json
+{
+  "accountNumber": "ACC1234567890",
+  "accountType": "SAVINGS",
+  "balance": 1000.00,
+  "currency": "USD",
+  "status": "ACTIVE",
+  "createdAt": "2024-12-23T10:35:00Z"
+}
+```
+
+#### 4. Transfer Funds
+
+```bash
+curl -X POST http://localhost:8080/api/transactions/transfer \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "fromAccount": "ACC1234567890",
+    "toAccount": "ACC0987654321",
+    "amount": 500.00,
+    "currency": "USD",
+    "description": "Payment for services"
+  }'
+```
+
+**Response**:
+```json
+{
+  "transactionId": "TXN_789012",
+  "fromAccount": "ACC1234567890",
+  "toAccount": "ACC0987654321",
+  "amount": 500.00,
+  "status": "SUCCESS",
+  "timestamp": "2024-12-23T10:40:00Z",
+  "referenceNumber": "REF123456789"
+}
+```
+
+### Error Responses
+
+All services follow a standard error format:
+
+```json
+{
+  "timestamp": "2024-12-23T10:45:00Z",
+  "status": 400,
+  "error": "Bad Request",
+  "message": "Insufficient balance",
+  "path": "/api/transactions/transfer",
+  "traceId": "abc123def456"
+}
+```
+
+**HTTP Status Codes**:
+- `200 OK` - Successful request
+- `201 Created` - Resource created
+- `400 Bad Request` - Invalid request data
+- `401 Unauthorized` - Missing or invalid token
+- `403 Forbidden` - Insufficient permissions
+- `404 Not Found` - Resource not found
+- `409 Conflict` - Resource conflict (e.g., duplicate account)
+- `500 Internal Server Error` - Server error
+- `503 Service Unavailable` - Service down
+
+---
+
+## 🔒 Security
+
+### JWT Authentication
+
+The system uses **RS256 (RSA Signature with SHA-256)** for JWT token generation:
+
+```
+Header:
+{
+  "alg": "RS256",
+  "typ": "JWT"
+}
+
+Payload:
+{
+  "sub": "user_id",
+  "username": "john.doe",
+  "roles": ["USER"],
+  "iat": 1703331000,
+  "exp": 1703334600
+}
+```
+
+**Key Features**:
+- Asymmetric encryption (public/private key pair)
+- Token expiration (1 hour for access token, 7 days for refresh token)
+- Redis-based token blacklist for logout
+- Automatic token refresh mechanism
+
+### Role-Based Access Control
+
+| Role | Permissions |
+|------|-------------|
+| **USER** | - View own profile<br/>- Manage own accounts<br/>- Perform transactions<br/>- Apply for loans |
+| **MANAGER** | - All USER permissions<br/>- Approve loans<br/>- View customer accounts<br/>- Generate reports |
+| **ADMIN** | - All MANAGER permissions<br/>- Manage users<br/>- Configure system<br/>- Access all endpoints |
+
+### Security Best Practices
+
+1. **Password Security**
+    - Minimum 8 characters
+    - BCrypt hashing (cost factor: 12)
+    - Password history tracking
+    - Forced password change every 90 days
+
+2. **API Security**
+    - Rate limiting (100 requests per minute)
+    - CORS configuration
+    - SQL injection prevention
+    - XSS protection
+
+3. **Data Security**
+    - Sensitive data encryption at rest
+    - TLS/SSL for data in transit
+    - PII (Personally Identifiable Information) masking in logs
+    - Regular security audits
+
+---
+
+## 📊 Monitoring & Observability
+
+### Prometheus Metrics
+
+**Exposed Metrics**:
+- JVM metrics (heap, threads, GC)
+- HTTP request metrics (rate, duration, errors)
+- Database connection pool metrics
+- Kafka consumer lag
+- Custom business metrics
+
+**Prometheus Configuration** (`prometheus.yml`):
 
 ```yaml
 global:
   scrape_interval: 15s
   evaluation_interval: 15s
+  external_labels:
+    cluster: 'banking-system'
+    environment: 'production'
 
 scrape_configs:
   - job_name: 'spring-actuator'
@@ -512,130 +745,308 @@ scrape_configs:
         regex: '([^:]+).*'
         replacement: '${1}'
 
-  - job_name: 'kafka'
+  - job_name: 'kafka-exporter'
     static_configs:
       - targets: ['kafka:9092']
 
-  - job_name: 'mysql'
-    static_configs:
-      - targets: ['mysql:3306']
-
-  - job_name: 'redis'
+  - job_name: 'redis-exporter'
     static_configs:
       - targets: ['redis:6379']
 ```
 
-### 📈 Key Metrics Tracked
+### Grafana Dashboards
 
-- **JVM Metrics**: Heap memory, GC pauses, thread count
-- **HTTP Metrics**: Request rate, latency percentiles, error rates
-- **Database**: Connection pool size, query duration
-- **Kafka**: Consumer lag, message throughput
-- **Business Metrics**: Transaction volume, user registrations, loan approvals
+**Pre-configured Dashboards**:
 
----
+1. **System Overview**
+    - Service health status
+    - Request rate and latency
+    - Error rate
+    - Active users
 
-## 🔧 Useful Commands
+2. **JVM Metrics**
+    - Heap memory usage
+    - GC pause time
+    - Thread count
+    - CPU usage
+
+3. **Business Metrics**
+    - Transaction volume
+    - Transaction success rate
+    - Account creation rate
+    - Loan approval rate
+    - Revenue tracking
+
+4. **Kafka Metrics**
+    - Message throughput
+    - Consumer lag
+    - Partition distribution
+    - Broker status
+
+### Accessing Dashboards
 
 ```bash
-# Start all services
-docker-compose up -d
+# 1. Open Grafana
+http://localhost:3000
 
-# Start specific service
-docker-compose up -d auth-service
+# 2. Login (default credentials)
+Username: admin
+Password: admin
 
-# View logs
-docker-compose logs -f [service-name]
+# 3. Navigate to Dashboards → Banking System
+```
 
-# Stop all services
-docker-compose down
+### Sample Queries
 
-# Stop and remove volumes
-docker-compose down -v
+```promql
+# Total requests per service
+sum(rate(http_server_requests_seconds_count[5m])) by (application)
 
-# Rebuild specific service
-docker-compose up -d --build auth-service
+# Error rate
+sum(rate(http_server_requests_seconds_count{status=~"5.."}[5m])) 
+  / 
+sum(rate(http_server_requests_seconds_count[5m]))
 
-# Scale a service
-docker-compose up -d --scale transaction-service=3
+# 95th percentile latency
+histogram_quantile(0.95, 
+  sum(rate(http_server_requests_seconds_bucket[5m])) by (le, application)
+)
 
-# Check service health
-docker-compose ps
-docker inspect banking-mysql | grep -i health
+# JVM memory usage
+jvm_memory_used_bytes{area="heap"} / jvm_memory_max_bytes{area="heap"}
 ```
 
 ---
 
-## 📡 Kafka Topics
+## 💻 Development
 
-| Topic | Producer | Consumer | Description |
-|-------|----------|----------|-------------|
-| `user.registered` | user-service | notification-service | New user registration events |
-| `transaction.completed` | transaction-service | notification-service | Transaction completion events |
-| `account.credit` | account-service | notification-service | Credit/deposit notifications |
-| `account.debit` | account-service | notification-service | Debit/withdrawal notifications |
-| `loan.approved` | loan-service | notification-service | Loan approval notifications |
-| `loan.rejected` | loan-service | notification-service | Loan rejection notifications |
+### Project Structure
+
+```
+Banking-system/
+├── .github/
+│   └── workflows/
+│       └── ci-cd.yml                    # GitHub Actions CI/CD
+├── account-service/
+│   ├── src/
+│   │   ├── main/
+│   │   │   ├── java/com/banking/account/
+│   │   │   │   ├── controller/
+│   │   │   │   ├── service/
+│   │   │   │   ├── repository/
+│   │   │   │   ├── model/
+│   │   │   │   ├── dto/
+│   │   │   │   ├── config/
+│   │   │   │   └── AccountServiceApplication.java
+│   │   │   └── resources/
+│   │   │       ├── application.yml
+│   │   │       └── application-docker.yml
+│   │   └── test/
+│   ├── Dockerfile
+│   └── pom.xml
+├── auth-service/
+├── user-service/
+├── transaction-service/
+├── notification-service/
+├── loan-service/
+├── eureka-server/
+├── api-gateway/
+├── docs/
+│   ├── api-docs.md
+│   ├── architecture.md
+│   └── deployment.md
+├── docker-compose.yml
+├── prometheus.yml
+├── .env.example
+├── .gitignore
+├── README.md
+├── LICENSE
+└── pom.xml                              # Parent POM
+```
+
+### Building from Source
+
+```bash
+# Build all services
+mvn clean package -DskipTests
+
+# Build specific service
+cd auth-service
+mvn clean package
+
+# Run tests
+mvn test
+
+# Run with specific profile
+mvn spring-boot:run -Dspring-boot.run.profiles=dev
+```
+
+### Running Tests
+
+```bash
+# Unit tests
+mvn test
+
+# Integration tests
+mvn verify
+
+# Test coverage report
+mvn jacoco:report
+
+# View coverage report
+open target/site/jacoco/index.html
+```
+
+### Code Quality
+
+```bash
+# Run static code analysis
+mvn sonar:sonar
+
+# Check for security vulnerabilities
+mvn dependency-check:check
+
+# Format code
+mvn spotless:apply
+```
+
+### Database Migrations
+
+Using **Flyway** for version control:
+
+```bash
+# Location: src/main/resources/db/migration/
+
+V1__initial_schema.sql
+V2__add_account_types.sql
+V3__add_loan_tables.sql
+```
+
+Apply migrations:
+```bash
+mvn flyway:migrate
+```
 
 ---
 
-## 🔐 Security Features
+## 🚢 Deployment
 
-- **JWT RS256**: Asymmetric encryption with public/private key pairs
-- **Token Revocation**: Redis-based blacklist for logout
-- **Role-Based Access**: ADMIN, USER, MANAGER roles
-- **API Gateway Security**: Centralized authentication
-- **Rate Limiting**: Prevents API abuse
-- **CORS Configuration**: Controlled cross-origin requests
+### Docker Compose Production
+
+```bash
+# Build production images
+docker-compose -f docker-compose.prod.yml build
+
+# Start in detached mode
+docker-compose -f docker-compose.prod.yml up -d
+
+# Scale services
+docker-compose -f docker-compose.prod.yml up -d --scale transaction-service=3
+
+# Rolling update
+docker-compose -f docker-compose.prod.yml up -d --no-deps --build transaction-service
+```
+
+### Kubernetes Deployment
+
+```bash
+# Deploy to Kubernetes
+kubectl apply -f k8s/
+
+# Check deployment status
+kubectl get pods -n banking-system
+
+# View logs
+kubectl logs -f deployment/transaction-service -n banking-system
+
+# Scale deployment
+kubectl scale deployment transaction-service --replicas=5 -n banking-system
+```
+
+### Environment Variables
+
+Create `.env` file in root directory:
+
+```bash
+# Database
+MYSQL_ROOT_PASSWORD=your_secure_password
+MYSQL_DATABASE=banking_db
+
+# Redis
+REDIS_PASSWORD=your_redis_password
+
+# JWT
+JWT_SECRET_KEY=your_jwt_secret_key
+JWT_EXPIRATION=3600000
+
+# Kafka
+KAFKA_BOOTSTRAP_SERVERS=kafka:29092
+
+# Email (SMTP)
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_USERNAME=your_email@gmail.com
+SMTP_PASSWORD=your_app_password
+
+# SMS (Twilio)
+TWILIO_ACCOUNT_SID=your_twilio_sid
+TWILIO_AUTH_TOKEN=your_twilio_token
+TWILIO_PHONE_NUMBER=+1234567890
+
+# Monitoring
+GRAFANA_ADMIN_PASSWORD=your_grafana_password
+```
+
+### CI/CD Pipeline
+
+**GitHub Actions** workflow (`.github/workflows/ci-cd.yml`):
+
+```yaml
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up JDK 21
+        uses: actions/setup-java@v3
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+      - name: Run tests
+        run: mvn clean verify
+
+  build:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Build Docker images
+        run: docker-compose build
+      - name: Push to Docker Hub
+        run: |
+          echo ${{ secrets.DOCKER_PASSWORD }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
+          docker-compose push
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: Deploy to production
+        run: |
+          # Add your deployment script here
+```
 
 ---
 
 ## 🤝 Contributing
 
-Contributions are welcome! Please follow these steps:
-
-1. **Fork** the repository
-2. **Create** a feature branch (`git checkout -b feature/amazing-feature`)
-3. **Commit** your changes (`git commit -m 'Add amazing feature'`)
-4. **Push** to branch (`git push origin feature/amazing-feature`)
-5. **Open** a Pull Request
-
-### Development Guidelines
-
-- Follow Java coding conventions
-- Write unit tests for new features
-- Update documentation for API changes
-- Ensure Docker builds pass
-- Keep commits atomic and meaningful
-
----
-
-## 📝 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
----
-
-## 👨‍💻 Author
-
-**Akash Adak**  
-🔗 GitHub: [@Akash-Adak](https://github.com/Akash-Adak)  
-📧 Backend Architect | Microservices Specialist
-
----
-
-## ⭐ Show Your Support
-
-If you find this project helpful, please give it a ⭐ on GitHub!
-
----
-
-<div align="center">
-
-**Built with ❤️ using Spring Boot Microservices**
-
-![Banking System](https://img.shields.io/badge/Banking-System-success?style=for-the-badge)
-![Microservices](https://img.shields.io/badge/Architecture-Microservices-blue?style=for-the-badge)
-![Production Ready](https://img.shields.io/badge/Status-Production%20Ready-brightgreen?style=for-the-badge)
-
-</div>
+We welcome contributions! Please follow these steps
