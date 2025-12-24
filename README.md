@@ -688,22 +688,22 @@ Payload:
 ### Security Best Practices
 
 1. **Password Security**
-    - Minimum 8 characters
-    - BCrypt hashing (cost factor: 12)
-    - Password history tracking
-    - Forced password change every 90 days
+   - Minimum 8 characters
+   - BCrypt hashing (cost factor: 12)
+   - Password history tracking
+   - Forced password change every 90 days
 
 2. **API Security**
-    - Rate limiting (100 requests per minute)
-    - CORS configuration
-    - SQL injection prevention
-    - XSS protection
+   - Rate limiting (100 requests per minute)
+   - CORS configuration
+   - SQL injection prevention
+   - XSS protection
 
 3. **Data Security**
-    - Sensitive data encryption at rest
-    - TLS/SSL for data in transit
-    - PII (Personally Identifiable Information) masking in logs
-    - Regular security audits
+   - Sensitive data encryption at rest
+   - TLS/SSL for data in transit
+   - PII (Personally Identifiable Information) masking in logs
+   - Regular security audits
 
 ---
 
@@ -759,29 +759,29 @@ scrape_configs:
 **Pre-configured Dashboards**:
 
 1. **System Overview**
-    - Service health status
-    - Request rate and latency
-    - Error rate
-    - Active users
+   - Service health status
+   - Request rate and latency
+   - Error rate
+   - Active users
 
 2. **JVM Metrics**
-    - Heap memory usage
-    - GC pause time
-    - Thread count
-    - CPU usage
+   - Heap memory usage
+   - GC pause time
+   - Thread count
+   - CPU usage
 
 3. **Business Metrics**
-    - Transaction volume
-    - Transaction success rate
-    - Account creation rate
-    - Loan approval rate
-    - Revenue tracking
+   - Transaction volume
+   - Transaction success rate
+   - Account creation rate
+   - Loan approval rate
+   - Revenue tracking
 
 4. **Kafka Metrics**
-    - Message throughput
-    - Consumer lag
-    - Partition distribution
-    - Broker status
+   - Message throughput
+   - Consumer lag
+   - Partition distribution
+   - Broker status
 
 ### Accessing Dashboards
 
