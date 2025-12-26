@@ -1,0 +1,110 @@
+package com.banking.loan.controller;
+
+import com.banking.loan.model.LoanRequestDto;
+import com.banking.loan.model.LoanResponseDto;
+import com.banking.loan.model.RepaymentDto;
+import com.banking.loan.repository.LoanRepository;
+import com.banking.loan.response.User;
+import com.banking.loan.service.LoanService;
+import com.banking.loan.service.RedisService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.*;
+
+import java.nio.file.AccessDeniedException;
+
+@RestController
+@RequestMapping("/api/loans")
+
+public class LoanController {
+    @Autowired
+    private  LoanService loanService;
+    @Autowired
+    private  RedisService redisService;
+    @Autowired
+    private LoanRepository loanRepository;
+    // ✅ Apply for a loan (Only own account)
+    @PostMapping
+    public ResponseEntity<?> applyLoan(@Valid @RequestBody LoanRequestDto request , HttpServletRequest  request2) throws AccessDeniedException {
+
+
+        String jwtUsername = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        String tokenWithBearer = request2.getHeader("Authorization");
+        String token = tokenWithBearer.replaceFirst("(?i)^Bearer\\s+", "");
+        return ResponseEntity.ok(loanService.applyLoan(request,jwtUsername,token));
+    }
+
+
+    // ✅ Approve Loan (Admin Only – if you want add ROLE check later)
+    @PostMapping("/{loanId}/approve")
+    public ResponseEntity<?> approve(@PathVariable Long loanId) {
+        return ResponseEntity.ok(loanService.approveLoan(loanId));
+    }
+
+    // ❌ Reject Loan (Admin Only)
+    @PostMapping("/{loanId}/reject")
+    public ResponseEntity<?> reject(@PathVariable Long loanId) {
+        return ResponseEntity.ok(loanService.rejectLoan(loanId));
+    }
+
+
+    // ✅ Get loans by account number (only own account)
+    @GetMapping("/account/{accountNumber}")
+    public ResponseEntity<?> byAccount(@PathVariable String accountNumber) {
+
+        String jwtUsername = SecurityContextHolder.getContext().getAuthentication().getName();
+
+//        User user = redisService.get(accountNumber, User.class);
+//
+//        if (user == null || !user.getUsername().equals(jwtUsername)) {
+//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+//                    .body("❌ You cannot view loans of another account.");
+//        }
+
+        return ResponseEntity.ok(loanService.getLoansByAccountNumber(accountNumber));
+    }
+
+
+    // 🔐 Get Loan Details (ensures belonging to user)
+    @GetMapping("/{loanId}")
+    public ResponseEntity<?> getById(@PathVariable Long loanId) {
+
+        String jwtUsername = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        LoanResponseDto dto = loanService.getLoanById(loanId);
+
+        User user = redisService.get(dto.getAccountNumber(), User.class);
+
+        if (user == null || !user.getUsername().equals(jwtUsername)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body("❌ You cannot access another user’s loan.");
+        }
+
+        return ResponseEntity.ok(dto);
+    }
+
+
+    // 🔐 Repay loan (Only for own loan)
+    @PostMapping("/repay")
+    public ResponseEntity<?> repay(@Valid @RequestBody RepaymentDto repaymentDto) {
+
+        String jwtUsername = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        LoanResponseDto loan = loanService.getLoanById(repaymentDto.getLoanId());
+
+        User user = redisService.get(loan.getAccountNumber(), User.class);
+
+        if (user == null || !user.getUsername().equals(jwtUsername)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body("❌ You cannot repay someone else’s loan.");
+        }
+
+        return ResponseEntity.ok(loanService.makeRepayment(repaymentDto));
+    }
+}
