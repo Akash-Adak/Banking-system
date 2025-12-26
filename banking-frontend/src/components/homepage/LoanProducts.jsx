@@ -70,24 +70,8 @@ const loanTypes = [
     description: "Leverage your property value for substantial funds",
     applyLink: "https://leads.hdfcbank.com/applications/webforms/apply/lap_apply_frm.asp",
     knowMoreLink: "/loan-against-property"
-  },
-  {
-    id: 5,
-    name: "Tractor Loan",
-    icon: "fas fa-tractor",
-    minAmount: 100000,
-    maxAmount: 1000000,
-    defaultAmount: 150000,
-    minTenure: 12,
-    maxTenure: 72,
-    defaultTenure: 24,
-    minRate: 10,
-    maxRate: 21,
-    defaultRate: 20.9,
-    description: "Boost your agricultural productivity with special financing",
-    applyLink: "https://apply.hdfcbank.com/digital/tifgloan",
-    knowMoreLink: "/tractor-loan"
   }
+ 
 ];
 
 const formatCurrency = (value) => {
@@ -217,14 +201,14 @@ export default function LoanCalculator() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center mb-12 aos-init" data-aos="fade-up">
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-            Simplify financial planning <br className="hidden md:block" />
-            <span className="text-blue-900">with the right tools</span>
-          </h2>
-          <p className="text-xl text-gray-600">
-            Flexible EMIs to address your needs
-          </p>
-        </div>
+  <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+    Plan Your Finances <br className="hidden md:block" />
+    <span className="text-blue-900">With Precision</span>
+  </h2>
+  <p className="text-xl text-gray-600">
+    Smart tools for smarter financial decisions
+  </p>
+</div>
 
         {/* Main Calculator Container */}
         <div className="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-200">
@@ -473,16 +457,7 @@ export default function LoanCalculator() {
                   </div>
                 </div>
 
-                {/* Security Note */}
-                <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 flex gap-3">
-                  <i className="fas fa-shield-alt text-yellow-600 mt-1"></i>
-                  <div>
-                    <p className="text-sm font-bold text-gray-900 mb-1">Security Note</p>
-                    <p className="text-xs text-gray-700">
-                      Never share your OTP, PIN, or Password with anyone. This calculator is for estimation purposes only.
-                    </p>
-                  </div>
-                </div>
+            
               </div>
             </div>
           </div>
