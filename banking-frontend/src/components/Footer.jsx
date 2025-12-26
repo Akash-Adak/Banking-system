@@ -1,5 +1,11 @@
 import React from 'react';
-
+const ICON_MAP = {
+  'piggy-bank': 'piggy-bank'
+};
+const Icon = ({ name, className = "" }) => {
+  const iconName = ICON_MAP[name] || name;
+  return <i className={`fas fa-${iconName} ${className}`} />;
+};
 export default function Footer() {
   return (
     <footer className="bg-[#0f172a] text-gray-400 font-sans relative overflow-hidden border-t border-gray-800">
@@ -14,8 +20,11 @@ export default function Footer() {
           {/* Brand Column */}
           <div className="space-y-6">
             <div className="flex items-center gap-3 text-white">
-              <div className="w-10 h-10 bg-blue-700 rounded-lg flex items-center justify-center font-bold text-2xl shadow-lg shadow-blue-900/50">B</div>
-              <span className="text-2xl font-bold tracking-tight">BankEase</span>
+              {/* <div className="w-10 h-10 bg-blue-700 rounded-lg flex items-center justify-center font-bold text-2xl shadow-lg shadow-blue-900/50">B</div> */}
+              <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-indigo-700 rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-blue-200 transition-all duration-300 group-hover:scale-105">
+                  <Icon name="bank" className="text-white text-lg" />
+                </div>
+              <span className="text-2xl font-bold tracking-tight">Samarth Bank</span>
             </div>
             <p className="text-sm leading-relaxed text-gray-500">
               India's most trusted digital banking partner. Providing secure, fast, and accessible financial services to over 10 million customers.
@@ -81,7 +90,7 @@ export default function Footer() {
                   <i className="fas fa-envelope text-xs"></i>
                 </div>
                 <div>
-                  <div className="text-white font-medium">support@bankease.com</div>
+                  <div className="text-white font-medium">samarthbank.official@gmail.com</div>
                   <div className="text-[10px] text-gray-500 uppercase tracking-wide mt-1">Priority Support</div>
                 </div>
               </li>
@@ -115,7 +124,7 @@ export default function Footer() {
              <div className="space-y-2">
                <h4 className="text-[11px] font-bold text-gray-300 uppercase tracking-wider">Registered Office</h4>
                <p className="text-xs leading-relaxed text-gray-500">
-                 BankEase Tower, Plot No. C-12, G Block, Bandra-Kurla Complex, Bandra (East), Mumbai - 400051, Maharashtra, India.<br/>
+                 Samarth Bank Tower, Plot No. C-12, G Block, Bandra-Kurla Complex, Bandra (East), Mumbai - 400051, Maharashtra, India.<br/>
                  <span className="text-gray-400">CIN: L65191MH1994PLC076333</span> | <span className="text-gray-400">RBI License No: BANK-9988-77/2024</span>
                </p>
              </div>
@@ -140,11 +149,11 @@ export default function Footer() {
 
           <div className="bg-gray-900/30 p-4 rounded-lg border border-gray-800/50">
             <p className="text-[10px] text-gray-600 text-justify leading-relaxed">
-              <strong>IMPORTANT DISCLAIMER:</strong> BankEase never asks for your PIN, OTP, CVV, or Internet Banking Password via Email, SMS, or Call. Please do not share such confidential information with anyone. 
+              <strong>IMPORTANT DISCLAIMER:</strong> Samarth Bank never asks for your PIN, OTP, CVV, or Internet Banking Password via Email, SMS, or Call. Please do not share such confidential information with anyone. 
               Mutual Fund investments are subject to market risks, read all scheme related documents carefully. The information provided on this website is for general information purposes only.
               All interest rates, charges, and product features are subject to change without prior notice based on market conditions and internal policies.
               <br/><br/>
-              By accessing this website, you agree to be bound by the Terms and Conditions and Privacy Policy of BankEase Ltd.
+              By accessing this website, you agree to be bound by the Terms and Conditions and Privacy Policy of Samarth Bank Ltd.
             </p>
           </div>
         </div>
@@ -152,7 +161,7 @@ export default function Footer() {
         {/* Bottom Bar: Copyright & Utility Links */}
         <div className="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs">
           <div className="text-gray-500">
-            &copy; {new Date().getFullYear()} BankEase Ltd. All Rights Reserved.
+            &copy; {new Date().getFullYear()} Samarth Bank Ltd. All Rights Reserved.
           </div>
           <div className="flex flex-wrap justify-center gap-6">
             <a href="#" className="text-gray-500 hover:text-white transition-colors">Privacy Policy</a>

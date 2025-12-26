@@ -180,7 +180,7 @@ export default function Login() {
               {/* Footer of Card */}
               <div className="bg-gray-50 border-t border-gray-200 p-4 text-center">
                 <p className="text-sm text-gray-600">
-                  New to BankEase?{" "}
+                  New to Samarth Bank?{" "}
                   <Link to="/signup" className="text-blue-700 font-bold hover:underline">
                     Register Now
                   </Link>

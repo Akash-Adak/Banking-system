@@ -1,112 +1,494 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from "react";
+import Slider from "rc-slider";
+import "rc-slider/assets/index.css";
 
-const loanProducts = [
+const loanTypes = [
   {
-    type: "Home Loan",
-    rate: "8.35% p.a.*",
-    amount: "Up to ₹10 Cr",
-    tenure: "Max 30 Years",
-    features: ["Digital Sanction in 30 mins", "Part Payment Facility", "No Hidden Charges"],
-    image: "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=600&h=400&fit=crop",
-    tag: "BEST SELLER"
+    id: 1,
+    name: "Personal Loan",
+    icon: "fas fa-user",
+    minAmount: 50000,
+    maxAmount: 5000000,
+    defaultAmount: 1000000,
+    minTenure: 1,
+    maxTenure: 5,
+    defaultTenure: 4,
+    minRate: 10.5,
+    maxRate: 21,
+    defaultRate: 15,
+    description: "Quick funds for personal needs with instant approval",
+    applyLink: "https://applyonline.hdfcbank.com/personal-loans.html",
+    knowMoreLink: "/personal-loan"
   },
   {
-    type: "Car Loan",
-    rate: "8.85% p.a.*",
-    amount: "Up to 100% On-Road",
-    tenure: "Max 7 Years",
-    features: ["Instant Disbursal", "Minimal Documentation", "Flexible EMI Options"],
-    image: "https://images.unsplash.com/photo-1549399542-7e3f8b79c341?w=600&h=400&fit=crop",
-    tag: "POPULAR"
+    id: 2,
+    name: "Home Loan",
+    icon: "fas fa-home",
+    minAmount: 100000,
+    maxAmount: 100000000,
+    defaultAmount: 4500000,
+    minTenure: 1,
+    maxTenure: 50,
+    defaultTenure: 25,
+    minRate: 0.5,
+    maxRate: 15,
+    defaultRate: 8.75,
+    description: "Build your dream home with long tenure and flexible options",
+    applyLink: "https://portal.hdfc.com/",
+    knowMoreLink: "/home-loan"
   },
   {
-    type: "Personal Loan",
-    rate: "10.50% p.a.*",
-    amount: "Up to ₹40 Lakhs",
-    tenure: "Max 5 Years",
-    features: ["Money in 10 seconds", "No Collateral Required", "24/7 Assistance"],
-    image: "https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?w=600&h=400&fit=crop",
-    tag: "INSTANT"
+    id: 3,
+    name: "Car Loan",
+    icon: "fas fa-car",
+    minAmount: 100000,
+    maxAmount: 1900000,
+    defaultAmount: 1000000,
+    minTenure: 1,
+    maxTenure: 8,
+    defaultTenure: 7,
+    minRate: 5,
+    maxRate: 20,
+    defaultRate: 8.7,
+    description: "Drive your dream car with competitive interest rates",
+    applyLink: "https://applycarloan.hdfcbank.com/",
+    knowMoreLink: "/car-loan"
   },
   {
-    type: "Education Loan",
-    rate: "9.25% p.a.*",
-    amount: "Up to ₹1.5 Cr",
-    tenure: "Max 15 Years",
-    features: ["Moratorium Period", "Tax Benefit u/s 80E", "Covers Global Universities"],
-    image: "https://th.bing.com/th/id/OIP.XIeWced83xY8MRGJziOazgHaD4?o=7rm=3&rs=1&pid=ImgDetMain&o=7&rm=3",
-    tag: "STUDENT SPECIAL"
+    id: 4,
+    name: "Loan Against Property",
+    icon: "fas fa-landmark",
+    minAmount: 1100000,
+    maxAmount: 100000000,
+    defaultAmount: 1100000,
+    minTenure: 1,
+    maxTenure: 15,
+    defaultTenure: 15,
+    minRate: 10.1,
+    maxRate: 10.6,
+    defaultRate: 10.5,
+    description: "Leverage your property value for substantial funds",
+    applyLink: "https://leads.hdfcbank.com/applications/webforms/apply/lap_apply_frm.asp",
+    knowMoreLink: "/loan-against-property"
+  },
+  {
+    id: 5,
+    name: "Tractor Loan",
+    icon: "fas fa-tractor",
+    minAmount: 100000,
+    maxAmount: 1000000,
+    defaultAmount: 150000,
+    minTenure: 12,
+    maxTenure: 72,
+    defaultTenure: 24,
+    minRate: 10,
+    maxRate: 21,
+    defaultRate: 20.9,
+    description: "Boost your agricultural productivity with special financing",
+    applyLink: "https://apply.hdfcbank.com/digital/tifgloan",
+    knowMoreLink: "/tractor-loan"
   }
 ];
 
-export default function LoanProducts() {
-  return (
-    <section className="py-16 md:py-24 bg-gray-50 font-sans">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
-    
+const formatCurrency = (value) => {
+  return new Intl.NumberFormat('en-IN', {
+    maximumFractionDigits: 0,
+    notation: 'compact',
+    compactDisplay: 'short'
+  }).format(value);
+};
 
-        {/* Loan Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {loanProducts.map((loan, index) => (
-            <div key={index} className="bg-white rounded-xl overflow-hidden border border-gray-200 hover:shadow-2xl hover:border-blue-300 transition-all duration-300 group flex flex-col">
-              
-              {/* Image Header with Tag */}
-              <div className="relative h-48 overflow-hidden">
-                <img 
-                  src={loan.image} 
-                  alt={loan.type} 
-                  className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-blue-900/80 to-transparent"></div>
-                
-                {/* Status Tag */}
-                <div className="absolute top-4 right-4 bg-yellow-400 text-blue-900 text-[10px] font-black px-3 py-1 rounded-sm shadow-md uppercase tracking-wide">
-                  {loan.tag}
+const formatCurrencyFull = (value) => {
+  return new Intl.NumberFormat('en-IN').format(Math.round(value));
+};
+
+export default function LoanCalculator() {
+  const [activeLoan, setActiveLoan] = useState(loanTypes[0]);
+  const [loanAmount, setLoanAmount] = useState(loanTypes[0].defaultAmount);
+  const [loanTenure, setLoanTenure] = useState(loanTypes[0].defaultTenure);
+  const [interestRate, setInterestRate] = useState(loanTypes[0].defaultRate);
+  const [emi, setEmi] = useState(0);
+  const [totalInterest, setTotalInterest] = useState(0);
+  const [totalAmount, setTotalAmount] = useState(0);
+  const [inputFields, setInputFields] = useState({
+    amount: loanTypes[0].defaultAmount.toString(),
+    tenure: loanTypes[0].defaultTenure.toString(),
+    rate: loanTypes[0].defaultRate.toString()
+  });
+
+  // Calculate EMI
+  const calculateEMI = () => {
+    const principal = loanAmount;
+    const annualRate = interestRate;
+    const months = loanTenure * 12;
+    const monthlyRate = annualRate / 12 / 100;
+    
+    if (monthlyRate === 0) {
+      return principal / months;
+    }
+    
+    const emiValue = principal * monthlyRate * 
+      Math.pow(1 + monthlyRate, months) / 
+      (Math.pow(1 + monthlyRate, months) - 1);
+    
+    return emiValue;
+  };
+
+  // Update calculations when values change
+  useEffect(() => {
+    const calculatedEmi = calculateEMI();
+    const totalMonths = loanTenure * 12;
+    const calculatedTotalAmount = calculatedEmi * totalMonths;
+    const calculatedTotalInterest = calculatedTotalAmount - loanAmount;
+    
+    setEmi(calculatedEmi);
+    setTotalInterest(calculatedTotalInterest);
+    setTotalAmount(calculatedTotalAmount);
+  }, [loanAmount, loanTenure, interestRate]);
+
+  // Handle loan type change
+  const handleLoanChange = (loan) => {
+    setActiveLoan(loan);
+    setLoanAmount(loan.defaultAmount);
+    setLoanTenure(loan.defaultTenure);
+    setInterestRate(loan.defaultRate);
+    setInputFields({
+      amount: loan.defaultAmount.toString(),
+      tenure: loan.defaultTenure.toString(),
+      rate: loan.defaultRate.toString()
+    });
+  };
+
+  // Handle manual input changes
+  const handleInputChange = (field, value) => {
+    const numValue = parseFloat(value) || 0;
+    let clampedValue = numValue;
+    
+    switch(field) {
+      case 'amount':
+        clampedValue = Math.max(activeLoan.minAmount, Math.min(activeLoan.maxAmount, numValue));
+        setLoanAmount(clampedValue);
+        break;
+      case 'tenure':
+        clampedValue = Math.max(activeLoan.minTenure, Math.min(activeLoan.maxTenure, numValue));
+        setLoanTenure(clampedValue);
+        break;
+      case 'rate':
+        clampedValue = Math.max(activeLoan.minRate, Math.min(activeLoan.maxRate, numValue));
+        setInterestRate(clampedValue);
+        break;
+    }
+    
+    setInputFields(prev => ({
+      ...prev,
+      [field]: clampedValue.toString()
+    }));
+  };
+
+  // Handle slider changes
+  const handleSliderChange = (field, value) => {
+    switch(field) {
+      case 'amount':
+        setLoanAmount(value);
+        setInputFields(prev => ({ ...prev, amount: value.toString() }));
+        break;
+      case 'tenure':
+        setLoanTenure(value);
+        setInputFields(prev => ({ ...prev, tenure: value.toString() }));
+        break;
+      case 'rate':
+        setInterestRate(value);
+        setInputFields(prev => ({ ...prev, rate: value.toString() }));
+        break;
+    }
+  };
+
+  return (
+    <section className="relative py-16 bg-gradient-to-b from-gray-50 to-white font-sans" id="calculatorSEO">
+      {/* Background Pattern */}
+      <div className="absolute right-0 top-0 hidden lg:block">
+        <img 
+          src="https://s7ap1.scene7.com/is/content/hdfcbankPWS/calc_right_pattern?fmt=webp-alpha" 
+          alt="pattern shape" 
+          className="w-64 opacity-20"
+        />
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Header */}
+        <div className="text-center mb-12 aos-init" data-aos="fade-up">
+          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+            Simplify financial planning <br className="hidden md:block" />
+            <span className="text-blue-900">with the right tools</span>
+          </h2>
+          <p className="text-xl text-gray-600">
+            Flexible EMIs to address your needs
+          </p>
+        </div>
+
+        {/* Main Calculator Container */}
+        <div className="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-200">
+          {/* Loan Type Tabs */}
+          <div className="border-b border-gray-200">
+            <div className="flex overflow-x-auto scrollbar-hide">
+              {loanTypes.map((loan) => (
+                <button
+                  key={loan.id}
+                  onClick={() => handleLoanChange(loan)}
+                  className={`flex-shrink-0 px-6 py-4 flex items-center gap-3 transition-all ${
+                    activeLoan.id === loan.id
+                      ? 'bg-blue-900 text-white'
+                      : 'bg-white text-gray-700 hover:bg-gray-50'
+                  }`}
+                  style={{ minWidth: '200px' }}
+                >
+                  <i className={`${loan.icon} text-lg`}></i>
+                  <span className="font-bold text-base">{loan.name}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="p-6 md:p-8">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              {/* Left Column - Inputs */}
+              <div className="space-y-8" data-aos="fade-up">
+                <div>
+                  <h3 className="text-2xl font-bold text-gray-900 mb-2">
+                    {activeLoan.name} Calculator
+                  </h3>
+                  <p className="text-gray-600">{activeLoan.description}</p>
                 </div>
-                
-                <div className="absolute bottom-4 left-4 text-white">
-                  <h3 className="text-xl font-bold text-shadow">{loan.type}</h3>
+
+                {/* Loan Amount */}
+                <div className="space-y-4">
+                  <div className="flex justify-between items-center">
+                    <label className="text-sm font-bold text-gray-900 uppercase">
+                      Loan Amount
+                    </label>
+                    <div className="relative">
+                      <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-600">₹</span>
+                      <input
+                        type="text"
+                        value={formatCurrencyFull(loanAmount)}
+                        onChange={(e) => handleInputChange('amount', e.target.value.replace(/,/g, ''))}
+                        className="w-40 bg-gray-50 border border-gray-300 rounded-lg py-2 pl-8 pr-4 text-right font-bold text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      />
+                    </div>
+                  </div>
+                  <Slider
+                    min={activeLoan.minAmount}
+                    max={activeLoan.maxAmount}
+                    step={10000}
+                    value={loanAmount}
+                    onChange={(value) => handleSliderChange('amount', value)}
+                    trackStyle={{ backgroundColor: '#1e40af', height: 6 }}
+                    railStyle={{ backgroundColor: '#e5e7eb', height: 6 }}
+                    handleStyle={{
+                      backgroundColor: '#ffffff',
+                      borderColor: '#1e40af',
+                      borderWidth: 3,
+                      height: 24,
+                      width: 24,
+                      marginTop: -9,
+                      boxShadow: '0 2px 4px rgba(0,0,0,0.2)'
+                    }}
+                  />
+                  <div className="flex justify-between text-sm text-gray-600">
+                    <span>₹ {formatCurrency(activeLoan.minAmount)}</span>
+                    <span>₹ {formatCurrency(activeLoan.maxAmount)}</span>
+                  </div>
+                </div>
+
+                {/* Loan Tenure */}
+                <div className="space-y-4">
+                  <div className="flex justify-between items-center">
+                    <label className="text-sm font-bold text-gray-900 uppercase">
+                      Loan Tenure
+                    </label>
+                    <div className="relative">
+                      <input
+                        type="text"
+                        value={loanTenure}
+                        onChange={(e) => handleInputChange('tenure', e.target.value)}
+                        className="w-20 bg-gray-50 border border-gray-300 rounded-lg py-2 px-4 text-right font-bold text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      />
+                      <span className="absolute right-10 top-1/2 transform -translate-y-1/2 text-gray-600">
+                        {loanTenure === 1 ? 'Year' : 'Years'}
+                      </span>
+                    </div>
+                  </div>
+                  <Slider
+                    min={activeLoan.minTenure}
+                    max={activeLoan.maxTenure}
+                    step={1}
+                    value={loanTenure}
+                    onChange={(value) => handleSliderChange('tenure', value)}
+                    trackStyle={{ backgroundColor: '#1e40af', height: 6 }}
+                    railStyle={{ backgroundColor: '#e5e7eb', height: 6 }}
+                    handleStyle={{
+                      backgroundColor: '#ffffff',
+                      borderColor: '#1e40af',
+                      borderWidth: 3,
+                      height: 24,
+                      width: 24,
+                      marginTop: -9,
+                      boxShadow: '0 2px 4px rgba(0,0,0,0.2)'
+                    }}
+                  />
+                  <div className="flex justify-between text-sm text-gray-600">
+                    <span>{activeLoan.minTenure} {activeLoan.minTenure === 1 ? 'Year' : 'Years'}</span>
+                    <span>{activeLoan.maxTenure} Years</span>
+                  </div>
+                </div>
+
+                {/* Interest Rate */}
+                <div className="space-y-4">
+                  <div className="flex justify-between items-center">
+                    <label className="text-sm font-bold text-gray-900 uppercase">
+                      Interest Rate
+                    </label>
+                    <div className="relative">
+                      <input
+                        type="text"
+                        value={interestRate.toFixed(2)}
+                        onChange={(e) => handleInputChange('rate', e.target.value)}
+                        className="w-24 bg-gray-50 border border-gray-300 rounded-lg py-2 px-8 text-right font-bold text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      />
+                      <span className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-600">%</span>
+                    </div>
+                  </div>
+                  <Slider
+                    min={activeLoan.minRate}
+                    max={activeLoan.maxRate}
+                    step={0.01}
+                    value={interestRate}
+                    onChange={(value) => handleSliderChange('rate', value)}
+                    trackStyle={{ backgroundColor: '#1e40af', height: 6 }}
+                    railStyle={{ backgroundColor: '#e5e7eb', height: 6 }}
+                    handleStyle={{
+                      backgroundColor: '#ffffff',
+                      borderColor: '#1e40af',
+                      borderWidth: 3,
+                      height: 24,
+                      width: 24,
+                      marginTop: -9,
+                      boxShadow: '0 2px 4px rgba(0,0,0,0.2)'
+                    }}
+                  />
+                  <div className="flex justify-between text-sm text-gray-600">
+                    <span>{activeLoan.minRate}% p.a.</span>
+                    <span>{activeLoan.maxRate}% p.a.</span>
+                  </div>
                 </div>
               </div>
 
-              {/* Content Body */}
-              <div className="p-5 flex-1 flex flex-col">
-                {/* Key Metrics */}
-                <div className="flex justify-between items-center mb-5 border-b border-gray-100 pb-4">
+              {/* Right Column - Results */}
+              <div className="space-y-8" data-aos="fade-up" data-aos-delay="100">
+                {/* EMI Display */}
+                <div className="bg-gradient-to-r from-blue-900 to-blue-700 rounded-xl p-8 text-white">
+                  <p className="text-sm opacity-90">Your Monthly EMI will be</p>
+                  <div className="flex items-baseline mt-2">
+                    <span className="text-2xl mr-1">₹</span>
+                    <span className="text-4xl md:text-5xl font-bold">
+                      {formatCurrencyFull(emi)}
+                    </span>
+                  </div>
+                  <div className="mt-6 grid grid-cols-3 gap-4">
+                    <div>
+                      <p className="text-xs opacity-80">Amount Payable</p>
+                      <p className="text-lg font-bold mt-1">₹ {formatCurrencyFull(totalAmount)}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs opacity-80">Interest Amount</p>
+                      <p className="text-lg font-bold mt-1">₹ {formatCurrencyFull(totalInterest)}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs opacity-80">Principal Amount</p>
+                      <p className="text-lg font-bold mt-1">₹ {formatCurrencyFull(loanAmount)}</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Action Buttons */}
+                <div className="flex flex-col sm:flex-row gap-4">
+                  <a
+                    href={activeLoan.applyLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex-1 bg-blue-900 hover:bg-blue-800 text-white font-bold py-4 px-6 rounded-lg transition-all flex items-center justify-center gap-2 shadow-lg hover:shadow-xl"
+                  >
+                    <span>Apply Now</span>
+                    <i className="fas fa-arrow-right"></i>
+                  </a>
+                  <a
+                    href={activeLoan.knowMoreLink}
+                    className="flex-1 border-2 border-blue-900 text-blue-900 hover:bg-blue-50 font-bold py-4 px-6 rounded-lg transition-all flex items-center justify-center gap-2"
+                  >
+                    <span>Know More</span>
+                    <i className="fas fa-arrow-right"></i>
+                  </a>
+                </div>
+
+                {/* EMI Breakdown */}
+                <div className="bg-gray-50 rounded-xl p-6">
+                  <h4 className="font-bold text-gray-900 mb-4">EMI Breakdown</h4>
+                  <div className="space-y-4">
+                    <div>
+                      <div className="flex justify-between text-sm text-gray-600 mb-1">
+                        <span>Monthly EMI</span>
+                        <span>₹ {formatCurrencyFull(emi)}</span>
+                      </div>
+                      <div className="w-full bg-gray-200 rounded-full h-2">
+                        <div 
+                          className="bg-green-500 h-2 rounded-full" 
+                          style={{ width: '100%' }}
+                        ></div>
+                      </div>
+                    </div>
+                    <div>
+                      <div className="flex justify-between text-sm text-gray-600 mb-1">
+                        <span>Principal Amount</span>
+                        <span>₹ {formatCurrencyFull(loanAmount)}</span>
+                      </div>
+                      <div className="w-full bg-gray-200 rounded-full h-2">
+                        <div 
+                          className="bg-blue-500 h-2 rounded-full" 
+                          style={{ width: `${(loanAmount / totalAmount * 100)}%` }}
+                        ></div>
+                      </div>
+                    </div>
+                    <div>
+                      <div className="flex justify-between text-sm text-gray-600 mb-1">
+                        <span>Total Interest</span>
+                        <span>₹ {formatCurrencyFull(totalInterest)}</span>
+                      </div>
+                      <div className="w-full bg-gray-200 rounded-full h-2">
+                        <div 
+                          className="bg-orange-500 h-2 rounded-full" 
+                          style={{ width: `${(totalInterest / totalAmount * 100)}%` }}
+                        ></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Security Note */}
+                <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 flex gap-3">
+                  <i className="fas fa-shield-alt text-yellow-600 mt-1"></i>
                   <div>
-                    <p className="text-[10px] text-gray-500 uppercase font-bold tracking-wide">Interest Rate</p>
-                    <p className="text-2xl font-bold text-blue-800">{loan.rate}</p>
+                    <p className="text-sm font-bold text-gray-900 mb-1">Security Note</p>
+                    <p className="text-xs text-gray-700">
+                      Never share your OTP, PIN, or Password with anyone. This calculator is for estimation purposes only.
+                    </p>
                   </div>
-                  <div className="text-right">
-                    <p className="text-[10px] text-gray-500 uppercase font-bold tracking-wide">Tenure</p>
-                    <p className="text-sm font-bold text-gray-800">{loan.tenure}</p>
-                  </div>
-                </div>
-
-                {/* Features List */}
-                <div className="space-y-3 mb-6 flex-1">
-                   {loan.features.map((feat, i) => (
-                     <div key={i} className="flex items-start gap-2 text-sm text-gray-600">
-                       <i className="fas fa-check-circle text-green-500 mt-0.5 text-xs flex-shrink-0"></i>
-                       <span className="leading-tight">{feat}</span>
-                     </div>
-                   ))}
-                </div>
-
-                {/* Corporate Actions */}
-                <div className="grid grid-cols-2 gap-3 mt-auto">
-                  <button className="px-4 py-2.5 border border-blue-800 text-blue-800 rounded-lg font-bold text-xs hover:bg-blue-50 transition-colors uppercase tracking-wide">
-                    Know More
-                  </button>
-                  <button className="px-4 py-2.5 bg-blue-800 text-white rounded-lg font-bold text-xs hover:bg-blue-900 shadow-md hover:shadow-lg transition-all uppercase tracking-wide">
-                    Apply Now
-                  </button>
                 </div>
               </div>
             </div>
-          ))}
+          </div>
         </div>
+
+       
       </div>
     </section>
   );
