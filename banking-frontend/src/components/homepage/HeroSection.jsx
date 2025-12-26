@@ -25,22 +25,14 @@ export default function HeroSection() {
 
   const API = import.meta.env.VITE_AUTH_URL;
 
-  const handleLogin = async () => {
-    if (!form.username || !form.password) {
-      setError("Username and password are required");
-      return;
-    }
-
-    try {
-      const res = await axios.post(`${API}/api/auth/login`, form);
-      localStorage.setItem("username", form.username);
-      localStorage.setItem("token", res.data.token);
-      login(res.data); 
-      setError(""); 
-    } catch (e) {
-      setError(e.response?.data?.message || "Login failed");
-    }
-  };
+ const handleLogin = async () => {
+  try {
+    const res = await axios.post(`${API}/api/auth/login`, form);
+    login(res.data); // ✅ correct
+  } catch (e) {
+    setError("Login failed");
+  }
+};
 
   const handleInputChange = (e) => {
     setForm({
@@ -58,45 +50,79 @@ export default function HeroSection() {
 
   // --- AUTHENTICATED VIEW (DASHBOARD PREVIEW) ---
   if (isAuthenticated && user) {
-    return (
-      <section className="relative min-h-[85vh] flex flex-col font-sans">
-        <div className="relative flex-1 flex items-center">
-          <div className="absolute inset-0 z-0">
-             <img 
-               src="/homepage.jpg" 
-               alt="Bank Background" 
-               className="w-full h-full object-cover object-[50%_20%] sm:object-center"
-               loading="eager"
-             />
-             <div className="absolute inset-0 bg-white/40"></div>
+  return (
+  <section className="relative min-h-[85vh] flex items-center font-sans">
+    
+    {/* Background */}
+    <div className="absolute inset-0 z-0">
+      <img
+        src="/homepage.jpg"
+        alt="Bank Background"
+        className="w-full h-full object-cover object-[50%_20%]"
+        loading="eager"
+      />
+      {/* Premium overlay */}
+      {/* <div className="absolute inset-0 bg-gradient-to-r from-white/90 via-white/70 to-white/30"></div> */}
+    </div>
+
+    {/* Content */}
+    <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+
+        {/* LEFT */}
+        <div className="lg:col-span-8 space-y-7 text-center lg:text-left">
+
+          {/* Welcome Badge */}
+          <div className="inline-flex items-center gap-3 bg-white/80 backdrop-blur-md border border-slate-200 px-4 py-2 rounded-full shadow-md">
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+            </span>
+            <span className="text-sm font-bold text-slate-800">
+              Welcome back, {user.email} 👋
+            </span>
           </div>
 
-          <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-8 lg:py-12">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
-              <div className="lg:col-span-8 space-y-6 lg:space-y-8 text-blue-900 text-center lg:text-left">
-                <div className="inline-flex items-center gap-3 bg-white/60 backdrop-blur-md border border-white/40 px-4 py-2 rounded-full text-sm shadow-sm">
-                  <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                  <span className="font-bold">Welcome back, {user.username || user.name}!</span>
-                </div>
-                <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight text-slate-900">
-                  Your Financial <br className="hidden sm:block" />
-                  <span className="text-yellow-500 border-b-4 border-yellow-500">Dashboard</span>
-                </h1>
-                <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center lg:justify-start">
-                  <button onClick={() => navigate("/dashboard")} className="bg-blue-900 hover:bg-blue-800 text-white font-bold py-3 px-6 rounded-lg shadow-lg transition-all active:scale-95">
-                    Go to Dashboard
-                  </button>
-                  <button onClick={handleLogout} className="bg-transparent border-2 border-blue-900 hover:bg-blue-900 hover:text-white text-blue-900 font-bold py-3 px-6 rounded-lg transition-all">
-                    Logout
-                  </button>
-                </div>
-              </div>
-            </div>
+          {/* Heading */}
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-tight text-slate-900">
+            Your Financial <br />
+            <span className="text-yellow-500 border-b-4 border-yellow-500">
+              Dashboard
+            </span>
+          </h1>
+
+          {/* Subtext */}
+          <p className="max-w-xl text-slate-600 text-base sm:text-lg font-medium">
+            Track accounts, manage loans, monitor transactions and grow your
+            finances — all from one secure place.
+          </p>
+
+          {/* CTA Buttons */}
+          <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start pt-2">
+            <button
+              onClick={() => navigate("/dashboard")}
+              className="bg-blue-900 hover:bg-blue-800 text-white font-bold py-3 px-7 rounded-lg shadow-lg transition-all active:scale-95"
+            >
+              Go to Dashboard
+            </button>
+
+            <button
+              onClick={handleLogout}
+              className="border-2 border-blue-900 text-blue-900 hover:bg-blue-900 hover:text-white font-bold py-3 px-7 rounded-lg transition-all"
+            >
+              Logout
+            </button>
           </div>
+
+    
+
         </div>
-      </section>
-    );
-  }
+      </div>
+    </div>
+  </section>
+);
+
+}
 
   // --- PUBLIC VIEW (LOGIN FORM) ---
   return (

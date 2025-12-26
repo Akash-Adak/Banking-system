@@ -6,18 +6,17 @@ const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
   const navigate = useNavigate();
-
-  const [user, setUser] = useState(null);
   const [token, setToken] = useState(localStorage.getItem("token"));
+  const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  
- const logout = () => {
+
+  const logout = () => {
     localStorage.removeItem("token");
     setToken(null);
     setUser(null);
-    navigate("/"); // redirect to home page
+    navigate("/");
   };
-  // Decode token + validate
+
   useEffect(() => {
     if (!token) {
       setUser(null);
@@ -27,10 +26,7 @@ export function AuthProvider({ children }) {
 
     try {
       const decoded = jwtDecode(token);
-
-      // Check token expiry
-      const now = Date.now() / 1000;
-      if (decoded.exp && decoded.exp < now) {
+      if (decoded.exp * 1000 < Date.now()) {
         logout();
         return;
       }
@@ -39,29 +35,34 @@ export function AuthProvider({ children }) {
         email: decoded.sub,
         roles: decoded.roles || [],
       });
-      setLoading(false);
-    } catch (err) {
-      console.error("Invalid token:", err);
+    } catch {
       logout();
+    } finally {
+      setLoading(false);
     }
   }, [token]);
 
-  // Login function
   const login = (jwt) => {
-    console.log(jwt);
     localStorage.setItem("token", jwt);
     setToken(jwt);
-    navigate("/dashboard"); // redirect after login
+    navigate("/dashboard");
   };
 
-  // Logout function
- 
-
   return (
-    <AuthContext.Provider value={{ user, token, login, logout, loading }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        token,
+        isAuthenticated: !!user,
+        login,
+        logout,
+        loading,
+      }}
+    >
       {!loading && children}
     </AuthContext.Provider>
   );
 }
+
 
 export const useAuth = () => useContext(AuthContext);

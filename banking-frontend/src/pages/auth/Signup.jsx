@@ -137,7 +137,7 @@ export default function Signup() {
                 
                 {/* Username */}
                 <div className="col-span-1 md:col-span-2">
-                  <label className="block text-sm font-semibold text-gray-700 mb-1">Full Name (as per ID) <span className="text-red-500">*</span></label>
+                  <label className="block text-sm font-semibold text-gray-700 mb-1">User Name / User Id <span className="text-red-500">*</span></label>
                   <input
                     type="text"
                     name="username"

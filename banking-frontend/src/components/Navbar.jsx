@@ -265,7 +265,7 @@ export default function Navbar() {
             </span>
             <span className="flex items-center gap-2 hover:text-white transition-colors cursor-pointer">
               <Icon name="envelope" className="text-green-400" /> 
-              <span>support@bankease.com</span>
+              <span>samarthbank.official@gmail.com</span>
             </span>
           </div>
           <div className="flex items-center space-x-4">
@@ -299,11 +299,12 @@ export default function Navbar() {
             {/* Logo */}
             <div className="flex-shrink-0 flex items-center z-[60]">
               <a href="/" className="flex items-center space-x-3 group">
+              {/* <img src="/public/samarth1.png" alt=""  className="w-10 h-10"/> */}
                 <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-indigo-700 rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-blue-200 transition-all duration-300 group-hover:scale-105">
                   <Icon name="university" className="text-white text-lg" />
                 </div>
                 <div>
-                  <div className="text-2xl font-black text-slate-800 tracking-tight leading-none group-hover:text-blue-700 transition-colors">BankEase</div>
+                  <div className="text-4xl font-black text-slate-800 tracking-tight leading-none group-hover:text-blue-700 transition-colors">Samarth Bank</div>
                   <div className="text-[10px] text-slate-500 font-bold uppercase tracking-widest">Digital Banking</div>
                 </div>
               </a>
