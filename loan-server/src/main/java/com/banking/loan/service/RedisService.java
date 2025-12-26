@@ -8,32 +8,49 @@ import org.springframework.stereotype.Service;
 
 import java.util.concurrent.TimeUnit;
 
-@Slf4j
 @Service
 public class RedisService {
 
     @Autowired
-    private RedisTemplate<String, String> redisTemplate;
+    private RedisTemplate<String, Object> redisTemplate;
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     public <T> T get(String key, Class<T> clazz) {
         try {
-            String json = redisTemplate.opsForValue().get(key);
-            if (json == null) return null;
-            return objectMapper.readValue(json, clazz);
+            Object value = redisTemplate.opsForValue().get(key);
+            if (value == null) return null;
+
+            return objectMapper.convertValue(value, clazz);
         } catch (Exception e) {
-//            log.error("❌ Error reading from Redis: {}", e.getMessage());
             return null;
         }
     }
 
-    public void set(String key, Object value, long ttlMinutes) {
+    public void set(String key, Object value, long ttlSeconds) {
         try {
-            String json = objectMapper.writeValueAsString(value);
-            redisTemplate.opsForValue().set(key, json, ttlMinutes, TimeUnit.SECONDS);
+            redisTemplate.opsForValue().set(key, value, ttlSeconds, TimeUnit.SECONDS);
         } catch (Exception e) {
-//            log.error("❌ Error writing to Redis: {}", e.getMessage());
+            System.out.println("❌ Error writing to Redis: " + e.getMessage());
+        }
+    }
+
+    public void delete(String key) {
+        try {
+            redisTemplate.delete(key);
+        } catch (Exception e) {
+            System.out.println("❌ Error deleting from Redis: " + e.getMessage());
+        }
+    }
+
+    // ✅ New method: check if key exists
+    public boolean exists(String key) {
+        try {
+            Boolean result = redisTemplate.hasKey(key);
+            return result != null && result;
+        } catch (Exception e) {
+            System.out.println("❌ Error checking key existence in Redis: " + e.getMessage());
+            return false;
         }
     }
 }

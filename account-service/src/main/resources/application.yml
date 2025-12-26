@@ -22,9 +22,9 @@ spring:
 
   data:
     redis:
-      host: redis-16748.c301.ap-south-1-1.ec2.redns.redis-cloud.com
-      port: 16748
-      password: LKIudJQ9HnyyOzJQZdBVf3BjDWQSHyac
+      host: redis-13050.crce179.ap-south-1-1.ec2.cloud.redislabs.com
+      port: 13050
+      password: dXVNWpG9WoQSbOgIvpPcfxb50PQQTtMD
       timeout: 3000
 
 

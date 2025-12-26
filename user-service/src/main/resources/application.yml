@@ -31,9 +31,9 @@ spring:
 
   data:
     redis:
-      host: redis-13252.c305.ap-south-1-1.ec2.redns.redis-cloud.com
-      port: 13252
-      password: KiIpJJ24Oh46m4SfPWcDh3JuVcPWjPWQ
+      host: redis-13050.crce179.ap-south-1-1.ec2.cloud.redislabs.com
+      port: 13050
+      password: dXVNWpG9WoQSbOgIvpPcfxb50PQQTtMD
       timeout: 3000
 #      ssl: true
 jwt:

@@ -2,18 +2,25 @@ package com.banking.loan.service;
 
 import com.banking.loan.model.*;
 import com.banking.loan.repository.LoanRepository;
+import com.banking.loan.response.AccountResponse;
 import com.banking.loan.response.LoanMsg;
 import com.banking.loan.response.User;
 import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
+
 
 import java.math.BigDecimal;
+import java.nio.file.AccessDeniedException;
 import java.time.LocalDate;
 import java.util.List;
+
+import static com.banking.loan.notification.LoanEmailBuilder.buildLoanEmail;
 
 @Service
 @Transactional
@@ -22,19 +29,52 @@ public class LoanServiceImpl implements LoanService {
     private RedisService redisService;
     @Autowired
     private  LoanRepository loanRepository;
-
+    @Autowired
+    private RestTemplate restTemplate;
     @Autowired
     private  KafkaProducerService kafkaProducerService;
 
-    @Override
-    public LoanResponseDto applyLoan(LoanRequestDto req) {
-        BigDecimal emi = calculateEmi(req.getPrincipalAmount(), req.getInterestRate(), req.getTenureMonths());
+    public LoanResponseDto applyLoan(LoanRequestDto req,String username, String token) throws AccessDeniedException {
 
+
+
+        // 🔐 Headers
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(token);
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        HttpEntity<Void> entity = new HttpEntity<>(headers);
+
+        // 📡 Call Account Service
+        ResponseEntity<AccountResponse> response = restTemplate.exchange(
+                "http://ACCOUNT/api/accounts/user/{accountNumber}",
+                HttpMethod.GET,
+                entity,
+                AccountResponse.class,
+                req.getAccountNumber()
+        );
+
+        if (!response.getStatusCode().is2xxSuccessful() || response.getBody() == null) {
+            throw new RuntimeException("Account service validation failed");
+        }
+
+        // 🔐 Ownership validation
+        if (!response.getBody().getUsername().equals(username)) {
+            throw new AccessDeniedException("You cannot apply loan for another user's account");
+        }
+
+        // 💰 EMI Calculation
+        BigDecimal emi = calculateEmi(
+                req.getPrincipalAmount(),
+                req.getInterestRate(),
+                req.getTenureMonths()
+        );
+
+        // 🏦 Save Loan
         Loan loan = new Loan();
-
-
         loan.setAccountNumber(req.getAccountNumber());
         loan.setLoanType(req.getLoanType());
+
         loan.setPrincipalAmount(req.getPrincipalAmount());
         loan.setInterestRate(req.getInterestRate());
         loan.setTenureMonths(req.getTenureMonths());
@@ -43,63 +83,26 @@ public class LoanServiceImpl implements LoanService {
         loan.setCreatedAt(LocalDate.now());
         loan.setUpdatedAt(LocalDate.now());
 
-
         Loan saved = loanRepository.save(loan);
 
-        User user = redisService.get(req.getAccountNumber(), User.class);
+        // 📬 Notification
+
+//        User user = redisService.get(username, User.class);
 
         LoanMsg event = new LoanMsg();
-        String fullname = user.getUsername();
-        String email = user.getEmail();
-        String subject = "✅ Your Account Details Updated Successfully";
+        event.setEmail(loanRepository.findEmailByAccountNumber(req.getAccountNumber()));
+        event.setUsername("Loan Application Received");
+        event.setBody(buildLoanEmail(username, req));
 
-// HTML Email body
-        String body = "<!DOCTYPE html>" +
-                "<html>" +
-                "<head>" +
-                "  <meta charset='UTF-8'>" +
-                "  <style>" +
-                "    body { font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 0; }" +
-                "    .container { background-color: #ffffff; padding: 20px; margin: 30px auto; width: 90%; max-width: 600px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }" +
-                "    .header { background-color: #0046be; color: white; padding: 15px; border-radius: 10px 10px 0 0; text-align: center; }" +
-                "    .logo { max-width: 100px; margin-bottom: 10px; }" +
-                "    .content { padding: 20px; color: #333333; line-height: 1.6; }" +
-                "    .footer { text-align: center; font-size: 12px; color: #888888; padding-top: 15px; }" +
-                "    .highlight { font-weight: bold; color: #0046be; }" +
-                "  </style>" +
-                "</head>" +
-                "<body>" +
-                "  <div class='container'>" +
-                "    <div class='header'>" +
-                "      <img src='YOUR_LOGO_URL_HERE' alt='EFB Logo' class='logo'>" +
-                "      <h1>Loan Application Received 📝</h1>" +
-                "    </div>" +
-                "    <div class='content'>" +
-                "      <p>Hello <strong>" + fullname + "</strong>,</p>" +
-                "      <p>Your loan application for <span class='highlight'>" + req.getLoanType() + "</span> has been successfully submitted.</p>" +
-                "      <p><strong>Loan Amount:</strong> ₹" + req.getPrincipalAmount() + "</p>" +
-                "      <p>Our team is currently reviewing your request. You will receive an update as soon as your loan is processed.</p>" +
-                "      <p>Thank you for choosing <strong>EFB – Equinox Finance Bank</strong>.</p>" +
-                "    </div>" +
-                "    <div class='footer'>" +
-                "      &copy; 2025 EFB – Equinox Finance Bank. All rights reserved." +
-                "    </div>" +
-                "  </div>" +
-                "</body>" +
-                "</html>";
-
-
-// Set event for Kafka or email sending
-        event.setUsername(subject); // Email subject
-        event.setEmail(email);      // Recipient email
-        event.setBody(body);        // HTML email body
-
-
-        String json = new Gson().toJson(event);
-        kafkaProducerService.sendLoanMsg("banking-loans", json);
+        kafkaProducerService.sendLoanMsg(
+                "banking-loans",
+                new Gson().toJson(event)
+        );
 
         return mapToDto(saved);
     }
+
+
 
     @Override
     public LoanResponseDto approveLoan(Long loanId) {
